@@ -1,0 +1,55 @@
+﻿<Window x:Class="HighThroughputDataRetrieval.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="HTDR"
+        Height="650" Width="825"
+        xmlns:local="clr-namespace:HighThroughputDataRetrieval.ViewModel">
+    <Window.DataContext>
+        <!-- Declaratively create an instance of our MainWindowViewModel -->
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+            <GradientStop Color="AliceBlue" Offset="0.0" />
+            <GradientStop Color="LightBlue" Offset="0.25" />
+            <GradientStop Color="SkyBlue" Offset="0.5" />
+            <GradientStop Color="DodgerBlue" Offset="0.75" />
+            <GradientStop Color="Blue" Offset="1.0" />
+        </LinearGradientBrush>
+    </Window.Background>
+    <Grid VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Button Command="{Binding Path=SearchPubMedCommand}"  Height="123"  Background="{x:Null}" Margin="323,12,355,44">
+            <Image Source="/HighThroughputDataRetrieval;component/Image/search_pubmed.png" Height="123" Width="123" Stretch="UniformToFill" />
+        </Button>
+        <Button
+      Padding="7,3.5"
+      Margin="11"
+      Grid.Row="1"
+      Content="ID Conversion"
+      VerticalAlignment="Center"
+      HorizontalAlignment="Center"
+      />
+        <Button
+      Padding="7,3.5"
+      Margin="11"
+      Grid.Row="2"
+      Content="Browse Previous Result"
+      VerticalAlignment="Center"
+      HorizontalAlignment="Center"
+      />
+        <Button
+      Padding="7,3.5"
+      Margin="11"
+      Grid.Row="3"
+      Content="Switch to Advanced Mode"
+      VerticalAlignment="Center"
+      HorizontalAlignment="Center"
+      />
+    </Grid>
+</Window>

@@ -1,0 +1,9 @@
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrievalBackend\bin\Debug\HighThroughputDataRetrievalBackend.dll
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrievalBackend\bin\Debug\HighThroughputDataRetrievalBackend.pdb
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrievalBackend\bin\Debug\System.Data.SQLite.dll
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrievalBackend\bin\Debug\System.Data.SQLite.pdb
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrievalBackend\bin\Debug\System.Data.SQLite.xml
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrievalBackend\obj\x86\Debug\HighThroughputDataRetrievalBackend.Properties.Resources.resources
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrievalBackend\obj\x86\Debug\HighThroughputDataRetrievalBackend.csproj.GenerateResource.Cache
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrievalBackend\obj\x86\Debug\HighThroughputDataRetrievalBackend.dll
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrievalBackend\obj\x86\Debug\HighThroughputDataRetrievalBackend.pdb

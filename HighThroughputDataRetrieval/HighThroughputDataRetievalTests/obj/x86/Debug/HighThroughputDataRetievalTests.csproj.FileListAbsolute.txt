@@ -1,0 +1,11 @@
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetievalTests\bin\x86\Debug\HighThroughputDataRetievalTests.dll
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetievalTests\bin\x86\Debug\HighThroughputDataRetievalTests.pdb
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetievalTests\bin\x86\Debug\HighThroughputDataRetrievalBackend.dll
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetievalTests\bin\x86\Debug\nunit.framework.dll
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetievalTests\bin\x86\Debug\System.Data.SQLite.dll
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetievalTests\bin\x86\Debug\HighThroughputDataRetrievalBackend.pdb
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetievalTests\bin\x86\Debug\System.Data.SQLite.pdb
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetievalTests\bin\x86\Debug\System.Data.SQLite.xml
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetievalTests\obj\x86\Debug\HighThroughputDataRetievalTests.csprojResolveAssemblyReference.cache
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetievalTests\obj\x86\Debug\HighThroughputDataRetievalTests.dll
+C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetievalTests\obj\x86\Debug\HighThroughputDataRetievalTests.pdb
