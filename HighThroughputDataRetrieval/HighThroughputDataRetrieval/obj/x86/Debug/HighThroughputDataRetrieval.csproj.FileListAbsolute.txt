@@ -33,3 +33,5 @@ C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\High
 C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\System.Data.SQLite.pdb
 C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\System.Data.SQLite.xml
 C:\Source\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\View\InputWizardView.baml
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\HighThroughputDataRetrieval.exe
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\HighThroughputDataRetrieval.pdb
