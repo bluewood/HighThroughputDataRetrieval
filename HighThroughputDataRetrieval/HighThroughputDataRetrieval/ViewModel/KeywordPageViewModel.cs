@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Input;
-using HighThroughputDataRetrieval.View;
+﻿using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
 
 namespace HighThroughputDataRetrieval.ViewModel
@@ -64,13 +56,7 @@ namespace HighThroughputDataRetrieval.ViewModel
         /// </summary>
         public ICommand LoadKeywordCommand
         {
-            get
-            {
-                if (_loadKeywordCommand == null)
-                    _loadKeywordCommand = new RelayCommand(() => this.LoadData());
-
-                return _loadKeywordCommand;
-            }
+            get { return _loadKeywordCommand ?? (_loadKeywordCommand = new RelayCommand(LoadData)); }
         }
 
         /// <summary>
@@ -78,7 +64,7 @@ namespace HighThroughputDataRetrieval.ViewModel
         /// </summary>
         public void LoadData()
         {
-            base.Input.Keyword = "HIV";
+            Input.Keyword = "HIV";
             base.OnPropertyChanged("Keyword");
         }
         #endregion // LoadKeywordCommand
@@ -89,10 +75,10 @@ namespace HighThroughputDataRetrieval.ViewModel
         public string Keyword
         {
             get
-            {   return base.Input.Keyword; }
+            {   return Input.Keyword; }
             set
             {
-                base.Input.Keyword = value;
+                Input.Keyword = value;
                 base.OnPropertyChanged("Keyword");
             }
         }

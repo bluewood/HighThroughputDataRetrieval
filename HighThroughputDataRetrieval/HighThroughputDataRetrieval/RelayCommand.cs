@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 using System.Windows.Input;
 
@@ -15,8 +12,8 @@ namespace HighThroughputDataRetrieval
     internal class RelayCommand<T> : ICommand
     {
         #region Fields
-        readonly Action<T> _execute = null;
-        readonly Predicate<T> _canExecute = null;
+        readonly Action<T> _execute;
+        readonly Predicate<T> _canExecute;
         #endregion // Fields
 
         #region Constructor
@@ -44,7 +41,7 @@ namespace HighThroughputDataRetrieval
         [DebuggerStepThrough]
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null ? true : _canExecute((T)parameter);
+            return _canExecute == null || _canExecute((T)parameter);
         }
 
         public event EventHandler CanExecuteChanged
@@ -110,7 +107,7 @@ namespace HighThroughputDataRetrieval
         [DebuggerStepThrough]
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null ? true : _canExecute();
+            return _canExecute == null || _canExecute();
         }
 
         public event EventHandler CanExecuteChanged

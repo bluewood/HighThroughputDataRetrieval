@@ -8,7 +8,7 @@ using System.Windows.Input;
 namespace HighThroughputDataRetrieval.ViewModel
 {
     /// <summary>
-    /// The main ViewModel class for the input wizard.
+    /// The main ViewModel class is for the input wizard.
     /// This class contains the various pages shown in the 
     /// workflow and provides navigation between the pages.
     /// In addition, the instance of Input is created here

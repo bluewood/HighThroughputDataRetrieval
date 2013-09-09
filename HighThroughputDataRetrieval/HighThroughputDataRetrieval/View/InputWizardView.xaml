@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
              xmlns:view="clr-namespace:HighThroughputDataRetrieval.View"
              xmlns:viewModel="clr-namespace:HighThroughputDataRetrieval.ViewModel"
-             >
-
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+  
     <UserControl.Resources>
         <!-- These four templates map a ViewModel to a View. -->
         <DataTemplate DataType="{x:Type viewModel:WelcomePageViewModel}">
@@ -37,7 +37,7 @@
         </Style>
 
         <!-- This Style inherits from the Button style seen above. -->
-        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}" x:Key="MoveBackButtonStyle">
+        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}" x:Key="moveBackButtonStyle">
             <Setter Property="Content" Value="Back" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=IsOnLastPage}" Value="True">
@@ -46,7 +46,7 @@
             </Style.Triggers>
         </Style>
 
-        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}" x:Key="MoveNextButtonStyle">
+        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}" x:Key="moveNextButtonStyle">
             <Setter Property="Content" Value="Next" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=IsOnLastPage}" Value="True">
@@ -200,13 +200,13 @@
             Grid.Column="0"
             Grid.Row="0"
             Command="{Binding Path=MovePreviousCommand}"
-            Style="{StaticResource MoveBackButtonStyle}" 
+            Style="{StaticResource moveBackButtonStyle}" 
             />
                     <Button
             Grid.Column="1"
             Grid.Row="0"
             Command="{Binding Path=MoveNextCommand}"
-            Style="{StaticResource MoveNextButtonStyle}" 
+            Style="{StaticResource moveNextButtonStyle}" 
             />
                     <Button
             Grid.Column="3"
@@ -219,4 +219,3 @@
         </Border>
     </Grid>
 </UserControl>
-

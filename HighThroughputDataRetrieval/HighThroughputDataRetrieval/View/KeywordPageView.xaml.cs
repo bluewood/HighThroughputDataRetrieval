@@ -9,6 +9,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace HighThroughputDataRetrieval.View
@@ -16,7 +17,7 @@ namespace HighThroughputDataRetrieval.View
     /// <summary>
     /// Interaction logic for KeywordPageView.xaml
     /// </summary>
-    public partial class KeywordPageView 
+    public partial class KeywordPageView : UserControl
     {
         public KeywordPageView()
         {

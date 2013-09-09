@@ -16,7 +16,7 @@ namespace HighThroughputDataRetrieval.View
     /// <summary>
     /// Interaction logic for InputWizardDialog.xaml
     /// </summary>
-    public partial class InputWizardDialog
+    public partial class InputWizardDialog : Window
     {
         public InputWizardDialog()
         {

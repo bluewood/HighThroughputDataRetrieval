@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Input;
-using HighThroughputDataRetrieval.View;
+﻿using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
 using Microsoft.Win32;
-using System.Windows;
 using System.IO;
 
 namespace HighThroughputDataRetrieval.ViewModel
@@ -39,13 +30,7 @@ namespace HighThroughputDataRetrieval.ViewModel
         /// </summary>
         public ICommand LoadIdentifierCommand
         {
-            get
-            {
-                if (_loadProteinCommand == null)
-                    _loadProteinCommand = new RelayCommand(() => this.LoadData());
-
-                return _loadProteinCommand;
-            }
+            get { return _loadProteinCommand ?? (_loadProteinCommand = new RelayCommand(LoadData)); }
         }
 
         /// <summary>
@@ -53,7 +38,7 @@ namespace HighThroughputDataRetrieval.ViewModel
         /// </summary>
         public void LoadData()
         {
-            base.Input.ProteinID = "LYNX1\nSPARCL1\nSCG3CRTAC1\nPARK7\nTGFB\ngag"; 
+            Input.ProteinID = "LYNX1\nSPARCL1\nSCG3CRTAC1\nPARK7\nTGFB\ngag"; 
             base.OnPropertyChanged("ProteinID");
         }
         #endregion // LoadIdentifierCommand
@@ -64,25 +49,20 @@ namespace HighThroughputDataRetrieval.ViewModel
         /// </summary>
         public ICommand OpenFileCommand
         {
-            get
-            {
-                if (_openFileCommand == null)
-                    _openFileCommand = new RelayCommand(() => this.OpenFile());
-
-                return _openFileCommand;
-            }
+            get { return _openFileCommand ?? (_openFileCommand = new RelayCommand(OpenFile)); }
         }
 
         public void OpenFile()
         {
-            OpenFileDialog ofd1 = new OpenFileDialog();
-
-            ofd1.InitialDirectory = "c:\\" ;
-            ofd1.Filter = "txt files (*.txt)|*.txt" ;
-            ofd1.FilterIndex = 1;
+            OpenFileDialog ofd1 = new OpenFileDialog
+            {
+                InitialDirectory = "c:\\",
+                Filter = "txt files (*.txt)|*.txt",
+                FilterIndex = 1,
+                Multiselect = false
+            };
 
             // Selecting multiple files not allowed
-            ofd1.Multiselect = false;
 
             // Call the ShowDialog method to show the dialog box.
             bool? userClickedOK = ofd1.ShowDialog();
@@ -91,17 +71,10 @@ namespace HighThroughputDataRetrieval.ViewModel
             if (userClickedOK == true)
             {
                 // Open the selected file to read.
-                try
+                using (StreamReader sr = new StreamReader(ofd1.FileName))
                 {
-                    using (StreamReader sr = new StreamReader(ofd1.FileName))
-                    {
-                        base.Input.ProteinID = sr.ReadToEnd();
-                        base.OnPropertyChanged("ProteinID");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //"Could not read the file";
+                    Input.ProteinID = sr.ReadToEnd();
+                    base.OnPropertyChanged("ProteinID");
                 }
             }
         }
@@ -110,12 +83,14 @@ namespace HighThroughputDataRetrieval.ViewModel
 
         #region Properties
         #region ProteinID
+// ReSharper disable InconsistentNaming
         public string ProteinID
+// ReSharper restore InconsistentNaming
         {
-            get { return base.Input.ProteinID; }
+            get { return Input.ProteinID; }
             set
             {   
-                base.Input.ProteinID = value;
+                Input.ProteinID = value;
                 base.OnPropertyChanged("ProteinID");
             }
         }

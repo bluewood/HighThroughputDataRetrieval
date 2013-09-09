@@ -10,7 +10,7 @@ namespace HighThroughputDataRetrieval.ViewModel
     /// </summary>
     public class OrganismPageViewModel : InputWizardViewModelBase
     {
-        #region Fieldss
+        #region Fields
         RelayCommand _loadOrgCommand;
         #endregion // Fields
 
@@ -29,13 +29,7 @@ namespace HighThroughputDataRetrieval.ViewModel
         /// </summary>
         public ICommand LoadOrgCommand
         {
-            get
-            {
-                if (_loadOrgCommand == null)
-                    _loadOrgCommand = new RelayCommand(() => this.LoadData());
-
-                return _loadOrgCommand;
-            }
+            get { return _loadOrgCommand ?? (_loadOrgCommand = new RelayCommand(LoadData)); }
         }
 
         /// <summary>
@@ -43,7 +37,7 @@ namespace HighThroughputDataRetrieval.ViewModel
         /// </summary>
         void LoadData()
         {
-            base.Input.Organism = "Human";
+            Input.Organism = "Human";
             base.OnPropertyChanged("Organism");
         }
         #endregion // LoadOrgCommand

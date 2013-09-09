@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using HighThroughputDataRetrievalBackend.Model;
 
 namespace HighThroughputDataRetrieval.ViewModel
@@ -18,7 +14,6 @@ namespace HighThroughputDataRetrieval.ViewModel
         #endregion // Fields
 
         #region Constructor
-
         protected InputWizardViewModelBase(UserInput input)
         {
             Input = input;
@@ -26,8 +21,6 @@ namespace HighThroughputDataRetrieval.ViewModel
         #endregion // Constructor
 
         #region Properties
-
-        
         public abstract string DisplayName { get; }
 
         public bool IsCurrentPage
@@ -51,7 +44,6 @@ namespace HighThroughputDataRetrieval.ViewModel
         /// next page in the workflow.
         /// </summary>
         internal abstract bool IsValid();
-
         #endregion // Methods
 
         #region INotifyPropertyChanged Members
@@ -59,7 +51,7 @@ namespace HighThroughputDataRetrieval.ViewModel
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = this.PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }

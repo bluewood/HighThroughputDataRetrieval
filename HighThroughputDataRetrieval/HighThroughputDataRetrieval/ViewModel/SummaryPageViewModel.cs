@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using HighThroughputDataRetrieval.View;
 using HighThroughputDataRetrievalBackend.Model;
 
@@ -27,34 +20,6 @@ namespace HighThroughputDataRetrieval.ViewModel
         }
         #endregion // Constructor
 
-        #region Commands
-        #region RetrievalCountCommand
-        /// <summary>
-        /// Returns the command which, when executed, connects to NCBI and retrieval hit count table
-        /// </summary>
-        public ICommand RetrievalCountCommand
-        {
-            get
-            {
-                if (_retrievalCountCommand == null)
-                    _retrievalCountCommand = new RelayCommand(() => this.ConnectPubMed());
-
-                return _retrievalCountCommand;
-            }
-        }
-
-        // Display hit count table by NCBI handler
-        public void ConnectPubMed()
-        {
-            HitCountTableViewModel HitCountVM = new HitCountTableViewModel(ProteinID, Organism, Keyword);
-            HitCountTableView hitView = new HitCountTableView();
-            hitView.DataContext = HitCountVM;
-            HitCountVM.GetCountNumber();
-            hitView.Show();
-        }
-        #endregion // RetrievalCountCommand
-        #endregion // Commands
-
         #region Properties
         #region DisplayName
         public override string DisplayName
@@ -64,26 +29,52 @@ namespace HighThroughputDataRetrieval.ViewModel
         #endregion // DisplayName
 
         #region ProteinID
+        // ReSharper disable once InconsistentNaming
         public string ProteinID
         {
-            get {   return base.Input.ProteinID;}
+            get { return Input.ProteinID; }
         }
         #endregion // ProteinID
 
         #region Organism
         public string Organism
         {
-            get { return base.Input.Organism; }
+            get { return Input.Organism; }
         }
         #endregion // Organism
 
         #region Keyword
         public string Keyword
         {
-            get { return base.Input.Keyword; }
+            get { return Input.Keyword; }
         }
         #endregion // Keyword
         #endregion // Properties
+
+        #region Commands
+        #region RetrievalCountCommand
+        /// <summary>
+        /// Returns the command which, when executed, connects to NCBI and retrieval hit count table
+        /// </summary>
+        public ICommand RetrievalCountCommand
+        {
+            get {
+                return _retrievalCountCommand ?? (_retrievalCountCommand = new RelayCommand(ConnectPubMed));
+            }
+        }
+
+        // Display hit count table by NCBI handler
+        public void ConnectPubMed()
+        {
+// ReSharper disable InconsistentNaming
+            HitCountTableViewModel HitCountVM = new HitCountTableViewModel(ProteinID, Organism, Keyword);
+// ReSharper restore InconsistentNaming
+            HitCountTableView hitView = new HitCountTableView {DataContext = HitCountVM};
+            HitCountVM.GetCountNumber();
+            hitView.Show();
+        }
+        #endregion // RetrievalCountCommand
+        #endregion // Commands
 
         #region Methods
         internal override bool IsValid()
