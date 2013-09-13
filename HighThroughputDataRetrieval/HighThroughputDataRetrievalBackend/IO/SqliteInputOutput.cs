@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Globalization;
 using System.IO;
 
 namespace HighThroughputDataRetrievalBackend.IO
@@ -33,33 +34,33 @@ namespace HighThroughputDataRetrievalBackend.IO
             return type;
         }
         /// <summary>
-        /// 
+        /// fill the value of dataset to datatable.
         /// </summary>
-        /// <param name="conn"></param>
+        /// <param name="connection"></param>
         /// <param name="data"></param>
 
-        private static void Fill(SQLiteConnection conn, DataSet data)
+        private static void Fill(SQLiteConnection connection, DataSet data)
         {
 
             foreach (DataTable table in data.Tables)
             {
-                using (SQLiteTransaction dbTrans = conn.BeginTransaction())
+                using (SQLiteTransaction dbTrans = connection.BeginTransaction())
                 {
-                    using (SQLiteCommand cmd = conn.CreateCommand())
+                    using (SQLiteCommand cmd = connection.CreateCommand())
                     {
-                        List<string> l_Col = new List<string>();
+                        List<string> listCol = new List<string>();
                         foreach (DataColumn dc in table.Columns)
-                            l_Col.Add(dc.ColumnName);
+                            listCol.Add(dc.ColumnName);
 
                         cmd.CommandText = string.Format(
                             "INSERT INTO {0}({1}) VALUES (@{2});", table.TableName,
-                            string.Join(", ", l_Col),
-                            string.Join(", @", l_Col));
+                            string.Join(", ", listCol),
+                            string.Join(", @", listCol));
 
                         Console.WriteLine("Insert Statement:\n" +
                             cmd.CommandText);
 
-                        foreach (string s in l_Col)
+                        foreach (string s in listCol)
                         {
                             SQLiteParameter param = cmd.CreateParameter();
                             cmd.Parameters.Add(param);
@@ -70,8 +71,8 @@ namespace HighThroughputDataRetrievalBackend.IO
                             int idx = 0;
                             foreach (SQLiteParameter p in cmd.Parameters)
                             {
-                                p.ParameterName = "@" + l_Col[idx];
-                                p.SourceColumn = l_Col[idx];
+                                p.ParameterName = "@" + listCol[idx];
+                                p.SourceColumn = listCol[idx];
                                 p.Value = dr[idx];
                                 idx++;
                             }
@@ -85,93 +86,104 @@ namespace HighThroughputDataRetrievalBackend.IO
             }
         }
 
-        //create the emty db file
+        /// <summary>
+        /// create the emty db file. If the filename is existed then return false
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+
         public static bool create_data(string filename)
         {
 
-            if (filename != null)
+            bool check;
+            SQLiteConnection conn = new SQLiteConnection("Data Source=" + filename + "; FailIfMissing=True");
+            try
+            {
+                conn.Open();
+                conn.Close();
+                check = true; // true mean the db is existed
+            }
+            catch (Exception exc)
+            {
+                check = false; // db not exist
+            }
+            if ((filename != null) && (check == false))
             {
                 SQLiteConnection.CreateFile(filename);
-
                 return true;
             }
-            else
-            {
-                return false;
-
-            }
+            return false;
 
         }
 
         //
         /// <summary>
-        ///  copy dataset to database
+        ///  copy dataset to database. that will create table with the collums abd then call function fill 
+        /// to fill dataset to data table.
         /// </summary>
-        /// <param name="Connection"></param>
-        /// <param name="Data"></param>
+        /// <param name="filename"></param>
+        /// <param name="data"></param>
         /// <returns>bool</returns>
-        public static bool CopydatasetToDatabase(string Connection, DataSet Data)
+        public static bool CopydatasetToDatabase(string filename, DataSet data)
         {
-            bool b_return = true;
-            SQLiteConnection Conn = new SQLiteConnection(
-                    "Data Source=" + Connection);
+            bool bReturn = true;
+            SQLiteConnection conn = new SQLiteConnection(
+                    "Data Source=" + filename);
             try
             {
-                Conn.Open();
+                conn.Open();
 
-                foreach (DataTable dt in Data.Tables)
+                foreach (DataTable dt in data.Tables)
                 {
-                    string m_cmd = string.Format("DROP TABLE IF EXISTS {0};", dt.TableName);
-                    SQLiteCommand Cmd = new SQLiteCommand(m_cmd, Conn);
-                    Cmd.ExecuteNonQuery();
+                    string sCmd1 = string.Format("DROP TABLE IF EXISTS {0};", dt.TableName);
+                    SQLiteCommand cmd1 = new SQLiteCommand(sCmd1, conn);
+                    cmd1.ExecuteNonQuery();
 
-                    string m_Cmd1 = string.Format("CREATE TABLE {0} (", dt.TableName);
+                    string sCmd2 = string.Format("CREATE TABLE {0} (", dt.TableName);
                     // get the collum name and type 
-                    List<string> ListOfColum = new List<string>();
-                    List<string> ListOfPK = new List<string>();
+                    List<string> listOfColum = new List<string>();
+                    List<string> listOfPk = new List<string>();
                     DataColumn[] col = dt.PrimaryKey;
                     foreach (DataColumn dc in dt.Columns)
                     {
                         string colum;
                         colum = dc.ColumnName + " ";
                         colum += ConverType(dc.DataType.FullName);
-                        ListOfColum.Add(colum);
+                        listOfColum.Add(colum);
                     }
-                    m_Cmd1 += string.Join(", ", ListOfColum);
+                    sCmd2 += string.Join(", ", listOfColum);
                     if (col.Length > 0)
                     {
-                        m_Cmd1 += ", ";
-                        m_Cmd1 += "PRIMARY KEY (";
+                        sCmd2 += ", ";
+                        sCmd2 += "PRIMARY KEY (";
                         foreach (DataColumn c in col)
                         {
-                            string PK;
-                            PK = string.Join(", ", c.ColumnName);
-                            ListOfPK.Add(PK);
+                            string pk = string.Join(", ", c.ColumnName);
+                            listOfPk.Add(pk);
                         }
-                        m_Cmd1 += string.Join(", ", ListOfPK);
-                        m_Cmd1 += ")";
+                        sCmd2 += string.Join(", ", listOfPk);
+                        sCmd2 += ")";
                     }
-                    m_Cmd1 += ");";
+                    sCmd2 += ");";
 
-                    Cmd = new SQLiteCommand(m_Cmd1, Conn);
-                    Console.WriteLine(m_Cmd1);
-                    Cmd.ExecuteNonQuery();
+                    cmd1 = new SQLiteCommand(sCmd2, conn);
+                    Console.WriteLine(sCmd2);
+                    cmd1.ExecuteNonQuery();
                 }
 
-                Fill(Conn, Data);
+                Fill(conn, data);
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Error in CopyToDatabase:\n" +
-                   exc.ToString());
-                b_return = false;
+                //Console.WriteLine("Error in CopyToDatabase:\n" +exc.ToString());
+                bReturn = false;
             }
             finally
             {
-                Conn.Close();
+                conn.Close();
             }
 
-            return b_return;
+            return bReturn;
         }
 
         /// <summary>
@@ -183,44 +195,44 @@ namespace HighThroughputDataRetrievalBackend.IO
 
         public static bool CopyTableToData(string connection, DataTable table)
         {
-            bool b_return = true;
+            bool bReturn = true;
             SQLiteConnection conn = new SQLiteConnection("Data Source=" + connection);
             try
             {
                 conn.Open();
-                string m_cmd = string.Format("DROP TABLE IF EXISTS {0};", table.TableName);
-                SQLiteCommand Cmd = new SQLiteCommand(m_cmd, conn);
+                string scmd = string.Format("DROP TABLE IF EXISTS {0};", table.TableName);
+                SQLiteCommand Cmd = new SQLiteCommand(scmd, conn);
                 Cmd.ExecuteNonQuery();
 
-                string m_Cmd1 = string.Format("CREATE TABLE {0} (", table.TableName);
+                string scmd1 = string.Format("CREATE TABLE {0} (", table.TableName);
                 // get the collum name and type 
-                List<string> ListOfColum = new List<string>();
-                List<string> ListOfPK = new List<string>();
+                List<string> listOfColum = new List<string>();
+                List<string> listOfPk = new List<string>();
                 DataColumn[] col = table.PrimaryKey;
                 foreach (DataColumn dc in table.Columns)
                 {
                     string colum;
                     colum = dc.ColumnName + " ";
                     colum += ConverType(dc.DataType.FullName);
-                    ListOfColum.Add(colum);
+                    listOfColum.Add(colum);
                 }
-                m_Cmd1 += string.Join(", ", ListOfColum);
+                scmd1 += string.Join(", ", listOfColum);
                 //write the primary key
                 if (col.Length > 0)
                 {
-                    m_Cmd1 += ",";
-                    m_Cmd1 += "PRIMARY KEY (";
+                    scmd1 += ",";
+                    scmd1 += "PRIMARY KEY (";
                     foreach (DataColumn c in col)
                     {
                         string PK;
                         PK = string.Join(", ", c.ColumnName);
-                        ListOfPK.Add(PK);
+                        listOfPk.Add(PK);
                     }
-                    m_Cmd1 += string.Join(", ", ListOfPK);
-                    m_Cmd1 += ")";
+                    scmd1 += string.Join(", ", listOfPk);
+                    scmd1 += ")";
                 }
-                m_Cmd1 += ");";
-                Cmd = new SQLiteCommand(m_Cmd1, conn);
+                scmd1 += ");";
+                Cmd = new SQLiteCommand(scmd1, conn);
                 Cmd.ExecuteNonQuery();
                 using (SQLiteCommand cmd = conn.CreateCommand())
                 {
@@ -234,8 +246,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                         string.Join(", ", l_Col),
                         string.Join(", @", l_Col));
 
-                    Console.WriteLine("Insert Statement:\n" +
-                        cmd.CommandText);
+                    //Console.WriteLine("Insert Statement:\n" + cmd.CommandText);
 
                     foreach (string s in l_Col)
                     {
@@ -260,30 +271,35 @@ namespace HighThroughputDataRetrievalBackend.IO
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Error in CopyToDatabase:\n" + exc.ToString());
-                b_return = false;
+               // Console.WriteLine(@"Error in CopyToDatabase:" + exc.ToString());
+                bReturn = false;
             }
             conn.Close();
-            return b_return;
+            return bReturn;
 
         }
-
-        public static DataTable GetTable(string Connection, string TableName)
+        /// <summary>
+        /// Return Table inside database by the table name.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public static DataTable GetTable(string filename, string tableName)
         {
-            DataTable table = new DataTable(TableName);
-            string Command = string.Format("SELECT * FROM {0};", TableName);
+            DataTable table = new DataTable(tableName);
+            string command = string.Format("SELECT * FROM {0};", tableName);
 
             try
             {
                 var connStr = new SQLiteConnectionStringBuilder()
                 {
-                    DataSource = Connection
+                    DataSource = filename
                 };
 
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
                 {
                     conn.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(Command, conn);
+                    SQLiteCommand cmd = new SQLiteCommand(command, conn);
                     SQLiteDataReader reader = cmd.ExecuteReader();
                     table.Load(reader);
                     conn.Close();
@@ -293,28 +309,27 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             catch (Exception exc)
             {
-                Console.WriteLine("Exception in GetTable(): " +
-                    exc.ToString());
+               // Console.WriteLine("Exception in GetTable(): " +exc.ToString());
             }
             return table;
         }
         /// <summary>
-        /// Get dataSet
+        /// Get dataSet from database
         /// </summary>
-        /// <param name="Connection"></param>
+        /// <param name="filename"></param>
         /// <returns></returns>
-        public static DataSet GetDataSet(string Connection)
+        public static DataSet GetDataSet(string filename)
         {
 
             DataSet ds = new DataSet();
-            List<string> get_Tables = new List<string>();
+            List<string> getTables = new List<string>();
             string Command = "SELECT * FROM sqlite_master WHERE type='table'";
 
             try
             {
                 var connStr = new SQLiteConnectionStringBuilder()
                 {
-                    DataSource = Connection
+                    DataSource = filename
                 };
 
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
@@ -328,31 +343,31 @@ namespace HighThroughputDataRetrievalBackend.IO
                     // get list of table
                     foreach (DataRow dr in dt.Rows)
                     {
-                        get_Tables.Add(dr["tbl_name"].ToString());
+                        getTables.Add(dr["tbl_name"].ToString());
                     }
                 }
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Get Table list:\n" + exc.ToString());
+               // Console.WriteLine("Get Table list:\n" + exc.ToString());
             }
             //read and get table in list
 
-            foreach (string tb in get_Tables)
+            foreach (string tb in getTables)
             {
                 DataTable table = new DataTable(tb);
-                string Command1 = string.Format("SELECT * FROM {0};", tb);
+                string command1 = string.Format("SELECT * FROM {0};", tb);
                 try
                 {
                     var connStr = new SQLiteConnectionStringBuilder()
                     {
-                        DataSource = Connection
+                        DataSource = filename
                     };
 
                     using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
                     {
                         conn.Open();
-                        SQLiteCommand cmd = new SQLiteCommand(Command1, conn);
+                        SQLiteCommand cmd = new SQLiteCommand(command1, conn);
                         SQLiteDataReader reader1 = cmd.ExecuteReader();
                         table.Load(reader1);
                         conn.Close();
@@ -361,7 +376,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                 }
                 catch (Exception exc)
                 {
-                    Console.WriteLine("Get table:\n" + exc.ToString());
+                  //  Console.WriteLine("Get table:\n" + exc.ToString());
                 }
                 ds.Tables.Add(table);
 
@@ -369,29 +384,25 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             return ds;
         }
-        /// <summary>
+
         // Create Index for table name and colum
-        /// </summary>
-        /// <param name="Connection"></param>
-        /// <param name="Table"></param>
-        /// <param name="ColumnName"></param>
-        /// <returns></returns>
-        public static bool CreateIndex(string Connection, string TableName, string ColumnName)
+        
+        public static bool CreateIndex(string filename, string tableName, string columnName)
         {
             bool rt = true;
             try
             {
-                string index = string.Format("idex" + ColumnName);
-                string Command = string.Format("CREATE INDEX {0} ON {1}({2});", index, TableName, ColumnName);
+                string index = string.Format("idex" + columnName);
+                string command = string.Format("CREATE INDEX {0} ON {1}({2});", index, tableName, columnName);
                 var connStr = new SQLiteConnectionStringBuilder()
                 {
-                    DataSource = Connection
+                    DataSource = filename
                 };
 
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
                 {
                     conn.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(Command, conn);
+                    SQLiteCommand cmd = new SQLiteCommand(command, conn);
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
@@ -399,7 +410,7 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             catch (Exception exc)
             {
-                Console.WriteLine("Exception in CreateIndex(): " + exc.ToString());
+                //Console.WriteLine("Exception in CreateIndex(): " + exc.ToString());
                 rt = false;
             }
 
@@ -408,23 +419,23 @@ namespace HighThroughputDataRetrievalBackend.IO
         /// <summary>
         /// function will do the sql statement on the database
         /// </summary>
-        /// <param name="Connection"></param>
-        /// <param name="SQLStatement"></param>
+        /// <param name="filename"></param>
+        /// <param name="sqlStatement"></param>
         /// <returns></returns>
-        public static bool RunSelectQuery(string Connection, string SQLStatement)
+        public static bool RunSelectQuery(string filename, string sqlStatement)
         {
             bool rt = true;
             try
             {
                 var connStr = new SQLiteConnectionStringBuilder()
                 {
-                    DataSource = Connection
+                    DataSource = filename
                 };
 
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
                 {
                     conn.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(SQLStatement, conn);
+                    SQLiteCommand cmd = new SQLiteCommand(sqlStatement, conn);
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
@@ -432,7 +443,7 @@ namespace HighThroughputDataRetrievalBackend.IO
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Exception in RunSelectQuery: " + exc.ToString());
+               // Console.WriteLine("Exception in RunSelectQuery: " + exc.ToString());
                 rt = false;
             }
             return rt;
@@ -471,36 +482,36 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             catch (Exception exc)
             {
-                Console.WriteLine("Exception in Search(): " + exc.ToString());
+                //Console.WriteLine("Exception in Search(): " + exc.ToString());
             }
             return result;
 
         }
-        public static void CreateTable(string Connection, string TableName, bool AutoID,
-             Dictionary<string, string> Columns)
+        public static void CreateTable(string filename, string tableName, bool autoId,
+             Dictionary<string, string> columns)
         {
-            string s_Command = "CREATE TABLE " + TableName + "(" +
-                (AutoID ? "ID INTEGER PRIMARY KEY AUTOINCREMENT, " : "");
+            string stCommand = "CREATE TABLE " + tableName + "(" +
+                (autoId ? "ID INTEGER PRIMARY KEY AUTOINCREMENT, " : "");
 
-            foreach (string k in Columns.Keys)
+            foreach (string k in columns.Keys)
             {
-                s_Command += k + " " + Columns[k] + ", ";
+                stCommand += k + " " + columns[k] + ", ";
             }
-            s_Command = s_Command.Substring(0, s_Command.Length - 2);   // removes the last comma and space
-            s_Command += ");";
+            stCommand = stCommand.Substring(0, stCommand.Length - 2);   // removes the last comma and space
+            stCommand += ");";
 
             try
             {
                 var connStr = new SQLiteConnectionStringBuilder()
                 {
-                    DataSource = Connection
+                    DataSource = filename
                 };
 
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
                 {
                     conn.Open();
                     SQLiteCommand cmd = new SQLiteCommand(conn);
-                    cmd.CommandText = s_Command;
+                    cmd.CommandText = stCommand;
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
@@ -508,20 +519,15 @@ namespace HighThroughputDataRetrievalBackend.IO
             }
             catch (IOException ioe)
             {
-                Console.WriteLine("SQLite Handler IOException in CreateTable(): " +
-                    ioe.ToString());
+                // Console.WriteLine(@"SQLite Handler IOException in CreateTable(): " + ioe.ToString());
             }
-            catch (Exception exc)
-            {
-                Console.WriteLine("SQLite Handler Exception in CreateTable(): " +
-                    exc.ToString());
-            }
+            
         }
 
 
 
-        // Insert to table
-        public static bool Insert(string sqConnectionString, string tableName, Dictionary<string, string> data)
+        // Insert in to table
+        public static bool Insert(string filename, string tableName, Dictionary<string, string> data)
         {
             string columns = "";
             string values = "";
@@ -539,7 +545,7 @@ namespace HighThroughputDataRetrievalBackend.IO
             {
                 var connStr = new SQLiteConnectionStringBuilder()
                 {
-                    DataSource = sqConnectionString
+                    DataSource = filename
                 };
 
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
@@ -555,7 +561,7 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             catch (Exception fail)
             {
-                System.Console.WriteLine(fail.Message);
+                //System.Console.WriteLine(fail.Message);
                 returnCode = false;
             }
 
@@ -564,7 +570,7 @@ namespace HighThroughputDataRetrievalBackend.IO
 
 
         //update table       
-        public static bool Update(string sqConnectionString, string tableName, Dictionary<string, string> data, string where)
+        public static bool Update(string filename, string tableName, Dictionary<string, string> data, string where)
         {
             string vals = "";
             bool returnCode = true;
@@ -572,7 +578,7 @@ namespace HighThroughputDataRetrievalBackend.IO
             {
                 foreach (KeyValuePair<String, String> val in data)
                 {
-                    vals += String.Format(" {0} = '{1}',", val.Key.ToString(), val.Value.ToString());
+                    vals += String.Format(" {0} = '{1}',", val.Key.ToString(CultureInfo.InvariantCulture), val.Value.ToString(CultureInfo.InvariantCulture));
                 }
                 vals = vals.Substring(0, vals.Length - 1);
             }
@@ -582,14 +588,13 @@ namespace HighThroughputDataRetrievalBackend.IO
             {
                 var connStr = new SQLiteConnectionStringBuilder()
                 {
-                    DataSource = sqConnectionString
+                    DataSource = filename
                 };
 
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
                 {
                     conn.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(conn);
-                    cmd.CommandText = myUpdateQuery;
+                    SQLiteCommand cmd = new SQLiteCommand(conn) {CommandText = myUpdateQuery};
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
@@ -598,14 +603,14 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             catch (Exception fail)
             {
-                System.Console.WriteLine(fail.Message);
+                //System.Console.WriteLine(fail.Message);
                 returnCode = false;
             }
             return returnCode;
         }
 
         //delete from table
-        public static bool Delete(string sqConnectionString, string tableName, string where)
+        public static bool Delete(string filename, string tableName, string where)
         {
             bool returnCode = true;
             string myDeleteQuery = string.Format("DELETE FROM {0} WHERE {1};", tableName, where);
@@ -613,7 +618,7 @@ namespace HighThroughputDataRetrievalBackend.IO
             {
                 var connStr = new SQLiteConnectionStringBuilder()
                 {
-                    DataSource = sqConnectionString
+                    DataSource = filename
                 };
 
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
@@ -628,7 +633,7 @@ namespace HighThroughputDataRetrievalBackend.IO
             }
             catch (Exception fail)
             {
-                System.Console.WriteLine(fail.Message);
+                //System.Console.WriteLine(fail.Message);
                 returnCode = false;
             }
             return returnCode;

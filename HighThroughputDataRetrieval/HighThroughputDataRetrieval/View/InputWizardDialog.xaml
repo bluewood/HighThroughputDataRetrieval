@@ -4,6 +4,6 @@
         xmlns:view="clr-namespace:HighThroughputDataRetrieval.View"
         Title="InputWizardDialog" Height="300" Width="300">
     <Grid>
-        <view:InputWizardView />
+        <view:InputWizardView></view:InputWizardView>
     </Grid>
 </Window>

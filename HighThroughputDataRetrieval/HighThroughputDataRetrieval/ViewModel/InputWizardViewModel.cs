@@ -188,6 +188,7 @@ namespace HighThroughputDataRetrieval.ViewModel
         /// <summary>
         /// Creating pages by adding view models
         /// </summary>
+        
         public void CreatePages()
         {
             var proteinViewModel  = new ProteinPageViewModel(Input);
