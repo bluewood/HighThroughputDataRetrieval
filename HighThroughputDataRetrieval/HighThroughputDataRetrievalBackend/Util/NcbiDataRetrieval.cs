@@ -6,45 +6,50 @@ namespace HighThroughputDataRetrievalBackend.Util
 {
     public abstract class NcbiDataRetrieval
     {
-        // properties
+        #region Properities
+
+        // List for PMIDs and xmlList for articles
         public List<string> IdList;
         public XmlNodeList ArticleList;
+        public int KeyOrder;
 
+        // datatables 
+        public DataTable QueryDataTable;
+        public DataTable QueryArticlesDataTable;
+        public DataTable KeywordListDataTable;
+        public DataTable KeywordDataTable;
+        public DataTable OrganismDataTable;
+        public DataTable ProteinsDataTable;
+        public DataTable ProteinListDataTable;
+        public DataTable QuerySessionDataTable;
+        public DataTable AlternativeProteinNameDataTable;
+        public DataTable ArticleDataTable;
+        public DataTable AuthorListDataTable;
+        public DataTable AuthorsDataTable;
+        public DataTable JournalReleaseDataTable;
+        public DataTable JournalDataTable;
+        public DataTable ArticleInfoDataTable;
+        //public DataTable TagListDataTable;
+        //public DataTable TagsDataTable;
+        //public DataTable CategoryListDataTable;
+        //public DataTable CategoriesDataTable;
 
-        // 19 datatables 
-        public DataTable dt_Query;
-        public DataTable dt_QueryArticles;
-        public DataTable dt_KeywordList;
-        public DataTable dt_Keyword;
-        public DataTable dt_Organism;
-        public DataTable dt_QuerySession;
-        public DataTable dt_Protein;
-        public DataTable dt_ProteinList;
-        public DataTable dt_AlternativeProteinName;
-        public DataTable dt_Article;
-        public DataTable dt_AuthorList;
-        public DataTable dt_Authors;
-        public DataTable dt_Journal_Release;
-        public DataTable dt_Journal;
-        public DataTable dt_ArticleInfo;
-        public DataTable dt_TagList;
-        public DataTable dt_Tags;
-        public DataTable dt_CategoryList;
-        public DataTable dt_Categories;
-
-        // Dataset to include the 19 datatables
-        public DataSet ds_Article;
+        // Dataset to include the datatables
+        public DataSet QueryArticlesDataSet;
 
         // Dictionary to avoid duplication
-        public Dictionary<string, DataRow> Dict;
+        public Dictionary<string, DataRow> Dictionary;
+
+        #endregion
 
 
-        // methods
-        public abstract int GetCount(string pro, string org, List<string> keys);
-        //public abstract bool storeInDataset(string s_PrefixURL);
+        #region Methods
+        public abstract int GetCount(string protein, string organism, string keyword);
+        //public abstract bool ParseXml();
         public abstract DataSet GetArticleInfo();
         //public abstract bool inputTag();
         //public abstract bool categorizeArticle();
+        #endregion
 
 
     }
