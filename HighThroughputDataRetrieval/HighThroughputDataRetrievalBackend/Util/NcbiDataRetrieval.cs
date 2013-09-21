@@ -4,51 +4,65 @@ using System.Xml;
 
 namespace HighThroughputDataRetrievalBackend.Util
 {
+    /// <summary>
+    /// NcbiDataRetrieval is an abstract includes basic data members and methods 
+    /// for web-biological repositories class  such as PubMedDataRetrieval. 
+    /// NcbiDataRetrieval declares basic data members and
+    /// methods for the child classes and the child classes will 
+    /// </summary>
     public abstract class NcbiDataRetrieval
     {
         #region Properities
 
         // List for PMIDs and xmlList for articles
-        public List<string> IdList;
-        public XmlNodeList ArticleList;
-        public int KeyOrder;
+        protected List<string> IdList;
+        //protected XmlNodeList ArticleList;
+        protected int RetrievedArticleCount;
+        protected int KeyOrder;
+        protected string ProteinFromUser;
+        protected string OrganismFromUser;
+        protected string KeywordFromUser;
 
         // datatables 
-        public DataTable QueryDataTable;
-        public DataTable QueryArticlesDataTable;
-        public DataTable KeywordListDataTable;
-        public DataTable KeywordDataTable;
-        public DataTable OrganismDataTable;
-        public DataTable ProteinsDataTable;
-        public DataTable ProteinListDataTable;
-        public DataTable QuerySessionDataTable;
-        public DataTable AlternativeProteinNameDataTable;
-        public DataTable ArticleDataTable;
-        public DataTable AuthorListDataTable;
-        public DataTable AuthorsDataTable;
-        public DataTable JournalReleaseDataTable;
-        public DataTable JournalDataTable;
-        public DataTable ArticleInfoDataTable;
+        protected DataTable QueryDataTable;
+        protected DataTable QueryArticlesDataTable;
+        protected DataTable KeywordListDataTable;
+        protected DataTable KeywordDataTable;
+        protected DataTable OrganismDataTable;
+        protected DataTable ProteinsDataTable;
+        protected DataTable ProteinListDataTable;
+        protected DataTable QuerySessionDataTable;
+        protected DataTable AlternativeProteinNameDataTable;
+        protected DataTable ArticleDataTable;
+        protected DataTable AuthorListDataTable;
+        protected DataTable AuthorsDataTable;
+        protected DataTable JournalReleaseDataTable;
+        protected DataTable JournalDataTable;
+        protected DataTable ArticleInfoDataTable;
         //public DataTable TagListDataTable;
         //public DataTable TagsDataTable;
         //public DataTable CategoryListDataTable;
         //public DataTable CategoriesDataTable;
 
         // Dataset to include the datatables
-        public DataSet QueryArticlesDataSet;
+        protected DataSet QueryArticlesDataSet;
 
         // Dictionary to avoid duplication
-        public Dictionary<string, DataRow> Dictionary;
+        protected static Dictionary<string, DataRow> Dictionary;
 
         #endregion
 
 
         #region Methods
-        public abstract int GetCount(string protein, string organism, string keyword);
-        //public abstract bool ParseXml();
-        public abstract DataSet GetArticleInfo();
+        public abstract int GetCountAndIds(string protein, string organism, string keyword);
+        public abstract void FillQueryDatatables(string name, int count, XmlNodeList pmidList);
+        public abstract DataTable GetArticleInfomation();
+        public abstract DataSet GetDataSet();
+        public abstract void FillAticleInfoDatatables(XmlNodeList articleList, string pubmedSearchPrefix);
+        
         //public abstract bool inputTag();
         //public abstract bool categorizeArticle();
+
         #endregion
 
 
