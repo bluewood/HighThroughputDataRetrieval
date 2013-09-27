@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using HighThroughputDataRetrievalBackend.Util;
 using NUnit.Framework;
@@ -16,9 +17,9 @@ namespace HighThroughputDataRetievalTests
             Console.WriteLine(@"Welcome to a simple PubMed Search...");
 
 
-            const string proteinFromUser = "Gag";
+            const string proteinFromUser = "ips";
             const string organixmFromUser = "Human";
-            const string termsFromUser = "HIV-1";
+            const string keywordFromUser = "cell";
 
             // get protein, organism
             //while (string.IsNullOrEmpty(proteinFromUser) && string.IsNullOrEmpty(organixmFromUser))
@@ -52,12 +53,33 @@ namespace HighThroughputDataRetievalTests
             NcbiDataRetrieval test = new PubMedDataRetrieval();
 
             // get count and PMIDs
-            int count = test.GetCountAndIds(proteinFromUser, organixmFromUser, termsFromUser);
+            //int count = test.GetCountAndIds("", "", "");
+            int count = test.GetCount(proteinFromUser, organixmFromUser, keywordFromUser);
+            List<string> idList = test.GetIdList();
 
             Console.WriteLine(@"count : " + count);
 
-            //// get dataset. need to modify the maximum number (retmax) of articles
-            //DataSet articleDataSet = test.GetArticleInfomation();
+            int lowBound = count/20;
+
+            for (int i = 0; i < lowBound; i++)
+            {
+                test.GetArticleInfomation();
+            }
+            
+            DataTable articleDataTable = test.GetArticleInfomation();
+            //for (int i = 0; i < articleDataTable.Rows.Count; i++)
+            //{
+            //    if (idList[i] != articleDataTable.Rows[i]["PMID"].ToString())
+            //    {
+            //        Console.WriteLine(i + @" " + idList[i]);
+            //        break;
+            //    }
+                
+            //}
+        
+
+            //Console.WriteLine(@"Tables rows count: "+articleDataTable.Rows.Count);
+            //articleDataTable.WriteXml("ArticleDataTable.xml");
             //if (articleDataSet != null)
             //{
             //    articleDataSet.WriteXml("Dataset.xml");

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Security.RightsManagement;
 using System.Xml;
 
 namespace HighThroughputDataRetrievalBackend.Util
@@ -15,16 +16,16 @@ namespace HighThroughputDataRetrievalBackend.Util
         #region Properities
 
         // List for PMIDs and xmlList for articles
-        protected List<string> IdList;
+        protected List<string> IdList { set; get; }
         //protected XmlNodeList ArticleList;
-        protected int RetrievedArticleCount;
-        protected int KeyOrder;
-        protected string ProteinFromUser;
-        protected string OrganismFromUser;
-        protected string KeywordFromUser;
+        protected int RetrievedArticleCount { set; get; }
+        protected int KeyOrder { set; get; }
+        protected string ProteinFromUser { set; get; }
+        protected string OrganismFromUser { set; get; }
+        protected string KeywordFromUser { set; get; }
 
         // datatables 
-        protected DataTable QueryDataTable;
+        public DataTable QueryDataTable;
         protected DataTable QueryArticlesDataTable;
         protected DataTable KeywordListDataTable;
         protected DataTable KeywordDataTable;
@@ -45,7 +46,7 @@ namespace HighThroughputDataRetrievalBackend.Util
         //public DataTable CategoriesDataTable;
 
         // Dataset to include the datatables
-        protected DataSet QueryArticlesDataSet;
+        public DataSet QueryArticlesDataSet;
 
         // Dictionary to avoid duplication
         protected static Dictionary<string, DataRow> Dictionary;
@@ -54,14 +55,14 @@ namespace HighThroughputDataRetrievalBackend.Util
 
 
         #region Methods
-        public abstract int GetCountAndIds(string protein, string organism, string keyword);
-        public abstract void FillQueryDatatables(string name, int count, XmlNodeList pmidList);
+        public abstract int GetCount(string protein, string organism, string keyword);
+        public abstract List<string> GetIdList();
+        public abstract void FillQueryDataTables(string name, int count, XmlNodeList pmidList);
         public abstract DataTable GetArticleInfomation();
         public abstract DataSet GetDataSet();
-        public abstract void FillAticleInfoDatatables(XmlNodeList articleList, string pubmedSearchPrefix);
-        
-        //public abstract bool inputTag();
-        //public abstract bool categorizeArticle();
+        public abstract void FillArticleDataTables(XmlNodeList articleList, string pubmedSearchPrefix);
+
+
 
         #endregion
 

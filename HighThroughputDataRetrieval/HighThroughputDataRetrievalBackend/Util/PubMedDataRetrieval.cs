@@ -183,12 +183,17 @@ namespace HighThroughputDataRetrievalBackend.Util
 
         }
 
+        public override List<string> GetIdList()
+        {
+            return IdList;
+        }
+
         // Name: getCout()
         // Parameters: one protein, one organism, and keywords list of string type 
         // Funtion: Retrieve number of articles and PMIDs and put them into the dataset
         //          based on one protein, one organizm, and one keyword at a time. 9/6/2013
         // Return: count number of int type
-        override public int GetCountAndIds(string protein, string organism, string  keyword)
+        override public int GetCount(string protein, string organism, string  keyword)
         {
             ProteinFromUser = protein;
             OrganismFromUser = organism;
@@ -244,7 +249,7 @@ namespace HighThroughputDataRetrievalBackend.Util
             XmlNodeList pmidListFromXml = xmlDocument.GetElementsByTagName("Id");
 
             // fill Query, Protein, Organism, Keyword, KeywordList, QueryArticle, QuerySession datatables
-            FillQueryDatatables(name, count, pmidListFromXml);
+            FillQueryDataTables(name, count, pmidListFromXml);
 
             return count;  
 
@@ -256,7 +261,7 @@ namespace HighThroughputDataRetrievalBackend.Util
         /// <param name="name"></param>
         /// <param name="count"></param>
         /// <param name="pmidListFromXml"></param>
-        override public void FillQueryDatatables(string name, int count, XmlNodeList pmidListFromXml)
+        override public void FillQueryDataTables(string name, int count, XmlNodeList pmidListFromXml)
         {
             try
             {
@@ -306,11 +311,11 @@ namespace HighThroughputDataRetrievalBackend.Util
 
 
                 // T_KeywordList          
-                DataRow rowKeywordList = KeywordListDataTable.NewRow();
-                rowKeywordList["KeywordListID"] = QueryDataTable.Rows.Count + 1;
-                rowKeywordList["KeywordOrder"] = KeyOrder++;
-                rowKeywordList["KeywordID"] = rowKeyword["KeywordID"]; //.ToString();
-                KeywordListDataTable.Rows.Add(rowKeywordList);
+                //DataRow rowKeywordList = KeywordListDataTable.NewRow();
+                //rowKeywordList["KeywordListID"] = QueryDataTable.Rows.Count + 1;
+                //rowKeywordList["KeywordOrder"] = KeyOrder++;
+                //rowKeywordList["KeywordID"] = rowKeyword["KeywordID"]; //.ToString();
+                //KeywordListDataTable.Rows.Add(rowKeywordList);
 
 
                 // The rest of T_Query
@@ -387,8 +392,10 @@ namespace HighThroughputDataRetrievalBackend.Util
             // the Url is too long when retrieving articles over 100 at a time, so occur exception
             // so retrieving 20 articles at a time when user click more
             int numberOfRetrieving = 20;
-            if ((IdList.Count - numberOfRetrieving) < numberOfRetrieving)
-                numberOfRetrieving = IdList.Count - numberOfRetrieving;
+            if ((IdList.Count - RetrievedArticleCount) < numberOfRetrieving)
+                numberOfRetrieving = IdList.Count - RetrievedArticleCount;
+            //int numberOfRetrieving = ((IdList.Count - RetrievedArticleCount) < numberOfRetrieving)
+            //    ? (IdList.Count - RetrievedArticleCount) : 20;
 
             string ids = string.Join(",", IdList.GetRange(RetrievedArticleCount, numberOfRetrieving));
             RetrievedArticleCount += numberOfRetrieving;
@@ -410,22 +417,23 @@ namespace HighThroughputDataRetrievalBackend.Util
             }
 
             // load result in xmlformat and parse per article
-           var doc = new XmlDocument();
-           doc.LoadXml(urlResult);
-           XmlNodeList articleListFromXml = doc.GetElementsByTagName("PubmedArticle");
+            var doc = new XmlDocument();
+            doc.LoadXml(urlResult);
+            XmlNodeList articleListFromXml = doc.GetElementsByTagName("PubmedArticle");
 
            //// fill article part datatables
-           //FillAticleInfoDatatables(articleListFromXml, pubmedSearchPrefix);
+           FillArticleDataTables(articleListFromXml, pubmedSearchPrefix);
 
 
            return ArticleDataTable;
 
         }
 
-        public override void FillAticleInfoDatatables(XmlNodeList articleListFromXml, string pubmedSearchPrefix)
+        public override void FillArticleDataTables(XmlNodeList articleListFromXml, string pubmedSearchPrefix)
         {
             try
             {
+                
                 // fill the data tables from XMLNodeList
                 foreach (XmlNode article in articleListFromXml)
                 {
@@ -435,7 +443,11 @@ namespace HighThroughputDataRetrievalBackend.Util
 
                     // check article already exists. if yes, move to the next article
                     if (Dictionary.ContainsKey(pmid))
+                    {
+                        Console.WriteLine(pmid);
                         continue;
+                    }
+                        
 
                     // some information doesn't show in the xml, so need to check if it's null or not.
                     DataRow rowArticle = ArticleDataTable.NewRow();
@@ -583,7 +595,7 @@ namespace HighThroughputDataRetrievalBackend.Util
             QueryArticlesDataSet.Tables.Add(ProteinsDataTable);
             QueryArticlesDataSet.Tables.Add(OrganismDataTable);
             QueryArticlesDataSet.Tables.Add(KeywordDataTable);
-            QueryArticlesDataSet.Tables.Add(KeywordListDataTable);
+            //QueryArticlesDataSet.Tables.Add(KeywordListDataTable);
             QueryArticlesDataSet.Tables.Add(QueryArticlesDataTable);
             QueryArticlesDataSet.Tables.Add(QuerySessionDataTable);
             //ds_Article.Tables.Add(dt_ProteinList);
