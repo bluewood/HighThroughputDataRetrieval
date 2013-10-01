@@ -114,4 +114,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="PubMedDataRetrieval_GetCount_Exception_caught_while_retrieving_results_from_NCBI__" xml:space="preserve">
+    <value>Exception caught while retrieving results from NCBI: </value>
+  </data>
+  <data name="PubMedDataRetrieval_GetArticleInfo_Exception_caught_while_retrieving_results_from_NCBI__" xml:space="preserve">
+    <value>Exception caught while retrieving results from NCBI: </value>
+  </data>
 </root>

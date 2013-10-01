@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using HighThroughputDataRetrievalBackend.Util;
 using NUnit.Framework;
 
@@ -14,62 +12,85 @@ namespace HighThroughputDataRetievalTests
         public void TestNcbiDataRetrieval()
         {
             // get current time 
-            DateTime dt_Start = DateTime.Now;
+            DateTime startDateTime = DateTime.Now;
 
-            Console.WriteLine("Welcome to a simple PubMed Search...\n");
+            Console.WriteLine(@"Welcome to a simple PubMed Search...");
 
-            string s_Org = "", s_Terms = "", s_Pro = "";
 
-            // get organism
-            while (string.IsNullOrEmpty(s_Pro) && string.IsNullOrEmpty(s_Org))
-            {
-                Console.WriteLine("Please enter the protein (e.g.: 'Gag') : ");
-                s_Pro = Console.ReadLine().Trim();
-                Console.WriteLine("Please enter the organism that you are interested in searching (e.g. 'Human'):");
-                s_Org = Console.ReadLine().Trim();
+            const string proteinFromUser = "ips";
+            const string organixmFromUser = "Human";
+            const string keywordFromUser = "cell";
 
-                if (s_Pro.Contains(' '))
-                    s_Pro = "";
+            // get protein, organism
+            //while (string.IsNullOrEmpty(proteinFromUser) && string.IsNullOrEmpty(organixmFromUser))
+            //{
+            //    Console.WriteLine("Please enter the protein (e.g.: 'Gag') : ");
+            //    proteinFromUser = Console.ReadLine().Trim();
+            //    Console.WriteLine("Please enter the organism that you are interested in searching (e.g. 'Human'):");
+            //    organixmFromUser = Console.ReadLine().Trim();
 
-                if (s_Org.Contains(' '))
-                    s_Org = ""; // organism cannot contain a space
-            }
+            //    if (proteinFromUser.Contains(' '))
+            //        proteinFromUser = "";
 
-            // get terms
-            List<string> l_keys = new List<string>();
-            while (string.IsNullOrEmpty(s_Terms))
-            {
-                Console.WriteLine("Please enter the terms to be searched with a space between them to delineate (e.g. 'HIV-1 Macrophage'):");
-                s_Terms = Console.ReadLine();
-                string[] s_AllTerms = s_Terms.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                l_keys = s_AllTerms.ToList();
-            }
+            //    if (organixmFromUser.Contains(' '))
+            //        organixmFromUser = ""; // organism cannot contain a space
+            //}
+
+            //// get terms
+            ////List<string> l_keys = new List<string>();
+            //while (string.IsNullOrEmpty(termsFromUser))
+            //{
+            //    Console.WriteLine("Please enter the terms to be searched with a space between them to delineate (e.g. 'HIV-1 Macrophage'):");
+            //    termsFromUser = Console.ReadLine();
+            //    string[] s_AllTerms = termsFromUser.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            //    l_keys = s_AllTerms.ToList();
+            //}
             //string s_FinalTerms = string.Join(",", l_Terms);
 
 
-            Console.WriteLine("\n" + "Started to retrieve article information...Please wait");
+            Console.WriteLine(@"Retrieving article information...Please wait");
 
             NcbiDataRetrieval test = new PubMedDataRetrieval();
 
             // get count and PMIDs
-            int count = test.GetCount(s_Pro, s_Org, l_keys);
+            //int count = test.GetCountAndIds("", "", "");
+            int count = test.GetCount(proteinFromUser, organixmFromUser, keywordFromUser);
+            List<string> idList = test.GetIdList();
 
-            Console.WriteLine("count : " + count);
+            Console.WriteLine(@"count : " + count);
 
+            int lowBound = count/20;
 
-            // get dataset. need to modify the maximum number (retmax) of articles
-            DataSet ds_Article = test.GetArticleInfo();
-            if (ds_Article != null)
+            for (int i = 0; i < lowBound; i++)
             {
-                ds_Article.WriteXml("Dataset.xml");
-                Console.WriteLine("Retrieving article information successed!!");
-                Console.WriteLine("Created Dataset.xml under bin/Debug folder. Please check inside.");
+                test.GetArticleInfomation();
             }
-            else
-            {
-                Console.WriteLine("Retrieving article information failed!!");
+            
+            DataTable articleDataTable = test.GetArticleInfomation();
+            //for (int i = 0; i < articleDataTable.Rows.Count; i++)
+            //{
+            //    if (idList[i] != articleDataTable.Rows[i]["PMID"].ToString())
+            //    {
+            //        Console.WriteLine(i + @" " + idList[i]);
+            //        break;
+            //    }
+                
+            //}
+        
 
-            }
+            //Console.WriteLine(@"Tables rows count: "+articleDataTable.Rows.Count);
+            //articleDataTable.WriteXml("ArticleDataTable.xml");
+            //if (articleDataSet != null)
+            //{
+            //    articleDataSet.WriteXml("Dataset.xml");
+            //    Console.WriteLine(@"Retrieving article information successed!!");
+            //    Console.WriteLine(@"Created Dataset.xml under bin/Debug folder. Please check inside.");
+            //}
+            //else
+            //{
+            //    Console.WriteLine(@"Retrieving article information failed!!");
+
+            //}
 
 
             //data_base.create_data("C:/Users/Owner/Desktop/mydb.db3");
@@ -80,9 +101,9 @@ namespace HighThroughputDataRetievalTests
 
 
             // get total running time
-            TimeSpan RunTime = DateTime.Now - dt_Start;
-            Console.WriteLine("Completed in " + RunTime.Hours + " h " + RunTime.Minutes + " min + " + RunTime.Seconds + " sec.");
-            Console.ReadKey();
+            TimeSpan runTime = DateTime.Now - startDateTime;
+            Console.WriteLine(@"Completed in " + runTime.Hours + @" h " + runTime.Minutes + @" min + " + runTime.Seconds + @" sec.");
+            //Console.ReadKey();
         }
     }
 }
