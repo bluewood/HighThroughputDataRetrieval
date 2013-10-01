@@ -104,3 +104,4 @@ C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThrough
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\HighThroughputDataRetrieval.Properties.Resources.resources
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\GenerateResource.read.1.tlog
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\GenerateResource.write.1.tlog
+\\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\HighThroughputDataRetrieval.exe.config

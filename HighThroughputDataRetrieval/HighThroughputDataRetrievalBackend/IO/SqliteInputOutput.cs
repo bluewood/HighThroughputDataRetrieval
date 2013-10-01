@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Globalization;
-using System.IO;
+//using System.IO;
 
 namespace HighThroughputDataRetrievalBackend.IO
 {
@@ -49,6 +49,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                     using (SQLiteCommand cmd = connection.CreateCommand())
                     {
                         List<string> listCol = new List<string>();
+// ReSharper disable once LoopCanBeConvertedToQuery
                         foreach (DataColumn dc in table.Columns)
                             listCol.Add(dc.ColumnName);
 
@@ -57,9 +58,9 @@ namespace HighThroughputDataRetrievalBackend.IO
                             string.Join(", ", listCol),
                             string.Join(", @", listCol));
 
-                        Console.WriteLine("Insert Statement:\n" +
-                            cmd.CommandText);
+                        //Console.WriteLine("Insert Statement:\n" +cmd.CommandText);
 
+                        // ReSharper disable once UnusedVariable
                         foreach (string s in listCol)
                         {
                             SQLiteParameter param = cmd.CreateParameter();
@@ -92,18 +93,18 @@ namespace HighThroughputDataRetrievalBackend.IO
         /// <param name="filename"></param>
         /// <returns></returns>
 
-        public static bool create_data(string filename)
+        public static bool Create_database(string filename)
         {
 
             bool check;
-            SQLiteConnection conn = new SQLiteConnection("Data Source=" + filename + "; FailIfMissing=True");
             try
             {
+                SQLiteConnection conn = new SQLiteConnection("Data Source=" + filename + "; FailIfMissing=True");
                 conn.Open();
                 conn.Close();
                 check = true; // true mean the db is existed
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 check = false; // db not exist
             }
@@ -144,10 +145,10 @@ namespace HighThroughputDataRetrievalBackend.IO
                     List<string> listOfColum = new List<string>();
                     List<string> listOfPk = new List<string>();
                     DataColumn[] col = dt.PrimaryKey;
+// ReSharper disable once LoopCanBeConvertedToQuery
                     foreach (DataColumn dc in dt.Columns)
                     {
-                        string colum;
-                        colum = dc.ColumnName + " ";
+                        string colum = dc.ColumnName + " ";
                         colum += ConverType(dc.DataType.FullName);
                         listOfColum.Add(colum);
                     }
@@ -156,6 +157,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                     {
                         sCmd2 += ", ";
                         sCmd2 += "PRIMARY KEY (";
+// ReSharper disable once LoopCanBeConvertedToQuery
                         foreach (DataColumn c in col)
                         {
                             string pk = string.Join(", ", c.ColumnName);
@@ -173,7 +175,7 @@ namespace HighThroughputDataRetrievalBackend.IO
 
                 Fill(conn, data);
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 //Console.WriteLine("Error in CopyToDatabase:\n" +exc.ToString());
                 bReturn = false;
@@ -189,14 +191,14 @@ namespace HighThroughputDataRetrievalBackend.IO
         /// <summary>
         /// write data table to database
         /// </summary>
-        /// <param name="connection"></param>
+        /// <param name="filename"></param>
         /// <param name="table"></param>
         /// <returns></returns>
 
-        public static bool CopyTableToData(string connection, DataTable table)
+        public static bool AddTableToDataset(string filename, DataTable table)
         {
             bool bReturn = true;
-            SQLiteConnection conn = new SQLiteConnection("Data Source=" + connection);
+            SQLiteConnection conn = new SQLiteConnection("Data Source=" + filename);
             try
             {
                 conn.Open();
@@ -209,10 +211,10 @@ namespace HighThroughputDataRetrievalBackend.IO
                 List<string> listOfColum = new List<string>();
                 List<string> listOfPk = new List<string>();
                 DataColumn[] col = table.PrimaryKey;
+// ReSharper disable once LoopCanBeConvertedToQuery
                 foreach (DataColumn dc in table.Columns)
                 {
-                    string colum;
-                    colum = dc.ColumnName + " ";
+                    string colum = dc.ColumnName + " ";
                     colum += ConverType(dc.DataType.FullName);
                     listOfColum.Add(colum);
                 }
@@ -222,11 +224,11 @@ namespace HighThroughputDataRetrievalBackend.IO
                 {
                     scmd1 += ",";
                     scmd1 += "PRIMARY KEY (";
+// ReSharper disable once LoopCanBeConvertedToQuery
                     foreach (DataColumn c in col)
                     {
-                        string PK;
-                        PK = string.Join(", ", c.ColumnName);
-                        listOfPk.Add(PK);
+                        string pk = string.Join(", ", c.ColumnName);
+                        listOfPk.Add(pk);
                     }
                     scmd1 += string.Join(", ", listOfPk);
                     scmd1 += ")";
@@ -287,7 +289,14 @@ namespace HighThroughputDataRetrievalBackend.IO
         public static DataTable GetTable(string filename, string tableName)
         {
             DataTable table = new DataTable(tableName);
-            string command = string.Format("SELECT * FROM {0};", tableName);
+            string command;
+            if(tableName!="")
+                command = string.Format("SELECT * FROM {0};", tableName);
+            else
+            {
+                //table = null;
+                return null;
+            }
 
             try
             {
@@ -309,7 +318,8 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             catch (Exception exc)
             {
-               // Console.WriteLine("Exception in GetTable(): " +exc.ToString());
+                return null;
+                // Console.WriteLine("Exception in GetTable(): " +exc.ToString());
             }
             return table;
         }
@@ -323,7 +333,7 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             DataSet ds = new DataSet();
             List<string> getTables = new List<string>();
-            string Command = "SELECT * FROM sqlite_master WHERE type='table'";
+            const string command = "SELECT * FROM sqlite_master WHERE type='table'";
 
             try
             {
@@ -335,21 +345,22 @@ namespace HighThroughputDataRetrievalBackend.IO
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
                 {
                     conn.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(Command, conn);
+                    SQLiteCommand cmd = new SQLiteCommand(command, conn);
                     SQLiteDataReader reader = cmd.ExecuteReader();
                     DataTable dt = new DataTable();
                     dt.Load(reader);
                     conn.Close();
                     // get list of table
+                    // ReSharper disable once LoopCanBeConvertedToQuery
                     foreach (DataRow dr in dt.Rows)
                     {
                         getTables.Add(dr["tbl_name"].ToString());
                     }
                 }
             }
-            catch (Exception exc)
+            catch (Exception)
             {
-               // Console.WriteLine("Get Table list:\n" + exc.ToString());
+               return ds;
             }
             //read and get table in list
 
@@ -374,9 +385,9 @@ namespace HighThroughputDataRetrievalBackend.IO
                     }
 
                 }
-                catch (Exception exc)
+                catch (Exception)
                 {
-                  //  Console.WriteLine("Get table:\n" + exc.ToString());
+                  return ds;
                 }
                 ds.Tables.Add(table);
 
@@ -389,7 +400,7 @@ namespace HighThroughputDataRetrievalBackend.IO
         
         public static bool CreateIndex(string filename, string tableName, string columnName)
         {
-            bool rt = true;
+            //bool rt = true;
             try
             {
                 string index = string.Format("idex" + columnName);
@@ -408,13 +419,14 @@ namespace HighThroughputDataRetrievalBackend.IO
                 }
             }
 
-            catch (Exception exc)
+            catch (Exception)
             {
                 //Console.WriteLine("Exception in CreateIndex(): " + exc.ToString());
-                rt = false;
+                return false;
+
             }
 
-            return rt;
+            return true;
         }
         /// <summary>
         /// function will do the sql statement on the database
@@ -480,19 +492,21 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             }
 
-            catch (Exception exc)
+            catch (Exception)
             {
+                return null;
                 //Console.WriteLine("Exception in Search(): " + exc.ToString());
             }
             return result;
 
         }
-        public static void CreateTable(string filename, string tableName, bool autoId,
+        public static bool CreateTableInDatasbase(string filename, string tableName, bool autoId,
              Dictionary<string, string> columns)
         {
             string stCommand = "CREATE TABLE " + tableName + "(" +
                 (autoId ? "ID INTEGER PRIMARY KEY AUTOINCREMENT, " : "");
 
+// ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string k in columns.Keys)
             {
                 stCommand += k + " " + columns[k] + ", ";
@@ -510,17 +524,18 @@ namespace HighThroughputDataRetrievalBackend.IO
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
                 {
                     conn.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(conn);
-                    cmd.CommandText = stCommand;
+                    SQLiteCommand cmd = new SQLiteCommand(conn) {CommandText = stCommand};
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
 
             }
-            catch (IOException ioe)
+            catch (Exception)
             {
+                return false;
                 // Console.WriteLine(@"SQLite Handler IOException in CreateTable(): " + ioe.ToString());
             }
+            return true;
             
         }
 
@@ -534,7 +549,7 @@ namespace HighThroughputDataRetrievalBackend.IO
             bool returnCode = true;
             foreach (KeyValuePair<String, String> val in data)
             {
-                columns += String.Format(" {0},", val.Key.ToString());
+                columns += String.Format(" {0},", val.Key);
                 values += String.Format(" '{0}',", val.Value);
             }
             columns = columns.Substring(0, columns.Length - 1);
@@ -551,8 +566,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
                 {
                     conn.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(conn);
-                    cmd.CommandText = myInsertQuery;
+                    SQLiteCommand cmd = new SQLiteCommand(conn) {CommandText = myInsertQuery};
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
@@ -576,6 +590,7 @@ namespace HighThroughputDataRetrievalBackend.IO
             bool returnCode = true;
             if (data.Count >= 1)
             {
+// ReSharper disable once LoopCanBeConvertedToQuery
                 foreach (KeyValuePair<String, String> val in data)
                 {
                     vals += String.Format(" {0} = '{1}',", val.Key.ToString(CultureInfo.InvariantCulture), val.Value.ToString(CultureInfo.InvariantCulture));
@@ -601,7 +616,7 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             }
 
-            catch (Exception fail)
+            catch (Exception)
             {
                 //System.Console.WriteLine(fail.Message);
                 returnCode = false;
@@ -624,14 +639,13 @@ namespace HighThroughputDataRetrievalBackend.IO
                 using (SQLiteConnection conn = new SQLiteConnection(connStr.ToString()))
                 {
                     conn.Open();
-                    SQLiteCommand cmd = new SQLiteCommand(conn);
-                    cmd.CommandText = myDeleteQuery;
+                    SQLiteCommand cmd = new SQLiteCommand(conn) {CommandText = myDeleteQuery};
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
 
             }
-            catch (Exception fail)
+            catch (Exception)
             {
                 //System.Console.WriteLine(fail.Message);
                 returnCode = false;
