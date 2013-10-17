@@ -18,13 +18,11 @@ using System.Xml;
 
 namespace HighThroughputDataRetievalTests
 {
-    /// <summary>
-    /// 
-    /// 
-    /// </summary>
+
     public class UnitTest
     {
-<<<<<<< HEAD
+
+        // Database Unit test
         [Test]
         public void Test_1_Create_database()
         {
@@ -122,12 +120,76 @@ namespace HighThroughputDataRetievalTests
             // wrong input that doest not have table name "abc"
             bool check1 = SqliteInputOutput.CreateIndex("D://Test/database.db3", "abc", "abc");
             Assert.AreEqual(false, check1);
-=======
+                   
+         }
+
+        [Test]
+        public void Test_7_Search()
+        {
+            
+            //DataTable holdTable = SqliteInputOutput.GetTable("D://Test/database.db3", "staff");
+            DataTable table = SqliteInputOutput.Search("D://Test/database.db3", "staff", "name", "Peter");
+            Assert.AreNotEqual(null,table);
+            foreach (DataRow row in table.Rows)
+            {
+                Assert.AreEqual("Peter",row[0].ToString());
+            }
+           //wrong input
+            DataTable table1 = SqliteInputOutput.Search("D://Test/database.db3", "staff", "name", "Lam");
+// ReSharper disable once UnusedVariable
+            foreach (DataRow row1 in table1.Rows)
+            {
+                Assert.AreEqual(null, table.Rows[0]);
+            }
+
+        }
+
+        [Test]
+        public void Test_8_CreateTableInDatasbase()
+        {
+            Dictionary<string, string> column = new Dictionary<string, string> {{"name", "TEXT"}, {"fee", "INTEGER"}};
+            bool check = SqliteInputOutput.CreateTableInDatasbase("D://Test/database.db3", "Newtable", false, column);
+            Assert.AreEqual(check, true);
+
+        }
+
+        [Test]
+        public void Test_9_Insert()
+        {
+            Dictionary<string, string> value = new Dictionary<string, string> {{"Name", "Lam"}, {"fee", "1000"}};
+
+            bool check = SqliteInputOutput.Insert("D://Test/database.db3", "Newtable", value);
+            Assert.AreEqual(check, true);
+        }
+
+        [Test]
+        public void Test_10_Update()
+        {
+            Dictionary<string, string> value = new Dictionary<string, string> { { "Name", "Nan" }};
+            bool check = SqliteInputOutput.Update("D://Test/database.db3", "Newtable", value, "fee = 1000");
+            Assert.AreEqual(check, true);
+            //wrong input
+            bool check1 = SqliteInputOutput.Update("D://Test/database.db3", "Newtable", value, "money = 11");
+            Assert.AreEqual(false, check1);
+        }
+
+        [Test]
+        public void Test_11_Delete()
+        {
+            bool check1 = SqliteInputOutput.Delete("D://Test/database.db3", "Newtable","fee=1000");
+            Assert.AreEqual(true, check1);
+        }
+
+
+        // retrieval data unit testing
+        #region Data members of UnitTest class
         string _proteinTest;
         string _organismTest;
         string _keywordTest;
 
         NcbiDataRetrieval _unitTestDataRetrieval;
+        #endregion
+
 
         [SetUp]
         public void Init()
@@ -212,68 +274,10 @@ namespace HighThroughputDataRetievalTests
             //Assert.AreEqual(true, unitTestDataTable.Rows.Contains("Enteric Pathogens in HIV/AIDS from a Tertiary Care Hospital."));
             Assert.AreEqual("Future horizons in hair restoration.", unitTestDataTable.Rows[8]["Title"].ToString());
 
->>>>>>> a3ceb313b97c5dc2d71f9c2e4f519ffe12a3cb1b
 
         }
 
         [Test]
-<<<<<<< HEAD
-        public void Test_7_Search()
-        {
-            
-            //DataTable holdTable = SqliteInputOutput.GetTable("D://Test/database.db3", "staff");
-            DataTable table = SqliteInputOutput.Search("D://Test/database.db3", "staff", "name", "Peter");
-            Assert.AreNotEqual(null,table);
-            foreach (DataRow row in table.Rows)
-            {
-                Assert.AreEqual("Peter",row[0].ToString());
-            }
-           //wrong input
-            DataTable table1 = SqliteInputOutput.Search("D://Test/database.db3", "staff", "name", "Lam");
-// ReSharper disable once UnusedVariable
-            foreach (DataRow row1 in table1.Rows)
-            {
-                Assert.AreEqual(null, table.Rows[0]);
-            }
-
-        }
-
-        [Test]
-        public void Test_8_CreateTableInDatasbase()
-        {
-            Dictionary<string, string> column = new Dictionary<string, string> {{"name", "TEXT"}, {"fee", "INTEGER"}};
-            bool check = SqliteInputOutput.CreateTableInDatasbase("D://Test/database.db3", "Newtable", false, column);
-            Assert.AreEqual(check, true);
-
-        }
-
-        [Test]
-        public void Test_9_Insert()
-        {
-            Dictionary<string, string> value = new Dictionary<string, string> {{"Name", "Lam"}, {"fee", "1000"}};
-
-            bool check = SqliteInputOutput.Insert("D://Test/database.db3", "Newtable", value);
-            Assert.AreEqual(check, true);
-        }
-
-        [Test]
-        public void Test_10_Update()
-        {
-            Dictionary<string, string> value = new Dictionary<string, string> { { "Name", "Nan" }};
-            bool check = SqliteInputOutput.Update("D://Test/database.db3", "Newtable", value, "fee = 1000");
-            Assert.AreEqual(check, true);
-            //wrong input
-            bool check1 = SqliteInputOutput.Update("D://Test/database.db3", "Newtable", value, "money = 11");
-            Assert.AreEqual(false, check1);
-        }
-
-        [Test]
-        public void Test_11_Delete()
-        {
-            bool check1 = SqliteInputOutput.Delete("D://Test/database.db3", "Newtable","fee=1000");
-            Assert.AreEqual(true, check1);
-        }
-=======
         public void TestFillArticleDataTables()
         {
             const string pubmedSearchPrefix = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=";
@@ -409,8 +413,5 @@ namespace HighThroughputDataRetievalTests
             Assert.AreEqual("1546-1696", queryArticleDataSet.Tables["T_JournalRelease"].Rows[0]["JournalRelease"]);
         }
 
-
-
->>>>>>> a3ceb313b97c5dc2d71f9c2e4f519ffe12a3cb1b
     }
 }
