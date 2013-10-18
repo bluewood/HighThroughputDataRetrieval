@@ -2,19 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-<<<<<<< HEAD
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using HighThroughputDataRetrievalBackend.IO;
 using NUnit.Framework;
-
-=======
 using HighThroughputDataRetrievalBackend.Util;
 using NUnit.Framework;
 using System.Net;
 using System.Xml;
->>>>>>> a3ceb313b97c5dc2d71f9c2e4f519ffe12a3cb1b
+
 
 namespace HighThroughputDataRetievalTests
 {

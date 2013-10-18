@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighThroughputDataRetrieval", "HighThroughputDataRetrieval\HighThroughputDataRetrieval.csproj", "{1C73B0C7-3293-4CA4-8588-2B25EE66B718}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighThroughputDataRetrievalBackend", "HighThroughputDataRetrievalBackend\HighThroughputDataRetrievalBackend.csproj", "{69A8550C-AAE8-48AE-B83D-545EA8B8E234}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighThroughputDataRetievalTests", "HighThroughputDataRetievalTests\HighThroughputDataRetievalTests.csproj", "{2CD11E25-329A-4E17-B8E6-654D47F9A6FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighThroughputDateRetrieval", "HighThroughputDateRetrieval\HighThroughputDateRetrieval.csproj", "{C04E0CF0-C0F7-4451-B32F-84BD02818D18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,10 +13,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1C73B0C7-3293-4CA4-8588-2B25EE66B718}.Debug|x86.ActiveCfg = Debug|x86
-		{1C73B0C7-3293-4CA4-8588-2B25EE66B718}.Debug|x86.Build.0 = Debug|x86
-		{1C73B0C7-3293-4CA4-8588-2B25EE66B718}.Release|x86.ActiveCfg = Release|x86
-		{1C73B0C7-3293-4CA4-8588-2B25EE66B718}.Release|x86.Build.0 = Release|x86
 		{69A8550C-AAE8-48AE-B83D-545EA8B8E234}.Debug|x86.ActiveCfg = Debug|x86
 		{69A8550C-AAE8-48AE-B83D-545EA8B8E234}.Debug|x86.Build.0 = Debug|x86
 		{69A8550C-AAE8-48AE-B83D-545EA8B8E234}.Release|x86.ActiveCfg = Release|x86
@@ -25,6 +21,10 @@ Global
 		{2CD11E25-329A-4E17-B8E6-654D47F9A6FE}.Debug|x86.Build.0 = Debug|x86
 		{2CD11E25-329A-4E17-B8E6-654D47F9A6FE}.Release|x86.ActiveCfg = Release|x86
 		{2CD11E25-329A-4E17-B8E6-654D47F9A6FE}.Release|x86.Build.0 = Release|x86
+		{C04E0CF0-C0F7-4451-B32F-84BD02818D18}.Debug|x86.ActiveCfg = Debug|x86
+		{C04E0CF0-C0F7-4451-B32F-84BD02818D18}.Debug|x86.Build.0 = Debug|x86
+		{C04E0CF0-C0F7-4451-B32F-84BD02818D18}.Release|x86.ActiveCfg = Release|x86
+		{C04E0CF0-C0F7-4451-B32F-84BD02818D18}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
