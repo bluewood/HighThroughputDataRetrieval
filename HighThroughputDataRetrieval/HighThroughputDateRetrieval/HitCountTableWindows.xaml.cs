@@ -23,9 +23,11 @@ namespace HighThroughputDateRetrieval
             InitializeComponent();
 
             DataGridTextColumn hitCounTextColumn = new DataGridTextColumn();
-            hitCounTextColumn.Header = "Your header";
-            hitCounTextColumn.Binding = new Binding("YourBindingField");
-            dg.Columns.Add(hitCounTextColumn);
+            hitCounTextColumn.Header = "Number of Publication";
+            DataGridTextColumn inpuTextColumn = new DataGridTextColumn();
+            inpuTextColumn.Header = "Input";
+            //hitCounTextColumn.Binding = new Binding("YourBindingField");
+            HitCountTableDataGrid.Columns.Add(hitCounTextColumn);
         }
     }
 }
