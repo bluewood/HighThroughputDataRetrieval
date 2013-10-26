@@ -22,12 +22,12 @@ namespace HighThroughputDateRetrieval
         {
             InitializeComponent();
 
-            DataGridTextColumn hitCounTextColumn = new DataGridTextColumn();
-            hitCounTextColumn.Header = "Number of Publication";
-            DataGridTextColumn inpuTextColumn = new DataGridTextColumn();
-            inpuTextColumn.Header = "Input";
-            //hitCounTextColumn.Binding = new Binding("YourBindingField");
-            HitCountTableDataGrid.Columns.Add(hitCounTextColumn);
+            //DataGridTextColumn hitCounTextColumn = new DataGridTextColumn();
+            //hitCounTextColumn.Header = "Number of Publication";
+            //DataGridTextColumn inpuTextColumn = new DataGridTextColumn();
+            //inpuTextColumn.Header = "Input";
+            ////hitCounTextColumn.Binding = new Binding("YourBindingField");
+            //HitCountTableDataGrid.Columns.Add(hitCounTextColumn);
         }
     }
 }

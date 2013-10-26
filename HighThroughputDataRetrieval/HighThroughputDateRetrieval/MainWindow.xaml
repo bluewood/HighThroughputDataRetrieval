@@ -1,8 +1,45 @@
-﻿<Window x:Class="HighThroughputDateRetrieval.MainWindow"
+﻿<Window x:Class="HighThroughputDataRetrieval.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:HighThroughputDataRetrieval"
         Title="MainWindow" Height="350" Width="525">
+
+    <Window.DataContext>
+        <!-- Declaratively create an instance of our View Model-->
+        <local:MainViewModel/>
+    </Window.DataContext>
+
+    <Window.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#FF3164a5" Offset="1"/>
+            <GradientStop Color="#FF8AAED4" Offset="0"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+
+
     <Grid>
-        
+        <TabControl Margin="5" TabStripPlacement="Top" Padding="10"
+                     FontSize="16">
+            <!--Style="{StaticResource TabControlStyle}"-->
+            <TabItem Name="mainTab" Header="Main">
+                <Border Margin="5" CornerRadius="2">
+                    <Grid>
+                        <Button Content="Import txt" Height="23" HorizontalAlignment="Left" Margin="5,5,0,0" Name="btnImportTXT" VerticalAlignment="Top" Width="100" />
+                        <Button Content="Browse previous result" Height="23" HorizontalAlignment="Left" Margin="120,5,0,0" Name="btnBrowsePreviousResult" VerticalAlignment="Top" Width="175" />
+                        <Label Content="Protein" Height="28" Name="lbProtein" Margin="5,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Label Content="Organism" Height="28" Name="lbOrganism" Margin="5,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Label Content="Keyword" Height="28" Name="lbKeyword" Margin="5,150,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <TextBox Height="23" HorizontalAlignment="Left" Margin="119,50,0,0" Name="tbxProtein" VerticalAlignment="Top" Width="300"  />
+                        <TextBox Height="23" HorizontalAlignment="Left" Margin="119,100,0,0" Name="tbxOrganism" VerticalAlignment="Top" Width="300"  />
+                        <TextBox Height="23" HorizontalAlignment="Left" Margin="119,150,0,0" Name="tbxKeyword" VerticalAlignment="Top" Width="300"  />
+                    </Grid>
+
+                </Border>
+            </TabItem>
+            <TabItem Header="Hit count table" />
+            <TabItem Header="Article abstract" />
+            <TabItem Header="Search result" />
+        </TabControl>
     </Grid>
 </Window>
