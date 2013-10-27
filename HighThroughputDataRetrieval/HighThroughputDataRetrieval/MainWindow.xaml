@@ -35,7 +35,14 @@
                         <Button Content="Search PubMed" Height="23" HorizontalAlignment="Left" Margin="600,400,0,0" Name="SearchPubMedButton" VerticalAlignment="Top" Width="120" Command="{Binding Path=SearchPubMedCommand}" />
                     </Grid>
             </TabItem>
-            <TabItem Header="Hit count summary" />
+            <TabItem Name="HitCountTabItem" Header="Hit count summary">
+                <DataGrid AutoGenerateColumns="False" Height="498" Name="HitCountDataGrid" Width="800" HorizontalAlignment="Center">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Number of Publication" Width="400" Binding="Binding Count"/>
+                        <DataGridTextColumn Header="Protein" Width="400" Binding="Binding UserInputFromModel.ProteinInModel"/>
+                    </DataGrid.Columns>                  
+                </DataGrid>
+            </TabItem>
             <TabItem Header="Article abstract" />
         </TabControl>
     </Grid>

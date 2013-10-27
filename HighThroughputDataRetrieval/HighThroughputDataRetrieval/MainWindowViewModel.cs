@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
+using HighThroughputDataRetrievalBackend.Util;
 using Microsoft.Win32;
 
 namespace HighThroughputDataRetrieval
@@ -11,6 +12,12 @@ namespace HighThroughputDataRetrieval
     {
         #region Fields
         public UserInput UserInputFromModel;
+
+        // Hyesun added for GetCount
+        private NcbiDataRetrieval PubMedSearch { set; get; }
+        private int Count { set; get; }
+        //
+
         RelayCommand _openFileCommand;
         RelayCommand _searchPubMedCommand;
         #endregion // Fields
@@ -19,6 +26,7 @@ namespace HighThroughputDataRetrieval
         public MainWindowViewModel()      
         {
             UserInputFromModel  = new UserInput();
+            PubMedSearch = new PubMedDataRetrieval();
         }
         #endregion // Constructor
 
@@ -71,9 +79,13 @@ namespace HighThroughputDataRetrieval
 
         public void GetCount()
         {
-            MessageBox.Show(UserInputFromModel.ProteinInModel);
-            MessageBox.Show(UserInputFromModel.OrganismInModel);
-            MessageBox.Show(UserInputFromModel.KeywordInModel);
+            // this is just an example for test
+            UserInputFromModel.ProteinInModel = "ips";
+            UserInputFromModel.OrganismInModel = "Human";
+            UserInputFromModel.KeywordInModel = "cell";
+
+            Count = PubMedSearch.GetCount(UserInputFromModel.ProteinInModel, UserInputFromModel.OrganismInModel,
+                UserInputFromModel.ProteinInModel);
         }
         #endregion // Commands
 
