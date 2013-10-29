@@ -32,14 +32,14 @@
                         <TextBox Height="50" HorizontalAlignment="Left" Margin="100,200,0,0" Name="OrganismTextBox" VerticalAlignment="Top" Width="300" Text="{Binding Path=OrganismFromModel}" />
                         <TextBox Height="50" HorizontalAlignment="Left" Margin="100,300,0,0" Name="KeywordTextBox" VerticalAlignment="Top" Width="300" Text="{Binding Path=KeywordFromModel}" />
                         <!--<TextBlock Text="Please enter protein/gene identifiers\nFor example, MAVS, gag, MP etc." Margin="5,80,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
-                        <Button Content="Search PubMed" Height="23" HorizontalAlignment="Left" Margin="600,400,0,0" Name="SearchPubMedButton" VerticalAlignment="Top" Width="120" Command="{Binding Path=SearchPubMedCommand}" />
+                    <Button Content="Search PubMed" Height="23" HorizontalAlignment="Left" Margin="600,400,0,0" Name="SearchPubMedButton" VerticalAlignment="Top" Width="120" Command="{Binding Path=SearchPubMedCommand}" />
                     </Grid>
             </TabItem>
-            <TabItem Name="HitCountTabItem" Header="Hit count summary">
-                <DataGrid AutoGenerateColumns="False" Height="498" Name="HitCountDataGrid" Width="800" HorizontalAlignment="Center">
+            <TabItem Name="HitCountTableTab" Header="Hit Count Table">
+                <DataGrid ItemsSource="{Binding CountListWithProteins}" AutoGenerateColumns="False" Height="498" Name="HitCountDataGrid" Width="800" HorizontalAlignment="Center">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Number of Publication" Width="400" Binding="Binding Count"/>
-                        <DataGridTextColumn Header="Protein" Width="400" Binding="Binding UserInputFromModel.ProteinInModel"/>
+                        <DataGridTextColumn Header="Number of Publication" Width="400" Binding="{Binding CountInHitCountTable}"/>
+                        <DataGridTextColumn Header="Protein" Width="400" Binding="{Binding ProteinInHitCountTable}"/>
                     </DataGrid.Columns>                  
                 </DataGrid>
             </TabItem>

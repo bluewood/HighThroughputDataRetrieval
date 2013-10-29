@@ -19,9 +19,16 @@ namespace HighThroughputDataRetrieval
     /// </summary>
     public partial class MainWindow : Window
     {
+        //private MainWindowViewModel _mainWindowViewModel;
         public MainWindow()
         {
             InitializeComponent();
+            //_mainWindowViewModel = (MainWindowViewModel) Content;
         }
+
+        //private void SearchPubMedButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    _mainWindowViewModel.GetCount();
+        //}
     }
 }

@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
-using System.Windows;
 using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
 using HighThroughputDataRetrievalBackend.Util;
@@ -11,23 +11,29 @@ namespace HighThroughputDataRetrieval
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         #region Fields
+
         public UserInput UserInputFromModel;
-
-        // Hyesun added for GetCount
-        private NcbiDataRetrieval PubMedSearch { set; get; }
-        private int Count { set; get; }
         //
-
+        // Hyesun added for GetCount
+        public NcbiDataRetrieval PubMedSearch { get; set; }
+        private int _count;
+        public ObservableCollection<HitCountTable> CountListWithProteins { get; set; }
+        //
+        //
         RelayCommand _openFileCommand;
         RelayCommand _searchPubMedCommand;
+
         #endregion // Fields
 
         #region Constructor
+
         public MainWindowViewModel()      
         {
             UserInputFromModel  = new UserInput();
             PubMedSearch = new PubMedDataRetrieval();
+            CountListWithProteins = new ObservableCollection<HitCountTable>();
         }
+
         #endregion // Constructor
 
         #region Commands
@@ -66,7 +72,7 @@ namespace HighThroughputDataRetrieval
         }
         #endregion // OpenFileCommand
 
-        #region SearchPubMedCoomand
+        #region SearchPubMedCommand
         #endregion // SearchPubMedCommand
         /// <summary>
         /// Returns the command which, when executed, search pubmed based on user input and retrieves
@@ -84,51 +90,53 @@ namespace HighThroughputDataRetrieval
             UserInputFromModel.OrganismInModel = "Human";
             UserInputFromModel.KeywordInModel = "cell";
 
-            Count = PubMedSearch.GetCount(UserInputFromModel.ProteinInModel, UserInputFromModel.OrganismInModel,
-                UserInputFromModel.ProteinInModel);
+            _count = PubMedSearch.GetCount(UserInputFromModel.ProteinInModel, UserInputFromModel.OrganismInModel,
+                UserInputFromModel.KeywordInModel);
+            CountListWithProteins.Add(new HitCountTable(_count, ProteinFromModel));
         }
         #endregion // Commands
 
         #region Properties
-        #region ProteinFromModel
-        public string ProteinFromModel
-        {
-            get
+        
+            #region ProteinFromModel
+            public string ProteinFromModel
             {
-                return UserInputFromModel.ProteinInModel; }
-            set
-            {
-                UserInputFromModel.ProteinInModel = value;
-                OnPropertyChanged("ProteinFromModel");
+                get
+                {
+                    return UserInputFromModel.ProteinInModel; }
+                set
+                {
+                    UserInputFromModel.ProteinInModel = value;
+                    OnPropertyChanged("ProteinFromModel");
+                }
             }
-        }
-        #endregion // ProteinFromModel
+            #endregion // ProteinFromModel
 
-        #region OrganismFromModel
-        public string OrganismFromModel
-        {
-            get
-            { return UserInputFromModel.OrganismInModel; }
-            set
+            #region OrganismFromModel
+            public string OrganismFromModel
             {
-                UserInputFromModel.OrganismInModel = value;
-                OnPropertyChanged("OrganismFromModel");
+                get
+                { return UserInputFromModel.OrganismInModel; }
+                set
+                {
+                    UserInputFromModel.OrganismInModel = value;
+                    OnPropertyChanged("OrganismFromModel");
+                }
             }
-        }
-        #endregion // OrganismFromModel
+            #endregion // OrganismFromModel
 
-        #region KeywordFromModel
-        public string KeywordFromModel
-        {
-            get
-            { return UserInputFromModel.KeywordInModel; }
-            set
+            #region KeywordFromModel
+            public string KeywordFromModel
             {
-                UserInputFromModel.KeywordInModel = value;
-                OnPropertyChanged("KeywordFromModel");
+                get
+                { return UserInputFromModel.KeywordInModel; }
+                set
+                {
+                    UserInputFromModel.KeywordInModel = value;
+                    OnPropertyChanged("KeywordFromModel");
+                }
             }
-        }
-        #endregion // KeywordFromModel
+            #endregion // KeywordFromModel
         #endregion
 
         #region INotifyPropertyChanged Members
