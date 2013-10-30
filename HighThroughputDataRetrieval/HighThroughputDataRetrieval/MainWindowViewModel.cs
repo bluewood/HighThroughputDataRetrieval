@@ -86,9 +86,9 @@ namespace HighThroughputDataRetrieval
         public void GetCount()
         {
             // this is just an example for test
-            UserInputFromModel.ProteinInModel = "ips";
-            UserInputFromModel.OrganismInModel = "Human";
-            UserInputFromModel.KeywordInModel = "cell";
+            //UserInputFromModel.ProteinInModel = "ips";
+            //UserInputFromModel.OrganismInModel = "Human";
+            //UserInputFromModel.KeywordInModel = "cell";
 
             _count = PubMedSearch.GetCount(UserInputFromModel.ProteinInModel, UserInputFromModel.OrganismInModel,
                 UserInputFromModel.KeywordInModel);
