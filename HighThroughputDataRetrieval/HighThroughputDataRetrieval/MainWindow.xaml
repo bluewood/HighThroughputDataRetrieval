@@ -43,18 +43,21 @@
                    
                         <!--<TextBlock Text="Please enter protein/gene identifiers\nFor example, MAVS, gag, MP etc." Margin="5,80,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
                     <Button Content="Search PubMed" Height="23" HorizontalAlignment="Left" Margin="600,400,0,0" Name="SearchPubMedButton" VerticalAlignment="Top" Width="120" Command="{Binding Path=SearchPubMedCommand}" />
-                    <Image Height="75" HorizontalAlignment="Left" Margin="713,8,0,0" Name="QuestionMarkImage" Stretch="Fill" VerticalAlignment="Top" Width="77" Source=""/>
+                    <Image Height="40" HorizontalAlignment="Left" Margin="750,6,0,0" Name="QuestionMarkImageInMain" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg"/>
                 </Grid>
             </TabItem>
             <TabItem Name="HitCountTableTab" Header="Hit Count Table">
-                <DataGrid ItemsSource="{Binding CountListWithProteins}" AutoGenerateColumns="False" Height="498" Name="HitCountDataGrid" Width="800" HorizontalAlignment="Center">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Number of Publication" Width="400" Binding="{Binding CountInHitCountTable}"/>
-                        <DataGridTextColumn Header="Protein" Width="400" Binding="{Binding ProteinInHitCountTable}"/>
-                    </DataGrid.Columns>                  
-                </DataGrid>
-            </TabItem>
-            
+                <Grid Width="800" Height="455" HorizontalAlignment="Center">
+                    <DataGrid ItemsSource="{Binding CountListWithProteins}" AutoGenerateColumns="False" Height="445" Name="HitCountDataGrid" Width="790" HorizontalAlignment="Center" Margin="-2,55,6,2">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Number of Publication" Width="400" Binding="{Binding CountInHitCountTable}"/>
+                            <DataGridTextColumn Header="Protein" Width="400" Binding="{Binding ProteinInHitCountTable}"/>
+                        </DataGrid.Columns>                  
+                    </DataGrid>
+                    <Label Content="Hit Count Table" Height="28" HorizontalAlignment="Left" Margin="332,6,0,0" Name="HitCountTableLabel" VerticalAlignment="Top" />
+                    <Image Height="40" HorizontalAlignment="Left" Margin="754,9,0,0" Name="QuestionMarkImageInHitCountTable" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg" />
+                </Grid>
+            </TabItem>           
             <TabItem Header="Article abstract" >
             <Grid>
                 <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="button1" VerticalAlignment="Top" Width="75" />
@@ -72,7 +75,9 @@
                     </DataGrid.Columns>
 
                 </DataGrid>
-            </Grid>
+                    <Image Height="40" HorizontalAlignment="Left" Margin="750,6,0,0" Name="QuestionMarkImageInArticleTable" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg" />
+
+                </Grid>
             </TabItem>
         
     </TabControl>
