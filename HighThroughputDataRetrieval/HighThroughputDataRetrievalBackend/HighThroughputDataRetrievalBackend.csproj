@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IO\SqliteInputOutput.cs" />
+    <Compile Include="Model\HitCountTable.cs" />
     <Compile Include="Model\UserInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
