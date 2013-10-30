@@ -1,6 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
 using System.IO;
+using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
 using HighThroughputDataRetrievalBackend.Util;
@@ -20,10 +24,106 @@ namespace HighThroughputDataRetrieval
         public ObservableCollection<HitCountTable> CountListWithProteins { get; set; }
         //
         //
+        public ObservableCollection<DataGrid> _ResultTable;
+
         RelayCommand _openFileCommand;
         RelayCommand _searchPubMedCommand;
+        
+        RelayCommand _click;
 
         #endregion // Fields
+        public ObservableCollection<DataGrid> ResultTable
+        {
+            get { return _ResultTable; }
+            set
+            {
+                _ResultTable = value;
+                OnPropertyChanged("ProteinFromModel");
+            }
+        }
+
+        public void LoadDataGrid()
+        {
+            this._ResultTable = new ObservableCollection<DataGrid>();
+            string[] myArticle = new string[15];
+            string[] myAuthor = new string[15];
+            int[] myYear = new int[15];
+            string[] myJournal = new string[15];
+            string[] myUrl = new string[15];
+            //example table in dataset
+            DataTable article = new DataTable("Article");
+            article.Columns.Add("Title", typeof(string));
+            article.Columns.Add("PMID", typeof(int));
+            article.Columns.Add("URL", typeof(string));
+            article.Rows.Add("Water-soluble LYNX1 residues important for interaction with muscle-type and/or neuronal nicotinic receptors", 1, "http://www.ncbi.nlm.nih.gov/pubmed/");
+            article.Rows.Add("[Bacterial expression of water-soluble domain of Lynx1, endogenic neuromodulator of humannicotinic acetylcholine receptors]", 2, "http://www.ncbi.nlm.nih.gov/pubmed/");
+
+            DataTable author = new DataTable("Author");
+            author.Columns.Add("Author", typeof(string));
+            author.Columns.Add("PMID", typeof(int));
+            author.Rows.Add("Lyukmanova EN,…Tsetlin VI", 1);
+            author.Rows.Add("Shulepko MA, … Kirpichnikov MP", 2);
+
+            DataTable journal = new DataTable("Jornal");
+            journal.Columns.Add("Jornal", typeof(string));
+            journal.Columns.Add("Year", typeof(int));
+            journal.Columns.Add("PMID", typeof(int));
+            journal.Rows.Add("J Biol Chem", 2013, 1);
+            journal.Rows.Add("Bioorg Khim", 2011, 2);
+
+            //get myArticle
+            for (int i = 0; i < article.Rows.Count; i++)
+            {
+                myArticle[i] = string.Format(article.Rows[i].ItemArray[0].ToString());
+                myUrl[i] = string.Format(article.Rows[i].ItemArray[2].ToString());
+
+            }
+            //get myAuthor
+
+            for (int i = 0; i < article.Rows.Count; i++)
+            {
+                for (int j = 0; j < author.Rows.Count; j++)
+                {
+                    if ((int)article.Rows[i].ItemArray[1] == (int)author.Rows[j].ItemArray[1])
+                    {
+                        myAuthor[i] = (string)author.Rows[j].ItemArray[0];
+                    }
+                }
+            }
+            //get myJournal and my Year
+            for (int i = 0; i < article.Rows.Count; i++)
+            {
+                for (int j = 0; j < journal.Rows.Count; j++)
+                {
+                    if ((int)article.Rows[i].ItemArray[1] == (int)journal.Rows[j].ItemArray[2])
+                    {
+                        myJournal[i] = (string)journal.Rows[j].ItemArray[0];
+                        myYear[i] = (int)journal.Rows[j].ItemArray[1];
+                    }
+                }
+            }
+            for (int i = 0; i < article.Rows.Count; i++)
+            {
+                _ResultTable.Add(new DataGrid() { Article = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
+            }
+
+        }
+
+        public ICommand click
+        {
+            get { return _click ?? (_click = new RelayCommand(ClickOnDataGrid)); }
+
+        }
+
+        public void ClickOnDataGrid()
+        {
+            if (MessageBox.Show("Go to PubMed ?", "Message", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                RoutedEventArgs e = new RoutedEventArgs();
+                Hyperlink link = (Hyperlink)e.OriginalSource;
+                Process.Start(link.NavigateUri.AbsoluteUri);
+            }
+        }
 
         #region Constructor
 
@@ -32,6 +132,7 @@ namespace HighThroughputDataRetrieval
             UserInputFromModel  = new UserInput();
             PubMedSearch = new PubMedDataRetrieval();
             CountListWithProteins = new ObservableCollection<HitCountTable>();
+            this.LoadDataGrid();
         }
 
         #endregion // Constructor
@@ -149,5 +250,14 @@ namespace HighThroughputDataRetrieval
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion // INotifyPropertyChanged Members
+    }
+    public class DataGrid
+    {
+        public string Article { get; set; }
+        public string Url { get; set; }
+        public string Author { get; set; }
+        public int Year { get; set; }
+        public string Journal { get; set; }
+
     }
 }
