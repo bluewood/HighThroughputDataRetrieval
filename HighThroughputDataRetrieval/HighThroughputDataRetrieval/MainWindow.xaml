@@ -43,7 +43,8 @@
                    
                         <!--<TextBlock Text="Please enter protein/gene identifiers\nFor example, MAVS, gag, MP etc." Margin="5,80,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
                     <Button Content="Search PubMed" Height="23" HorizontalAlignment="Left" Margin="600,400,0,0" Name="SearchPubMedButton" VerticalAlignment="Top" Width="120" Command="{Binding Path=SearchPubMedCommand}" />
-                    <Image Height="40" HorizontalAlignment="Left" Margin="750,6,0,0" Name="QuestionMarkImageInMain" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg"/>
+                    
+                   <!--<Image Height="40" HorizontalAlignment="Left" Margin="750,6,0,0" Name="QuestionMarkImageInMain" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg"/>-->
                 </Grid>
             </TabItem>
             <TabItem Name="HitCountTableTab" Header="Hit Count Table">
@@ -55,15 +56,15 @@
                         </DataGrid.Columns>                  
                     </DataGrid>
                     <Label Content="Hit Count Table" Height="28" HorizontalAlignment="Left" Margin="332,6,0,0" Name="HitCountTableLabel" VerticalAlignment="Top" />
-                    <Image Height="40" HorizontalAlignment="Left" Margin="754,9,0,0" Name="QuestionMarkImageInHitCountTable" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg" />
+                    <!--<Image Height="40" HorizontalAlignment="Left" Margin="754,9,0,0" Name="QuestionMarkImageInHitCountTable" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg" />-->
                 </Grid>
             </TabItem>           
             <TabItem Header="Article abstract" >
-            <Grid>
-                <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="button1" VerticalAlignment="Top" Width="75" />
-                <TextBlock Height="23" HorizontalAlignment="Left" Margin="66,16,0,0" Name="textBlock1" Text="Result" VerticalAlignment="Top" Width="84" />
-                <DataGrid  AutoGenerateColumns="False" Height="235" HorizontalAlignment="Left" Margin="53,45,0,0" Name="dataGrid1" VerticalAlignment="Top" Width="400"
-                  CanUserReorderColumns="False" ItemsSource="{Binding ResultTable}">
+                <Grid>
+                    <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="button1" VerticalAlignment="Top" Width="75" />
+                    <TextBlock Height="23" HorizontalAlignment="Left" Margin="66,16,0,0" Name="textBlock1" Text="Result" VerticalAlignment="Top" Width="84" />
+                    <DataGrid  AutoGenerateColumns="False" Height="235" HorizontalAlignment="Left" Margin="53,45,0,0" Name="dataGrid1" VerticalAlignment="Top" Width="400"
+                    CanUserReorderColumns="False" ItemsSource="{Binding ResultTable}">
                     <DataGrid.Columns >
                         <DataGridHyperlinkColumn Header="Title" Binding="{Binding Path=Url}" 
                                                      ContentBinding="{Binding Path=Article}"  MaxWidth="100">
@@ -73,10 +74,12 @@
                         <DataGridTextColumn Header="Year" Binding="{Binding Path= Year}" Width="100" />
                         <DataGridTextColumn Header="Journal" Binding="{Binding Path=Journal}" MinWidth="100" />
                     </DataGrid.Columns>
-
-                </DataGrid>
-                    <Image Height="40" HorizontalAlignment="Left" Margin="750,6,0,0" Name="QuestionMarkImageInArticleTable" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg" />
-
+                    </DataGrid>
+                    <Button Height="40" Width="40" Margin="750,12,6,450">
+                        <StackPanel Orientation="Horizontal">
+                          <Image HorizontalAlignment="Center" Name="QuestionMarkImageInArticleTable" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg" />
+                        </StackPanel>
+                    </Button>
                 </Grid>
             </TabItem>
         
