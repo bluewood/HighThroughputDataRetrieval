@@ -43,20 +43,31 @@
                    
                         <!--<TextBlock Text="Please enter protein/gene identifiers\nFor example, MAVS, gag, MP etc." Margin="5,80,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
                     <Button Content="Search PubMed" Height="23" HorizontalAlignment="Left" Margin="600,400,0,0" Name="SearchPubMedButton" VerticalAlignment="Top" Width="120" Command="{Binding Path=SearchPubMedCommand}" />
-                    
-                   <!--<Image Height="40" HorizontalAlignment="Left" Margin="750,6,0,0" Name="QuestionMarkImageInMain" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg"/>-->
+
+                    <Button Height="40" Width="40" Margin="750,12,6,450" Command="{Binding Path=OpenHelpDocumentCommand}">
+                        <Button.Content>
+                            <Image HorizontalAlignment="Center" Name="QuestionMarkImageInInput" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg"/>                   
+                        </Button.Content>                          
+                    </Button>
+                    <!--<Image Height="40" HorizontalAlignment="Left" Margin="750,6,0,0" Name="QuestionMarkImageInMain" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg"/>-->
                 </Grid>
             </TabItem>
             <TabItem Name="HitCountTableTab" Header="Hit Count Table">
-                <Grid Width="800" Height="455" HorizontalAlignment="Center">
+                <Grid Width="800" Height="504" HorizontalAlignment="Center">
                     <DataGrid ItemsSource="{Binding CountListWithProteins}" AutoGenerateColumns="False" Height="445" Name="HitCountDataGrid" Width="790" HorizontalAlignment="Center" Margin="-2,55,6,2">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Number of Publication" Width="400" Binding="{Binding CountInHitCountTable}"/>
+                            <DataGridHyperlinkColumn Header="Number of Publication" Width="400" Binding="{Binding CountInHitCountTable}"/>
+                            <!--<DataGridTextColumn Header="Number of Publication" Width="400" Binding="{Binding CountInHitCountTable}"/>-->
                             <DataGridTextColumn Header="Protein" Width="400" Binding="{Binding ProteinInHitCountTable}"/>
                         </DataGrid.Columns>                  
                     </DataGrid>
                     <Label Content="Hit Count Table" Height="28" HorizontalAlignment="Left" Margin="332,6,0,0" Name="HitCountTableLabel" VerticalAlignment="Top" />
                     <!--<Image Height="40" HorizontalAlignment="Left" Margin="754,9,0,0" Name="QuestionMarkImageInHitCountTable" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg" />-->
+                    <Button Height="40" Width="40" Margin="750,12,6,450" Command="{Binding Path=OpenHelpDocumentCommand}">
+                        <Button.Content>
+                            <Image HorizontalAlignment="Center" Name="QuestionMarkImageInHitCountTable" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg"/>
+                        </Button.Content>                           
+                    </Button>
                 </Grid>
             </TabItem>           
             <TabItem Header="Article abstract" >
@@ -75,10 +86,10 @@
                         <DataGridTextColumn Header="Journal" Binding="{Binding Path=Journal}" MinWidth="100" />
                     </DataGrid.Columns>
                     </DataGrid>
-                    <Button Height="40" Width="40" Margin="750,12,6,450">
-                        <StackPanel Orientation="Horizontal">
-                          <Image HorizontalAlignment="Center" Name="QuestionMarkImageInArticleTable" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg" />
-                        </StackPanel>
+                    <Button Height="40" Width="40" Margin="750,12,6,450" Command="{Binding Path=OpenHelpDocumentCommand}">
+                        <Button.Content>
+                            <Image HorizontalAlignment="Center" Name="QuestionMarkImageInArticleTable" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg" />
+                        </Button.Content>
                     </Button>
                 </Grid>
             </TabItem>

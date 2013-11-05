@@ -1,14 +1,17 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
 using HighThroughputDataRetrievalBackend.Util;
-using Microsoft.Win32;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace HighThroughputDataRetrieval
 {
@@ -20,7 +23,8 @@ namespace HighThroughputDataRetrieval
         //
         // Hyesun added for GetCount
         public NcbiDataRetrieval PubMedSearch { get; set; }
-        private int _count;
+        public List<int> CountList { get; set; }
+        public IEnumerable<string> ProteinList { get; set; }
         public ObservableCollection<HitCountTable> CountListWithProteins { get; set; }
         //
         //
@@ -28,10 +32,11 @@ namespace HighThroughputDataRetrieval
 
         RelayCommand _openFileCommand;
         RelayCommand _searchPubMedCommand;
-        
+        RelayCommand _openHelpDocumentCommand;
         RelayCommand _click;
 
         #endregion // Fields
+
         public ObservableCollection<DataGrid> ResultTable
         {
             get { return _ResultTable; }
@@ -104,7 +109,7 @@ namespace HighThroughputDataRetrieval
             }
             for (int i = 0; i < article.Rows.Count; i++)
             {
-                _ResultTable.Add(new DataGrid() { Article = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
+                _ResultTable.Add(new DataGrid() { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
             }
 
         }
@@ -132,6 +137,8 @@ namespace HighThroughputDataRetrieval
             UserInputFromModel  = new UserInput();
             PubMedSearch = new PubMedDataRetrieval();
             CountListWithProteins = new ObservableCollection<HitCountTable>();
+            CountList = new List<int>();
+
             this.LoadDataGrid();
         }
 
@@ -174,7 +181,7 @@ namespace HighThroughputDataRetrieval
         #endregion // OpenFileCommand
 
         #region SearchPubMedCommand
-        #endregion // SearchPubMedCommand
+        
         /// <summary>
         /// Returns the command which, when executed, search pubmed based on user input and retrieves
         /// hit count table
@@ -183,19 +190,45 @@ namespace HighThroughputDataRetrieval
         {
             get { return _searchPubMedCommand ?? (_searchPubMedCommand = new RelayCommand(GetCount)); }
         }
+        #endregion // SearchPubMedCommand
 
+        #region OpenHelpDocumentCommand
+        public ICommand OpenHelpDocumentCommand
+        {
+            get
+            {
+                return _openHelpDocumentCommand ?? (_openHelpDocumentCommand = new RelayCommand(OpenHelpDocument));
+            }
+        }
+        #endregion
+
+        #endregion // Commands
+
+        #region Methods
         public void GetCount()
         {
-            // this is just an example for test
-            //UserInputFromModel.ProteinInModel = "ips";
-            //UserInputFromModel.OrganismInModel = "Human";
-            //UserInputFromModel.KeywordInModel = "cell";
+            // parse proteins string into a list
+            ProteinList = Regex.Split(ProteinFromModel, "\n");
 
-            _count = PubMedSearch.GetCount(UserInputFromModel.ProteinInModel, UserInputFromModel.OrganismInModel,
-                UserInputFromModel.KeywordInModel);
-            CountListWithProteins.Add(new HitCountTable(_count, ProteinFromModel));
+            foreach (string protein in ProteinList)
+            {
+                int count = PubMedSearch.GetCount(protein, OrganismFromModel, KeywordFromModel);
+                CountList.Add(count);
+                CountListWithProteins.Add(new HitCountTable(count, protein));
+            }
+            
         }
-        #endregion // Commands
+
+        public void OpenHelpDocument()
+        {
+
+            var helpDocumentWindow = new HelpDocumentView();
+            helpDocumentWindow.Show();
+
+        }
+        #endregion
+        
+       
 
         #region Properties
         
@@ -253,7 +286,7 @@ namespace HighThroughputDataRetrieval
     }
     public class DataGrid
     {
-        public string Article { get; set; }
+        public string ArticleTitle { get; set; }
         public string Url { get; set; }
         public string Author { get; set; }
         public int Year { get; set; }
