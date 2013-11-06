@@ -48,7 +48,7 @@ namespace HighThroughputDataRetrieval
             }
         }
 
-        public void LoadDataGrid()
+        public void RetrievalArticleInfo()
         {
             this._ResultTable = new ObservableCollection<ArticleTableInfo>();
             string[] myArticle = new string[15];
@@ -115,18 +115,6 @@ namespace HighThroughputDataRetrieval
 
         }
 
-     
-
-        public void ClickOnDataGrid()
-        {
-            if (MessageBox.Show("Go to PubMed ?", "Message", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                RoutedEventArgs e = new RoutedEventArgs();
-                Hyperlink link = (Hyperlink)e.OriginalSource;
-                Process.Start(link.NavigateUri.AbsoluteUri);
-            }
-        }
-
         #region Constructor
 
         public MainWindowViewModel()      
@@ -136,7 +124,7 @@ namespace HighThroughputDataRetrieval
             CountListWithProteins = new ObservableCollection<HitCountTable>();
             CountList = new List<int>();
 
-            this.LoadDataGrid();
+            this.RetrievalArticleInfo();
         }
 
         #endregion // Constructor
@@ -270,13 +258,11 @@ namespace HighThroughputDataRetrieval
             #endregion // KeywordFromModel
         #endregion
 
+            #region buttion_export
             public ICommand ExpordCommand
             {
                 get { return _ExportCommand ?? (_ExportCommand = new RelayCommand(Expord)); }
             }
-
-
-
             public void Expord()
             {
                 int count = 0;
@@ -308,8 +294,11 @@ namespace HighThroughputDataRetrieval
                 }
 
             }
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
+            #endregion
+
+
+            #region INotifyPropertyChanged Members
+            public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
