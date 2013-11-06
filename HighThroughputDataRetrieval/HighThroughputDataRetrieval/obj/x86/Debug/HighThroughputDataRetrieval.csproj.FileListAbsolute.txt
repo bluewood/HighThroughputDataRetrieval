@@ -65,6 +65,13 @@ C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThrou
 C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\HelpDocumentView.baml
 C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\HelpDocumentView.g.cs
 <<<<<<< HEAD
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\HelpDocumentView.baml
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\HelpDocumentView.g.cs
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\HighThroughputDataRetrieval.exe.config
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\Ookii.Dialogs.Wpf.dll
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\Ookii.Dialogs.Wpf.xml
+=======
+<<<<<<< HEAD
 C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\HighThroughputDataRetrieval.exe.config
 =======
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\Interop.AcrobatAccessLib.dll
@@ -76,3 +83,5 @@ C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThrou
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\Interop.AcroPDFLib.dll
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\AxInterop.AcroPDFLib.dll
 >>>>>>> cd29e245a4ad6c8f8372289a3a92284f2c7d0b16
+\\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\HighThroughputDataRetrieval.exe.config
+>>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
