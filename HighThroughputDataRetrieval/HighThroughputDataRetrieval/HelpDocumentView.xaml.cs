@@ -22,7 +22,7 @@ namespace HighThroughputDataRetrieval
         public HelpDocumentView()
         {
             InitializeComponent();
-            const string Path = @"C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\Document\";
+            const string Path = @"..";
             XpsDocument helpDocument = new XpsDocument(Path+ @"HelpDocument.xps", System.IO.FileAccess.Read);
             HelpDocumentViewer.Document = helpDocument.GetFixedDocumentSequence();
 

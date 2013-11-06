@@ -24,35 +24,23 @@
             <!--Style="{StaticResource TabControlStyle}"-->
             <TabItem Name="MainTab" Header="Main">
                <Grid>
-                        <Button Content="Import txt" Height="23" HorizontalAlignment="Left" Margin="5,5,0,0" Name="Importtxt" VerticalAlignment="Top" Width="100" Command="{Binding Path=OpenFileCommand}" />
-                        <Button Content="Browse previous result" Height="23" HorizontalAlignment="Left" Margin="120,5,0,0" Name="BrowsePreviousResultButton" VerticalAlignment="Top" Width="175" />
-                        <Label Content="Protein" Height="33" Name="ProteinLabel" Margin="10,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
-                            <Label.ToolTip>
-                                <ToolTip>
-                                    <StackPanel>
-                                        <TextBlock>Please enter protein indentifiers eg. Gag</TextBlock>
-                                    </StackPanel>
-                                </ToolTip>
-                            </Label.ToolTip>
-                    </Label>
-                        <Label Content="Organism" Height="33" Name="OrganismLabel" Margin="10,200,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <Label Content="Keyword" Height="33" Name="KeywordLabel" Margin="10,300,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <TextBox Height="100" HorizontalAlignment="Left" Margin="100,50,0,0" Name="ProteinTextBox" VerticalAlignment="Top" Width="300" Text="{Binding Path=ProteinFromModel}" TextWrapping="Wrap" AcceptsReturn="True"/>
-                        <TextBox Height="50" HorizontalAlignment="Left" Margin="100,200,0,0" Name="OrganismTextBox" VerticalAlignment="Top" Width="300" Text="{Binding Path=OrganismFromModel}" />
-                        <TextBox Height="50" HorizontalAlignment="Left" Margin="100,300,0,0" Name="KeywordTextBox" VerticalAlignment="Top" Width="300" Text="{Binding Path=KeywordFromModel}" />
-                   
-                        <!--<TextBlock Text="Please enter protein/gene identifiers\nFor example, MAVS, gag, MP etc." Margin="5,80,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />-->
+                    <Button Content="Import txt" Height="23" HorizontalAlignment="Left" Margin="5,5,0,0" Name="Importtxt" VerticalAlignment="Top" Width="100" Command="{Binding Path=OpenFileCommand}" />
+                    <Button Content="Browse previous result" Height="23" HorizontalAlignment="Left" Margin="120,5,0,0" Name="BrowsePreviousResultButton" VerticalAlignment="Top" Width="175" />
+                    <Label Content="Protein(required)" Height="33" Name="ProteinLabel" Margin="10,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Please enter protein/gene identifiers. For example, MAVS, gag, MP etc." />
+                    <Label Content="Organism(optional)" Height="33" Name="OrganismLabel" Margin="10,200,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Please enter single organism. For example, human, monkey etc."/>
+                    <Label Content="Keyword(optional)" Height="33" Name="KeywordLabel" Margin="10,300,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Please enter single keyword. For example, HIV, activator  etc."/>
+                    <TextBox Height="100" HorizontalAlignment="Left" Margin="200,50,0,0" Name="ProteinTextBox" VerticalAlignment="Top" Width="300" Text="{Binding Path=ProteinFromModel}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
+                    <TextBox Height="50" HorizontalAlignment="Left" Margin="200,200,0,0" Name="OrganismTextBox" VerticalAlignment="Top" Width="300" Text="{Binding Path=OrganismFromModel}" />
+                    <TextBox Height="50" HorizontalAlignment="Left" Margin="200,300,0,0" Name="KeywordTextBox" VerticalAlignment="Top" Width="300" Text="{Binding Path=KeywordFromModel}" />
                     <Button Content="Search PubMed" Height="23" HorizontalAlignment="Left" Margin="600,400,0,0" Name="SearchPubMedButton" VerticalAlignment="Top" Width="120" Command="{Binding Path=SearchPubMedCommand}" />
-
                     <Button Height="40" Width="40" Margin="750,12,6,450" Command="{Binding Path=OpenHelpDocumentCommand}">
                         <Button.Content>
                             <Image HorizontalAlignment="Center" Name="QuestionMarkImageInInput" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg"/>                   
                         </Button.Content>                          
                     </Button>
-                    <!--<Image Height="40" HorizontalAlignment="Left" Margin="750,6,0,0" Name="QuestionMarkImageInMain" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg"/>-->
                 </Grid>
             </TabItem>
-            <TabItem Name="HitCountTableTab" Header="Hit Count Table">
+            <TabItem Name="HitCountTableTab" Header="Hit Count Table" IsSelected="{Binding Path=SwitchTab, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <Grid Width="800" Height="504" HorizontalAlignment="Center">
                     <DataGrid ItemsSource="{Binding CountListWithProteins}" AutoGenerateColumns="False" Height="445" Name="HitCountDataGrid" Width="790" HorizontalAlignment="Center" Margin="-2,55,6,2">
                         <DataGrid.Columns>

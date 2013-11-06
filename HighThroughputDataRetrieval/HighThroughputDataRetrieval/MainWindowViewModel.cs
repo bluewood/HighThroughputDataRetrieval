@@ -4,14 +4,16 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
 using HighThroughputDataRetrievalBackend.Util;
-using MessageBox = System.Windows.MessageBox;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using Microsoft.Win32;
+using Ookii.Dialogs.Wpf;
 
 namespace HighThroughputDataRetrieval
 {
@@ -139,7 +141,9 @@ namespace HighThroughputDataRetrieval
             CountListWithProteins = new ObservableCollection<HitCountTable>();
             CountList = new List<int>();
 
-            this.LoadDataGrid();
+            LoadDataGrid();
+            _progressDialog = new ProgressDialog();
+            _progressDialog.DoWork += _progressDialog_DoWork;
         }
 
         #endregion // Constructor
@@ -190,6 +194,47 @@ namespace HighThroughputDataRetrieval
         {
             get { return _searchPubMedCommand ?? (_searchPubMedCommand = new RelayCommand(GetCount)); }
         }
+        /// <summary>
+        /// Nan: need revision, change to multi-threading 
+        /// current progress bar is on single thread, which is time consuming
+        /// </summary>
+        private ProgressDialog _progressDialog = new ProgressDialog()
+        {
+            Text = "Retrieving count number from PubMed...",
+            Description = "Processing...",
+            ShowTimeRemaining = true,
+        };
+
+        public void ShowProgressDialog()
+        {
+            if (_progressDialog.IsBusy)
+                MessageBox.Show("The progress dialog is already displayed.");
+            else
+                _progressDialog.Show(); // Show a modeless dialog
+        }
+
+        private void _progressDialog_DoWork(object sender, DoWorkEventArgs e)
+        {
+            int x = 0;
+            // Implement the operation that the progress bar is showing progress of here, same as you would do with a background worker.
+            foreach (string protein in ProteinList)
+            {
+                Thread.Sleep(500);
+                // Periodically check CancellationPending and abort the operation if required.
+                if (_progressDialog.CancellationPending)
+                    return;
+
+                //int count = PubMedSearch.GetCount(protein, OrganismFromModel, KeywordFromModel);
+                //CountList.Add(count);
+                //CountListWithProteins.Add(new HitCountTable(count, protein));
+
+                x++;
+                // ReportProgress can also modify the main text and description; pass null to leave them unchanged.
+                // If _progressDialog.ShowTimeRemaining is set to true, the time will automatically be calculated based on
+                // the frequency of the calls to ReportProgress.
+                _progressDialog.ReportProgress(x, null, string.Format(System.Globalization.CultureInfo.CurrentCulture, "Processing: {0}%", (int)x / ProteinList.Count()));
+            }
+        }
         #endregion // SearchPubMedCommand
 
         #region OpenHelpDocumentCommand
@@ -207,16 +252,26 @@ namespace HighThroughputDataRetrieval
         #region Methods
         public void GetCount()
         {
-            // parse proteins string into a list
-            ProteinList = Regex.Split(ProteinFromModel, "\n");
-
-            foreach (string protein in ProteinList)
+            if (UserInputFromModel.ProteinInModel == null)
             {
-                int count = PubMedSearch.GetCount(protein, OrganismFromModel, KeywordFromModel);
-                CountList.Add(count);
-                CountListWithProteins.Add(new HitCountTable(count, protein));
+                MessageBox.Show("Protein field required");
             }
-            
+            else
+            {
+                // parse proteins string into a list
+                ProteinList = Regex.Split(ProteinFromModel, "\n");
+
+                ShowProgressDialog();
+
+                foreach (string protein in ProteinList)
+                {
+                    int count = PubMedSearch.GetCount(protein, OrganismFromModel, KeywordFromModel);
+                    CountList.Add(count);
+                    CountListWithProteins.Add(new HitCountTable(count, protein));
+                }
+               
+                SwitchTab = true; // Switch to HitCountTableTab by setting HitCountTableTab IsSelected = true
+            }
         }
 
         public void OpenHelpDocument()
@@ -231,7 +286,25 @@ namespace HighThroughputDataRetrieval
        
 
         #region Properties
-        
+
+        #region SwitchTab
+        /// <summary>
+        /// SwitchTab is a property binding to HitCountTableTab IsSelected. By setting SwitchTab=true,
+        /// it will select HitCountTableTab programmatically.
+        /// </summary>
+        private bool _switchTab;
+
+        public bool SwitchTab
+        {
+            get { return _switchTab; }
+            set
+            {
+                _switchTab = value;
+                OnPropertyChanged("SwitchTab");
+            }
+        }
+        #endregion
+
             #region ProteinFromModel
             public string ProteinFromModel
             {
@@ -291,6 +364,5 @@ namespace HighThroughputDataRetrieval
         public string Author { get; set; }
         public int Year { get; set; }
         public string Journal { get; set; }
-
     }
 }

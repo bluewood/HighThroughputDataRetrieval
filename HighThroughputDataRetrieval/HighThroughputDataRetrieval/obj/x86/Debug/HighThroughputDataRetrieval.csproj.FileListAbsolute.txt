@@ -64,3 +64,8 @@ C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThrou
 C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\Interop.AcrobatAccessLib.dll
 C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\HelpDocumentView.baml
 C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\HelpDocumentView.g.cs
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\HelpDocumentView.baml
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\HelpDocumentView.g.cs
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\HighThroughputDataRetrieval.exe.config
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\Ookii.Dialogs.Wpf.dll
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\Ookii.Dialogs.Wpf.xml
