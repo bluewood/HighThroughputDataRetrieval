@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using System.Security.RightsManagement;
 using System.Xml;
 
 namespace HighThroughputDataRetrievalBackend.Util
@@ -16,55 +15,54 @@ namespace HighThroughputDataRetrievalBackend.Util
         #region Properities
 
         // List for PMIDs and xmlList for articles
-        protected List<string> IdList { set; get; }
+        public List<string> IdList { set; get; }
         //protected XmlNodeList ArticleList;
-        protected int RetrievedArticleCount { set; get; }
-        protected int KeyOrder { set; get; }
-        protected string ProteinFromUser { set; get; }
-        protected string OrganismFromUser { set; get; }
-        protected string KeywordFromUser { set; get; }
+        public int RetrievedArticleCount { set; get; }
+        public int KeyOrder { set; get; }
+        public string ProteinFromUser { set; get; }
+        public string OrganismFromUser { set; get; }
+        public string KeywordFromUser { set; get; }
 
         // datatables 
-        public DataTable QueryDataTable;
-        protected DataTable QueryArticlesDataTable;
-        protected DataTable KeywordListDataTable;
-        protected DataTable KeywordDataTable;
-        protected DataTable OrganismDataTable;
-        protected DataTable ProteinsDataTable;
-        protected DataTable ProteinListDataTable;
-        protected DataTable QuerySessionDataTable;
-        protected DataTable AlternativeProteinNameDataTable;
-        protected DataTable ArticleDataTable;
-        protected DataTable AuthorListDataTable;
-        protected DataTable AuthorsDataTable;
-        protected DataTable JournalReleaseDataTable;
-        protected DataTable JournalDataTable;
-        protected DataTable ArticleInfoDataTable;
+        public DataTable QueryDataTable { set; get; }
+        public DataTable QueryArticlesDataTable { set; get; }
+        public DataTable KeywordListDataTable { set; get; }
+        public DataTable KeywordDataTable { set; get; }
+        public DataTable OrganismDataTable { set; get; }
+        public DataTable ProteinsDataTable { set; get; }
+        public DataTable ProteinListDataTable { set; get; }
+        public DataTable QuerySessionDataTable { set; get; }
+        public DataTable AlternativeProteinNameDataTable { set; get; }
+        public DataTable ArticleDataTable { set; get; }
+        public DataTable AuthorListDataTable { set; get; }
+        public DataTable AuthorsDataTable { set; get; }
+        public DataTable JournalReleaseDataTable { set; get; }
+        public DataTable JournalDataTable { set; get; }
+        public DataTable ArticleInfoDataTable { set; get; }
         //public DataTable TagListDataTable;
         //public DataTable TagsDataTable;
         //public DataTable CategoryListDataTable;
         //public DataTable CategoriesDataTable;
 
         // Dataset to include the datatables
-        public DataSet QueryArticlesDataSet;
+        public DataSet QueryArticlesDataSet { set; get; }
 
         // Dictionary to avoid duplication
-        protected static Dictionary<string, DataRow> Dictionary;
+        public static Dictionary<string, DataRow> Dictionary { set; get; }
 
-        #endregion
+        #endregion // properties
 
 
         #region Methods
+
         public abstract int GetCount(string protein, string organism, string keyword);
-        public abstract List<string> GetIdList();
         public abstract void FillQueryDataTables(string name, int count, XmlNodeList pmidList);
         public abstract DataTable GetArticleInfomation();
-        public abstract DataSet GetDataSet();
         public abstract void FillArticleDataTables(XmlNodeList articleList, string pubmedSearchPrefix);
+        public abstract DataSet GetDataSet();
 
 
-
-        #endregion
+        #endregion // methods
 
 
     }

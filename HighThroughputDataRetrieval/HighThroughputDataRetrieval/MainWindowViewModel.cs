@@ -34,6 +34,7 @@ namespace HighThroughputDataRetrieval
         RelayCommand _openFileCommand;
         RelayCommand _searchPubMedCommand;
         RelayCommand _openHelpDocumentCommand;
+        RelayCommand _retrieveArticleInfoCommand;
         RelayCommand _ExportCommand;
 
         #endregion // Fields
@@ -48,7 +49,11 @@ namespace HighThroughputDataRetrieval
             }
         }
 
+<<<<<<< HEAD
         public void RetrievalArticleInfo()
+=======
+        public void RetrieveArticleinformation()
+>>>>>>> a63efa0ce16776e27a673206cdc6be4c6f7a7d77
         {
             this._ResultTable = new ObservableCollection<ArticleTableInfo>();
             string[] myArticle = new string[15];
@@ -124,7 +129,11 @@ namespace HighThroughputDataRetrieval
             CountListWithProteins = new ObservableCollection<HitCountTable>();
             CountList = new List<int>();
 
+<<<<<<< HEAD
             this.RetrievalArticleInfo();
+=======
+            this.RetrieveArticleinformation();
+>>>>>>> a63efa0ce16776e27a673206cdc6be4c6f7a7d77
         }
 
         #endregion // Constructor
@@ -186,6 +195,11 @@ namespace HighThroughputDataRetrieval
             }
         }
         #endregion
+
+        public ICommand RetrieveArticleInfo
+        {
+            get { return _openFileCommand ?? (_openFileCommand = new RelayCommand(OpenFile)); }
+        }
 
         #endregion // Commands
 
