@@ -60,15 +60,23 @@
             </TabItem>           
             <TabItem Header="Article abstract" >
                 <Grid>
-                    <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="button1" VerticalAlignment="Top" Width="75" />
+                    <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="button1" VerticalAlignment="Top" Width="75"  Command="{Binding Path=ExpordCommand}" />
                     <TextBlock Height="23" HorizontalAlignment="Left" Margin="66,16,0,0" Name="textBlock1" Text="Result" VerticalAlignment="Top" Width="84" />
-                    <DataGrid  AutoGenerateColumns="False" Height="235" HorizontalAlignment="Left" Margin="53,45,0,0" Name="dataGrid1" VerticalAlignment="Top" Width="400"
-                    CanUserReorderColumns="False" ItemsSource="{Binding ResultTable}">
+                    <DataGrid  AutoGenerateColumns="False" Height="498" HorizontalAlignment="Center" Margin="10,45,0,10" Name="ResultDataGrid" VerticalAlignment="Top" Width="800"
+                  CanUserReorderColumns="False" ItemsSource="{Binding ResultTable}" >
                     <DataGrid.Columns >
                         <DataGridHyperlinkColumn Header="Title" Binding="{Binding Path=Url}" 
-                                                     ContentBinding="{Binding Path=Article}"  MaxWidth="100">
+                                                     ContentBinding="{Binding Path=ArticleTitle}"  MaxWidth="100">
+                                <DataGridHyperlinkColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <EventSetter Event="Hyperlink.Click" Handler="dataGrid1_GotFocus" />
 
-                        </DataGridHyperlinkColumn>
+                                    </Style>
+                                </DataGridHyperlinkColumn.ElementStyle>
+
+                            </DataGridHyperlinkColumn>
+
+                          
                         <DataGridTextColumn Header="Author" Binding="{Binding Path= Author}" Width="100" />
                         <DataGridTextColumn Header="Year" Binding="{Binding Path= Year}" Width="100" />
                         <DataGridTextColumn Header="Journal" Binding="{Binding Path=Journal}" MinWidth="100" />

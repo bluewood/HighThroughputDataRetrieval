@@ -12,8 +12,14 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
 using HighThroughputDataRetrievalBackend.Util;
+<<<<<<< HEAD
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
+=======
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using Microsoft.Win32;
+>>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
 
 namespace HighThroughputDataRetrieval
 {
@@ -30,16 +36,17 @@ namespace HighThroughputDataRetrieval
         public ObservableCollection<HitCountTable> CountListWithProteins { get; set; }
         //
         //
-        public ObservableCollection<DataGrid> _ResultTable;
+        public ObservableCollection<ArticleTableInfo> _ResultTable;
 
         RelayCommand _openFileCommand;
         RelayCommand _searchPubMedCommand;
         RelayCommand _openHelpDocumentCommand;
-        RelayCommand _click;
+        RelayCommand _retrieveArticleInfoCommand;
+        RelayCommand _ExportCommand;
 
         #endregion // Fields
 
-        public ObservableCollection<DataGrid> ResultTable
+        public ObservableCollection<ArticleTableInfo> ResultTable
         {
             get { return _ResultTable; }
             set
@@ -49,9 +56,13 @@ namespace HighThroughputDataRetrieval
             }
         }
 
-        public void LoadDataGrid()
+<<<<<<< HEAD
+        public void RetrievalArticleInfo()
+=======
+        public void RetrieveArticleinformation()
+>>>>>>> a63efa0ce16776e27a673206cdc6be4c6f7a7d77
         {
-            this._ResultTable = new ObservableCollection<DataGrid>();
+            this._ResultTable = new ObservableCollection<ArticleTableInfo>();
             string[] myArticle = new string[15];
             string[] myAuthor = new string[15];
             int[] myYear = new int[15];
@@ -111,25 +122,9 @@ namespace HighThroughputDataRetrieval
             }
             for (int i = 0; i < article.Rows.Count; i++)
             {
-                _ResultTable.Add(new DataGrid() { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
+                _ResultTable.Add(new ArticleTableInfo() { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
             }
 
-        }
-
-        public ICommand click
-        {
-            get { return _click ?? (_click = new RelayCommand(ClickOnDataGrid)); }
-
-        }
-
-        public void ClickOnDataGrid()
-        {
-            if (MessageBox.Show("Go to PubMed ?", "Message", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                RoutedEventArgs e = new RoutedEventArgs();
-                Hyperlink link = (Hyperlink)e.OriginalSource;
-                Process.Start(link.NavigateUri.AbsoluteUri);
-            }
         }
 
         #region Constructor
@@ -141,9 +136,17 @@ namespace HighThroughputDataRetrieval
             CountListWithProteins = new ObservableCollection<HitCountTable>();
             CountList = new List<int>();
 
+<<<<<<< HEAD
             LoadDataGrid();
             _progressDialog = new ProgressDialog();
             _progressDialog.DoWork += _progressDialog_DoWork;
+=======
+<<<<<<< HEAD
+            this.RetrievalArticleInfo();
+=======
+            this.RetrieveArticleinformation();
+>>>>>>> a63efa0ce16776e27a673206cdc6be4c6f7a7d77
+>>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
         }
 
         #endregion // Constructor
@@ -247,6 +250,11 @@ namespace HighThroughputDataRetrieval
         }
         #endregion
 
+        public ICommand RetrieveArticleInfo
+        {
+            get { return _openFileCommand ?? (_openFileCommand = new RelayCommand(OpenFile)); }
+        }
+
         #endregion // Commands
 
         #region Methods
@@ -346,8 +354,47 @@ namespace HighThroughputDataRetrieval
             #endregion // KeywordFromModel
         #endregion
 
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
+            #region buttion_export
+            public ICommand ExpordCommand
+            {
+                get { return _ExportCommand ?? (_ExportCommand = new RelayCommand(Expord)); }
+            }
+            public void Expord()
+            {
+                int count = 0;
+                SaveFileDialog sfd = new SaveFileDialog()
+                {
+                    DefaultExt = "txt",
+                    Filter = "TXT Files (*.txt)|*.txt|All files (*.*)|*.*",
+                    FilterIndex = 1
+                };
+                if (sfd.ShowDialog() == true)
+                {
+                    using (Stream stream = sfd.OpenFile())
+                    {
+                        using (StreamWriter writer = new StreamWriter(stream))
+                        {
+                            while (count < this.ResultTable.Count)
+                            {
+                                writer.WriteLine(this.ResultTable[count].ArticleTitle);
+                                writer.WriteLine(this.ResultTable[count].Author);
+                                writer.WriteLine(this.ResultTable[count].Journal);
+                                writer.WriteLine(this.ResultTable[count].Year);
+                                writer.WriteLine(this.ResultTable[count].Url);
+                                count++;
+                            }
+                            writer.Close();
+                        }
+                        stream.Close();
+                    }
+                }
+
+            }
+            #endregion
+
+
+            #region INotifyPropertyChanged Members
+            public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -357,6 +404,7 @@ namespace HighThroughputDataRetrieval
         }
         #endregion // INotifyPropertyChanged Members
     }
+<<<<<<< HEAD
     public class DataGrid
     {
         public string ArticleTitle { get; set; }
@@ -365,4 +413,7 @@ namespace HighThroughputDataRetrieval
         public int Year { get; set; }
         public string Journal { get; set; }
     }
+=======
+   
+>>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
 }

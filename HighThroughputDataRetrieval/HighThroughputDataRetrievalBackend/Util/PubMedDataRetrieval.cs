@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Net;
 using System.Xml;
-using HighThroughputDataRetrievalBackend.Properties;
 
 namespace HighThroughputDataRetrievalBackend.Util
 {
@@ -22,8 +21,7 @@ namespace HighThroughputDataRetrievalBackend.Util
             KeyOrder = 1;
             ProteinFromUser = "";
             OrganismFromUser = "";
-            KeywordFromUser = "";
-            
+            KeywordFromUser = "";          
 
 
             /* initialize datatables and columns */            
@@ -183,10 +181,6 @@ namespace HighThroughputDataRetrievalBackend.Util
 
         }
 
-        public override List<string> GetIdList()
-        {
-            return IdList;
-        }
 
         // Name: getCout()
         // Parameters: one protein, one organism, and keywords list of string type 
@@ -330,7 +324,7 @@ namespace HighThroughputDataRetrievalBackend.Util
                 rowQuery["KeywordListID"] = rowQuery["QueryID"]; //.ToString(); // keywordListID = QueryID because one query has one keywordList
                 rowQuery["ResultCount"] = count; // new count from the xml string
 
-                // Add a row of T_Query into the T_Query datatable and the dictionary
+                // Add the row of T_Query into the T_Query datatable and the dictionary
                 QueryDataTable.Rows.Add(rowQuery);
                 Dictionary.Add(name, rowQuery);
 
@@ -606,12 +600,13 @@ namespace HighThroughputDataRetrievalBackend.Util
             QueryArticlesDataSet.Tables.Add(JournalDataTable);
             QueryArticlesDataSet.Tables.Add(JournalReleaseDataTable);
 
-            //return QueryArticlesDataSet;
+            // check any datatable in the dataset is empty
             if (QueryArticlesDataSet.Tables.Cast<DataTable>().Any(datatable => datatable.Rows.Count == 0))
             {
                 return null;
             }
 
+            //return QueryArticlesDataSet;
             return QueryArticlesDataSet;
         }
     }
