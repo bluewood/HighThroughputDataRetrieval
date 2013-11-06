@@ -55,7 +55,7 @@ namespace HighThroughputDataRetievalTests
             // get count and PMIDs
             //int count = test.GetCountAndIds("", "", "");
             int count = test.GetCount(proteinFromUser, organixmFromUser, keywordFromUser);
-            List<string> idList = test.GetIdList();
+            List<string> idList = test.IdList;
 
             Console.WriteLine(@"count : " + count);
 

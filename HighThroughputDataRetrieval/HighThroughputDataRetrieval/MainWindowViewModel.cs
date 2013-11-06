@@ -47,7 +47,7 @@ namespace HighThroughputDataRetrieval
             }
         }
 
-        public void LoadDataGrid()
+        public void RetrieveArticleinformation()
         {
             this._ResultTable = new ObservableCollection<DataGrid>();
             string[] myArticle = new string[15];
@@ -139,7 +139,7 @@ namespace HighThroughputDataRetrieval
             CountListWithProteins = new ObservableCollection<HitCountTable>();
             CountList = new List<int>();
 
-            this.LoadDataGrid();
+            this.RetrieveArticleinformation();
         }
 
         #endregion // Constructor

@@ -18,8 +18,30 @@ namespace HighThroughputDataRetievalTests
 
     public class UnitTest
     {
+        // retrieval data unit testing
+        #region Data members 
 
-        // Database Unit test
+        string _proteinTest;
+        string _organismTest;
+        string _keywordTest;
+
+        NcbiDataRetrieval _unitTestDataRetrieval;
+
+        #endregion // Data members
+
+        [SetUp]
+        public void Init()
+        {
+            _proteinTest = "ips";
+            _organismTest = "Human";
+            _keywordTest = "cell";
+
+            _unitTestDataRetrieval = new PubMedDataRetrieval();
+        }
+
+
+        // Database Unit testing
+        #region Database unit test
         [Test]
         public void Test_1_Create_database()
         {
@@ -178,31 +200,15 @@ namespace HighThroughputDataRetievalTests
         }
 
 
-        // retrieval data unit testing
-        #region Data members of UnitTest class
-        string _proteinTest;
-        string _organismTest;
-        string _keywordTest;
+        #endregion // database unit test
 
-        NcbiDataRetrieval _unitTestDataRetrieval;
-        #endregion
-
-
-        [SetUp]
-        public void Init()
-        {
-            _proteinTest = "ips";
-            _organismTest = "Human";
-            _keywordTest = "cell";
-
-            _unitTestDataRetrieval = new PubMedDataRetrieval();
-        }
-
+        //Data Retrieval Unit testing 
+        #region Data Retrieval Unit testing 
         [Test]
         public void TestGetCountAndIds()
         {
             // before run, double check there is new articles in pubmed
-            Assert.AreEqual(1553, _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest));
+            Assert.AreEqual(1589, _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest));
             Assert.AreEqual(0, _unitTestDataRetrieval.GetCount("", "", ""));
         }
 
@@ -285,7 +291,7 @@ namespace HighThroughputDataRetievalTests
             int retrievedArticleCount = 0;
             int numberOfRetrieving = 20;
 
-            List<string> idList = _unitTestDataRetrieval.GetIdList();
+            List<string> idList = _unitTestDataRetrieval.IdList;
 
             for (int i = 0; i < lowBound; i++)
             {
@@ -409,6 +415,8 @@ namespace HighThroughputDataRetievalTests
             // check Journal Release data table
             Assert.AreEqual("1546-1696", queryArticleDataSet.Tables["T_JournalRelease"].Rows[0]["JournalRelease"]);
         }
+
+        #endregion
 
     }
 }
