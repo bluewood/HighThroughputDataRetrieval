@@ -34,6 +34,7 @@ namespace HighThroughputDataRetrieval
         RelayCommand _openFileCommand;
         RelayCommand _searchPubMedCommand;
         RelayCommand _openHelpDocumentCommand;
+        RelayCommand _retrieveArticleInfoCommand;
         RelayCommand _ExportCommand;
 
         #endregion // Fields
@@ -198,6 +199,11 @@ namespace HighThroughputDataRetrieval
             }
         }
         #endregion
+
+        public ICommand RetrieveArticleInfo
+        {
+            get { return _openFileCommand ?? (_openFileCommand = new RelayCommand(OpenFile)); }
+        }
 
         #endregion // Commands
 
