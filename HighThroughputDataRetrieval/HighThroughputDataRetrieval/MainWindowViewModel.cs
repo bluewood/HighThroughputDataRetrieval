@@ -12,6 +12,7 @@ using HighThroughputDataRetrievalBackend.Model;
 using HighThroughputDataRetrievalBackend.Util;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using Microsoft.Win32;
 
 namespace HighThroughputDataRetrieval
 {
@@ -28,16 +29,16 @@ namespace HighThroughputDataRetrieval
         public ObservableCollection<HitCountTable> CountListWithProteins { get; set; }
         //
         //
-        public ObservableCollection<DataGrid> _ResultTable;
+        public ObservableCollection<ArticleTableInfo> _ResultTable;
 
         RelayCommand _openFileCommand;
         RelayCommand _searchPubMedCommand;
         RelayCommand _openHelpDocumentCommand;
-        RelayCommand _click;
+        RelayCommand _ExportCommand;
 
         #endregion // Fields
 
-        public ObservableCollection<DataGrid> ResultTable
+        public ObservableCollection<ArticleTableInfo> ResultTable
         {
             get { return _ResultTable; }
             set
@@ -49,7 +50,7 @@ namespace HighThroughputDataRetrieval
 
         public void RetrieveArticleinformation()
         {
-            this._ResultTable = new ObservableCollection<DataGrid>();
+            this._ResultTable = new ObservableCollection<ArticleTableInfo>();
             string[] myArticle = new string[15];
             string[] myAuthor = new string[15];
             int[] myYear = new int[15];
@@ -109,16 +110,12 @@ namespace HighThroughputDataRetrieval
             }
             for (int i = 0; i < article.Rows.Count; i++)
             {
-                _ResultTable.Add(new DataGrid() { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
+                _ResultTable.Add(new ArticleTableInfo() { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
             }
 
         }
 
-        public ICommand click
-        {
-            get { return _click ?? (_click = new RelayCommand(ClickOnDataGrid)); }
-
-        }
+     
 
         public void ClickOnDataGrid()
         {
@@ -273,6 +270,44 @@ namespace HighThroughputDataRetrieval
             #endregion // KeywordFromModel
         #endregion
 
+            public ICommand ExpordCommand
+            {
+                get { return _ExportCommand ?? (_ExportCommand = new RelayCommand(Expord)); }
+            }
+
+
+
+            public void Expord()
+            {
+                int count = 0;
+                SaveFileDialog sfd = new SaveFileDialog()
+                {
+                    DefaultExt = "txt",
+                    Filter = "TXT Files (*.txt)|*.txt|All files (*.*)|*.*",
+                    FilterIndex = 1
+                };
+                if (sfd.ShowDialog() == true)
+                {
+                    using (Stream stream = sfd.OpenFile())
+                    {
+                        using (StreamWriter writer = new StreamWriter(stream))
+                        {
+                            while (count < this.ResultTable.Count)
+                            {
+                                writer.WriteLine(this.ResultTable[count].ArticleTitle);
+                                writer.WriteLine(this.ResultTable[count].Author);
+                                writer.WriteLine(this.ResultTable[count].Journal);
+                                writer.WriteLine(this.ResultTable[count].Year);
+                                writer.WriteLine(this.ResultTable[count].Url);
+                                count++;
+                            }
+                            writer.Close();
+                        }
+                        stream.Close();
+                    }
+                }
+
+            }
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -284,13 +319,5 @@ namespace HighThroughputDataRetrieval
         }
         #endregion // INotifyPropertyChanged Members
     }
-    public class DataGrid
-    {
-        public string ArticleTitle { get; set; }
-        public string Url { get; set; }
-        public string Author { get; set; }
-        public int Year { get; set; }
-        public string Journal { get; set; }
-
-    }
+   
 }

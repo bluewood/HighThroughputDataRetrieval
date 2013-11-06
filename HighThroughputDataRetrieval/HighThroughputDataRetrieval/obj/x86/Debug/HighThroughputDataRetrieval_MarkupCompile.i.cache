@@ -4,16 +4,21 @@
 winexe
 C#
 .cs
-C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\
+\\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\
 HighThroughputDataRetrieval
 none
 false
 DEBUG;TRACE
-C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\App.xaml
+\\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\App.xaml
 21190899401
 
+<<<<<<< HEAD
 9235477560
 191468737266
+=======
+9-405831360
+192144542200
+>>>>>>> cd29e245a4ad6c8f8372289a3a92284f2c7d0b16
 HelpDocumentView.xaml;MainWindow.xaml;
 
 False
