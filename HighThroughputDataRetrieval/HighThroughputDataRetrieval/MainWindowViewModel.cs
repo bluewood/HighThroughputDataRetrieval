@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
@@ -18,7 +19,7 @@ namespace HighThroughputDataRetrieval
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        #region Fields
+        # region Fields
 
         public UserInput UserInputFromModel;
         //
@@ -28,32 +29,74 @@ namespace HighThroughputDataRetrieval
         public IEnumerable<string> ProteinList { get; set; }
         public ObservableCollection<HitCountTable> CountListWithProteins { get; set; }
         //
-        //
+
+        public int SelectIndex { get; set; }
+
+        #region Fields of paging 
+        private int start = 0;
+        private int itemCount =5 ;
+        private int totalItems = 0;
+        private ICommand firstCommand;
+        private ICommand previousCommand;
+        private ICommand nextCommand;
+        private ICommand lastCommand;
+
+
+        public int Start { get { return start + 1; } }
+
+        /// <summary>
+        /// Gets the index of the last article
+        /// </summary>
+        public int End { get { return start + itemCount < totalItems ? start + itemCount : totalItems; } }
+
+        /// <summary>
+        /// The number of total article.
+        /// </summary>
+        public int TotalItems { get { return totalItems; } }
+
+// ReSharper disable once InconsistentNaming
         public ObservableCollection<ArticleTableInfo> _ResultTable;
 
+        public ObservableCollection<ArticleTableInfo> _FillArticleTableInfo;
+
+        #endregion
         RelayCommand _openFileCommand;
         RelayCommand _searchPubMedCommand;
         RelayCommand _openHelpDocumentCommand;
         RelayCommand _retrieveArticleInfoCommand;
-        RelayCommand _ExportCommand;
-
+        RelayCommand _exportCommand;
+        private RelayCommand _ArticleInfotableClick;
         #endregion // Fields
-
-        public ObservableCollection<ArticleTableInfo> ResultTable
-        {
-            get { return _ResultTable; }
-            set
+         
+        public ICommand ArticleInfoTableClick {
+            get
             {
-                _ResultTable = value;
-                OnPropertyChanged("ProteinFromModel");
+                return _ArticleInfotableClick ?? (_ArticleInfotableClick = new RelayCommand(Article_Info_Table_Click));
             }
         }
 
-<<<<<<< HEAD
+        public void Article_Info_Table_Click()
+        {
+            if (MessageBox.Show("Go to PubMed ?", "Message", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                //Hyperlink link = new Hyperlink(FillArticleTableInfo[SelectIndex].Url.ToString());
+               // Uri uri = new Uri(FillArticleTableInfo[SelectIndex].Url.ToString());
+
+                Process.Start(FillArticleTableInfo[SelectIndex].Url.ToString());
+            }
+        }
+       
+
+        public ObservableCollection<ArticleTableInfo> FillArticleTableInfo
+        {
+            get { return _FillArticleTableInfo; }
+            set
+            {
+                _FillArticleTableInfo = value;
+                OnPropertyChanged("FillArticleTableInfo");
+            }
+        }
         public void RetrievalArticleInfo()
-=======
-        public void RetrieveArticleinformation()
->>>>>>> a63efa0ce16776e27a673206cdc6be4c6f7a7d77
         {
             this._ResultTable = new ObservableCollection<ArticleTableInfo>();
             string[] myArticle = new string[15];
@@ -68,12 +111,20 @@ namespace HighThroughputDataRetrieval
             article.Columns.Add("URL", typeof(string));
             article.Rows.Add("Water-soluble LYNX1 residues important for interaction with muscle-type and/or neuronal nicotinic receptors", 1, "http://www.ncbi.nlm.nih.gov/pubmed/");
             article.Rows.Add("[Bacterial expression of water-soluble domain of Lynx1, endogenic neuromodulator of humannicotinic acetylcholine receptors]", 2, "http://www.ncbi.nlm.nih.gov/pubmed/");
-
+            article.Rows.Add("abcd ", 3, "http://www.ncbi.nlm.nih.gov/pubmed/");
+            article.Rows.Add("abcd1", 4, "http://www.ncbi.nlm.nih.gov/pubmed/");
+            article.Rows.Add("lasdasd ", 5, "http://www.ncbi.nlm.nih.gov/pubmed/");
+            article.Rows.Add("Last", 6, "http://www.ncbi.nlm.nih.gov/pubmed/");
+           
             DataTable author = new DataTable("Author");
             author.Columns.Add("Author", typeof(string));
             author.Columns.Add("PMID", typeof(int));
             author.Rows.Add("Lyukmanova EN,…Tsetlin VI", 1);
             author.Rows.Add("Shulepko MA, … Kirpichnikov MP", 2);
+            author.Rows.Add("Lyukmanova EN,…Tsetlin VI", 3);
+            author.Rows.Add("Shulepko MA, … Kirpichnikov MP", 4);
+            author.Rows.Add("Lyukmanova EN,…Tsetlin VI", 5);
+            author.Rows.Add("Shulepko MA, … Kirpichnikov MP", 6);
 
             DataTable journal = new DataTable("Jornal");
             journal.Columns.Add("Jornal", typeof(string));
@@ -81,6 +132,10 @@ namespace HighThroughputDataRetrieval
             journal.Columns.Add("PMID", typeof(int));
             journal.Rows.Add("J Biol Chem", 2013, 1);
             journal.Rows.Add("Bioorg Khim", 2011, 2);
+            journal.Rows.Add("J Biol Chem", 2013, 3);
+            journal.Rows.Add("Bioorg Khim", 2011, 4);
+            journal.Rows.Add("J Biol Chem", 2013, 5);
+            journal.Rows.Add("Bioorg Khim", 2011, 6);
 
             //get myArticle
             for (int i = 0; i < article.Rows.Count; i++)
@@ -117,7 +172,7 @@ namespace HighThroughputDataRetrieval
             {
                 _ResultTable.Add(new ArticleTableInfo() { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
             }
-
+            totalItems = _ResultTable.Count;
         }
 
         #region Constructor
@@ -128,12 +183,8 @@ namespace HighThroughputDataRetrieval
             PubMedSearch = new PubMedDataRetrieval();
             CountListWithProteins = new ObservableCollection<HitCountTable>();
             CountList = new List<int>();
-
-<<<<<<< HEAD
             this.RetrievalArticleInfo();
-=======
-            this.RetrieveArticleinformation();
->>>>>>> a63efa0ce16776e27a673206cdc6be4c6f7a7d77
+            Refresh();
         }
 
         #endregion // Constructor
@@ -275,7 +326,7 @@ namespace HighThroughputDataRetrieval
             #region buttion_export
             public ICommand ExpordCommand
             {
-                get { return _ExportCommand ?? (_ExportCommand = new RelayCommand(Expord)); }
+                get { return _exportCommand ?? (_exportCommand = new RelayCommand(Expord)); }
             }
             public void Expord()
             {
@@ -292,13 +343,13 @@ namespace HighThroughputDataRetrieval
                     {
                         using (StreamWriter writer = new StreamWriter(stream))
                         {
-                            while (count < this.ResultTable.Count)
+                            while (count < this._ResultTable.Count)
                             {
-                                writer.WriteLine(this.ResultTable[count].ArticleTitle);
-                                writer.WriteLine(this.ResultTable[count].Author);
-                                writer.WriteLine(this.ResultTable[count].Journal);
-                                writer.WriteLine(this.ResultTable[count].Year);
-                                writer.WriteLine(this.ResultTable[count].Url);
+                                writer.WriteLine(this._ResultTable[count].ArticleTitle);
+                                writer.WriteLine(this._ResultTable[count].Author);
+                                writer.WriteLine(this._ResultTable[count].Journal);
+                                writer.WriteLine(this._ResultTable[count].Year);
+                                writer.WriteLine(this._ResultTable[count].Url);
                                 count++;
                             }
                             writer.Close();
@@ -310,6 +361,142 @@ namespace HighThroughputDataRetrieval
             }
             #endregion
 
+
+            #region paging
+            public ICommand FirstCommand
+            {
+                get
+                {
+                    if (firstCommand == null)
+                    {
+                        firstCommand = new RelayCommand_
+                        (
+                            param =>
+                            {
+                                start = 0;
+                                Refresh();
+                            },
+                            param =>
+                            {
+                                return start - itemCount >= 0 ? true : false;
+                            }
+                        );
+                    }
+
+                    return firstCommand;
+                }
+            }
+
+            /// <summary>
+            /// Gets the command for moving to the previous page
+            /// </summary>
+            public ICommand PreviousCommand
+            {
+                get
+                {
+                    if (previousCommand == null)
+                    {
+                        previousCommand = new RelayCommand_
+                        (
+                            param =>
+                            {
+                                start -= itemCount;
+                                Refresh();
+                            },
+                            param =>
+                            {
+                                return start - itemCount >= 0 ? true : false;
+                            }
+                        );
+                    }
+
+                    return previousCommand;
+                }
+            }
+
+            /// <summary>
+            /// Gets the command for moving to the next page 
+            /// </summary>
+            public ICommand NextCommand
+            {
+                get
+                {
+                    if (nextCommand == null)
+                    {
+                        nextCommand = new RelayCommand_
+                        (
+                            param =>
+                            {
+                                start += itemCount;
+                                Refresh();
+                            },
+                            param =>
+                            {
+                                return start + itemCount < totalItems ? true : false;
+                            }
+                        );
+                    }
+
+                    return nextCommand;
+                }
+            }
+
+            /// <summary>
+            /// Gets the command for moving to the last page
+            /// </summary>
+            public ICommand LastCommand
+            {
+                get
+                {
+                    if (lastCommand == null)
+                    {
+                        lastCommand = new RelayCommand_
+                        (
+                            param =>
+                            {
+                                start = (totalItems / itemCount - 1) * itemCount;
+                                start += totalItems % itemCount == 0 ? 0 : itemCount;
+                                Refresh();
+                            },
+                            param =>
+                            {
+                                return start + itemCount < totalItems ? true : false;
+                            }
+                        );
+                    }
+
+                    return lastCommand;
+                }
+            }
+
+            /// <summary>
+            /// Refreshes the list article info
+            /// </summary>
+            private void Refresh()
+            {
+                FillPage(start);
+                OnPropertyChanged("Start");
+                OnPropertyChanged("End");
+                OnPropertyChanged("TotalItems");
+                OnPropertyChanged("FillArticleTableInfo");
+            }
+
+            public void FillPage(int startNum)
+            {
+                this._FillArticleTableInfo = new ObservableCollection<ArticleTableInfo>();
+                for (int i = startNum; i < startNum + itemCount && i < totalItems; i++)
+
+                {
+                  _FillArticleTableInfo.Add(_ResultTable[i]);
+                }
+            }
+
+            /// <summary>
+            /// Notifies subscribers of changed properties.
+            /// </summary>
+            /// <param name="propertyName">Name of the changed property.</param>
+           
+            #endregion
 
             #region INotifyPropertyChanged Members
             public event PropertyChangedEventHandler PropertyChanged;
