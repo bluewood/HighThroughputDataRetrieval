@@ -83,4 +83,8 @@ C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThrou
 >>>>>>> cd29e245a4ad6c8f8372289a3a92284f2c7d0b16
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\HighThroughputDataRetrieval.exe.config
 >>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
+<<<<<<< HEAD
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\Ookii.Dialogs.Wpf.xml
+=======
+C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\Ookii.Dialogs.Wpf.xml
+>>>>>>> a3be286fe852bb8bb7a1312965571f7fb33f2dbd

@@ -4,16 +4,46 @@
 winexe
 C#
 .cs
+<<<<<<< HEAD
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\
+=======
+C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\
+>>>>>>> a3be286fe852bb8bb7a1312965571f7fb33f2dbd
 HighThroughputDataRetrieval
 none
 false
 DEBUG;TRACE
+<<<<<<< HEAD
+=======
+C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\App.xaml
+21190899401
+
+8-1605058802
+<<<<<<< HEAD
+17-1559307152
+=======
+17-56037265
+=======
+>>>>>>> a3be286fe852bb8bb7a1312965571f7fb33f2dbd
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\App.xaml
 21190899401
 
 8-1605058802
+<<<<<<< HEAD
 17-341312166
+=======
+<<<<<<< HEAD
+19-1517348500
+=======
+<<<<<<< HEAD
+191468737266
+=======
+192144542200
+>>>>>>> cd29e245a4ad6c8f8372289a3a92284f2c7d0b16
+>>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
+>>>>>>> 4ba78c50815cde516d9b8b460f3eaec3b02cbc6b
+>>>>>>> 2c9ff56905d392a7214dcfe8fe1c2912986ae4ae
+>>>>>>> a3be286fe852bb8bb7a1312965571f7fb33f2dbd
 HelpDocumentView.xaml;MainWindow.xaml;
 
 False

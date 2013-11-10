@@ -8,10 +8,13 @@
 	<s:Boolean x:Key="/Default/Housekeeping/UnitTestingMru/UnitTestSessionPersistentData/=C59E2BCC95EE4EB88DAAD7A405EDC740/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/Housekeeping/UnitTestingMru/UnitTestSessionPersistentData/=C59E2BCC95EE4EB88DAAD7A405EDC740/Name/@EntryValue">TestGetCountAndIds</s:String>
 	<s:String x:Key="/Default/Housekeeping/UnitTestingMru/UnitTestSessionPersistentData/=C59E2BCC95EE4EB88DAAD7A405EDC740/XmlSerializedElements/@EntryValue">&lt;Session&gt;&lt;Elements&gt;&lt;UnitTestElement Provider="nUnit" Id="HighThroughputDataRetievalTests.FunctionalTest" type="NUnitTestFixtureElement" Project="2CD11E25-329A-4E17-B8E6-654D47F9A6FE" /&gt;&lt;UnitTestElement Provider="nUnit" Id="HighThroughputDataRetievalTests.UnitTest" type="NUnitTestFixtureElement" Project="2CD11E25-329A-4E17-B8E6-654D47F9A6FE" /&gt;&lt;UnitTestElement Provider="nUnit" Id="HighThroughputDataRetievalTests.UnitTest.TestGetCountAndIds" ParentId="HighThroughputDataRetievalTests.UnitTest" type="NUnitTestElement" TypeName="HighThroughputDataRetievalTests.UnitTest" MethodName="TestGetCountAndIds" Project="2CD11E25-329A-4E17-B8E6-654D47F9A6FE" /&gt;&lt;UnitTestElement Provider="nUnit" Id="HighThroughputDataRetievalTests.FunctionalTest.TestNcbiDataRetrieval" ParentId="HighThroughputDataRetievalTests.FunctionalTest" type="NUnitTestElement" TypeName="HighThroughputDataRetievalTests.FunctionalTest" MethodName="TestNcbiDataRetrieval" Project="2CD11E25-329A-4E17-B8E6-654D47F9A6FE" /&gt;&lt;/Elements&gt;&lt;/Session&gt;</s:String>
+<<<<<<< HEAD
 	
 	
 	
 	
 	
 	
+=======
+>>>>>>> a3be286fe852bb8bb7a1312965571f7fb33f2dbd
 </wpf:ResourceDictionary>

@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using HighThroughputDataRetrievalBackend.IO;
 using NUnit.Framework;
 using HighThroughputDataRetrievalBackend.Util;
-using NUnit.Framework;
 using System.Net;
 using System.Xml;
 
@@ -254,7 +249,11 @@ namespace HighThroughputDataRetievalTests
 
         }
 
+<<<<<<< HEAD
        // [Test]
+=======
+        //[Test]
+>>>>>>> a3be286fe852bb8bb7a1312965571f7fb33f2dbd
         //public void TestGetArticleInfomation()
         //{
         //    //_proteinTest = "salmonella";
@@ -280,97 +279,97 @@ namespace HighThroughputDataRetievalTests
 
         //}
 
-        [Test]
-        public void TestFillArticleDataTables()
-        {
-            const string pubmedSearchPrefix = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=";
+        //[Test]
+        //public void TestFillArticleDataTables()
+        //{
+        //    const string pubmedSearchPrefix = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=";
            
-            int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
+        //    int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
 
-            int lowBound = count/20;
-            int retrievedArticleCount = 0;
-            int numberOfRetrieving = 20;
+        //    int lowBound = count/20;
+        //    int retrievedArticleCount = 0;
+        //    int numberOfRetrieving = 20;
 
-            List<string> idList = _unitTestDataRetrieval.IdList;
+        //    List<string> idList = _unitTestDataRetrieval.IdList;
 
-            for (int i = 0; i < lowBound; i++)
-            {
-                if (retrievedArticleCount == count)
-                    break;
+        //    for (int i = 0; i < lowBound; i++)
+        //    {
+        //        if (retrievedArticleCount == count)
+        //            break;
 
-                // the Url is too long when retrieving articles over 100 at a time, so occur exception
-                // so retrieving 20 articles at a time when user click more
+        //        // the Url is too long when retrieving articles over 100 at a time, so occur exception
+        //        // so retrieving 20 articles at a time when user click more
                
 
-                string ids = string.Join(",",idList.GetRange(retrievedArticleCount, numberOfRetrieving));
-                retrievedArticleCount += numberOfRetrieving;
+        //        string ids = string.Join(",",idList.GetRange(retrievedArticleCount, numberOfRetrieving));
+        //        retrievedArticleCount += numberOfRetrieving;
 
-                // make url
-                string assembleUrl = string.Format("{0}{1}&{2}", pubmedSearchPrefix, ids, "retmode=xml");
-
-
-                // Retrieve article information from PubMed through the URL
-                var client = new WebClient();
-                string urlResult = "";
-                try
-                {
-                    urlResult = client.DownloadString(assembleUrl);
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine(exc.Message);
-                }
+        //        // make url
+        //        string assembleUrl = string.Format("{0}{1}&{2}", pubmedSearchPrefix, ids, "retmode=xml");
 
 
-                // load result in xmlformat and parse per article
-                var doc = new XmlDocument();
-                doc.LoadXml(urlResult);
-                XmlNodeList articleListFromXml = doc.GetElementsByTagName("PubmedArticle");
+        //        // Retrieve article information from PubMed through the URL
+        //        var client = new WebClient();
+        //        string urlResult = "";
+        //        try
+        //        {
+        //            urlResult = client.DownloadString(assembleUrl);
+        //        }
+        //        catch (Exception exc)
+        //        {
+        //            Console.WriteLine(exc.Message);
+        //        }
 
-                _unitTestDataRetrieval.FillArticleDataTables(articleListFromXml, pubmedSearchPrefix);
+
+        //        // load result in xmlformat and parse per article
+        //        var doc = new XmlDocument();
+        //        doc.LoadXml(urlResult);
+        //        XmlNodeList articleListFromXml = doc.GetElementsByTagName("PubmedArticle");
+
+        //        _unitTestDataRetrieval.FillArticleDataTables(articleListFromXml, pubmedSearchPrefix);
           
-            } // end of for
+        //    } // end of for
          
 
-            // the Url is too long when retrieving articles over 100 at a time, so occur exception
-            // so retrieving 20 articles at a time when user click more
+        //    // the Url is too long when retrieving articles over 100 at a time, so occur exception
+        //    // so retrieving 20 articles at a time when user click more
             
-            if ((count - retrievedArticleCount) < numberOfRetrieving)
-                numberOfRetrieving = count - retrievedArticleCount;
+        //    if ((count - retrievedArticleCount) < numberOfRetrieving)
+        //        numberOfRetrieving = count - retrievedArticleCount;
 
-            string idsLast = string.Join(",", idList.GetRange(retrievedArticleCount, numberOfRetrieving));
-            retrievedArticleCount += numberOfRetrieving;
+        //    string idsLast = string.Join(",", idList.GetRange(retrievedArticleCount, numberOfRetrieving));
+        //    retrievedArticleCount += numberOfRetrieving;
 
-            // make url
-            string assembleUrlLast = string.Format("{0}{1}&{2}", pubmedSearchPrefix, idsLast, "retmode=xml");
-
-
-            // Retrieve article information from PubMed through the URL
-            var clientLast = new WebClient();
-            string urlResultLast = "";
-            try
-            {
-                urlResultLast = clientLast.DownloadString(assembleUrlLast);
-            }
-            catch (Exception exc)
-            {
-                Console.WriteLine(exc.Message);
-            }
+        //    // make url
+        //    string assembleUrlLast = string.Format("{0}{1}&{2}", pubmedSearchPrefix, idsLast, "retmode=xml");
 
 
-            // load result in xmlformat and parse per article
-            var docLast = new XmlDocument();
-            docLast.LoadXml(urlResultLast);
-            XmlNodeList articleListFromXmlLast = docLast.GetElementsByTagName("PubmedArticle");
-            _unitTestDataRetrieval.FillArticleDataTables(articleListFromXmlLast, pubmedSearchPrefix);
+        //    // Retrieve article information from PubMed through the URL
+        //    var clientLast = new WebClient();
+        //    string urlResultLast = "";
+        //    try
+        //    {
+        //        urlResultLast = clientLast.DownloadString(assembleUrlLast);
+        //    }
+        //    catch (Exception exc)
+        //    {
+        //        Console.WriteLine(exc.Message);
+        //    }
 
-            DataSet articleDataSet = _unitTestDataRetrieval.GetDataSet();
 
-            string articleTitle = "Functional analysis of serially expanded human iPS cell-derived RPE cultures.";
+        //    // load result in xmlformat and parse per article
+        //    var docLast = new XmlDocument();
+        //    docLast.LoadXml(urlResultLast);
+        //    XmlNodeList articleListFromXmlLast = docLast.GetElementsByTagName("PubmedArticle");
+        //    _unitTestDataRetrieval.FillArticleDataTables(articleListFromXmlLast, pubmedSearchPrefix);
 
-            // check T_Article
-            //Assert.AreEqual(articleTitle, articleDataT);
-        }
+        //    DataSet articleDataSet = _unitTestDataRetrieval.GetDataSet();
+
+        //    string articleTitle = "Functional analysis of serially expanded human iPS cell-derived RPE cultures.";
+
+        //    // check T_Article
+        //    //Assert.AreEqual(articleTitle, articleDataT);
+        //}
 
         //[Test]
         //public void TestGetDataSet()

@@ -131,8 +131,7 @@ namespace HighThroughputDataRetrievalBackend.Util
             JournalReleaseDataTable.Columns.Add("Year"); // should be int or string???
             JournalReleaseDataTable.Columns.Add("Volume");
             JournalReleaseDataTable.Columns.Add("Issue");
-            JournalReleaseDataTable.PrimaryKey = new[] { JournalReleaseDataTable.Columns["JournalRelease"], 
-                                                            JournalReleaseDataTable.Columns["JournalID"] };
+            JournalReleaseDataTable.PrimaryKey = new[] { JournalReleaseDataTable.Columns["JournalRelease"] };
            
             JournalDataTable = new DataTable("T_Journals");
             JournalDataTable.Columns.Add("JournalID", typeof(int));
@@ -199,7 +198,6 @@ namespace HighThroughputDataRetrievalBackend.Util
 
             // combine proteins and keyword
             string terms = string.Format("{0},{1},{2}", ProteinFromUser, OrganismFromUser, KeywordFromUser);
-
             string assembleUrl = string.Format("{0}&term={1}",pubmedSearchPrefix,terms);
 
             #endregion
@@ -438,7 +436,7 @@ namespace HighThroughputDataRetrievalBackend.Util
                     // check article already exists. if yes, move to the next article
                     if (Dictionary.ContainsKey(pmid))
                     {
-                        Console.WriteLine(pmid);
+                        //Console.WriteLine(pmid);
                         continue;
                     }
                         
