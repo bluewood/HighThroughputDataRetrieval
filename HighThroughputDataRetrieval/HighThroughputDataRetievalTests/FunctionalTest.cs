@@ -59,14 +59,14 @@ namespace HighThroughputDataRetievalTests
 
             Console.WriteLine(@"count : " + count);
 
-            int lowBound = count/20;
+            //int lowBound = count/20;
 
-            for (int i = 0; i < lowBound; i++)
-            {
-                test.GetArticleInfomation();
-            }
+            //for (int i = 0; i < lowBound; i++)
+            //{
+            //    test.GetArticleInfomation();
+            //}
             
-            DataTable articleDataTable = test.GetArticleInfomation();
+            DataTable articleDataTable = test.GetArticleInfomation(count, idList);
             //for (int i = 0; i < articleDataTable.Rows.Count; i++)
             //{
             //    if (idList[i] != articleDataTable.Rows[i]["PMID"].ToString())
@@ -98,7 +98,8 @@ namespace HighThroughputDataRetievalTests
             //data_base.CopydatasetToDatabase("C:/Users/Owner/Desktop/mydb.db3", ds_Article);
 
 
-
+            DataSet queryArticleDataSet = test.GetDataSet();
+            queryArticleDataSet.WriteXml("check.xml");
 
             // get total running time
             TimeSpan runTime = DateTime.Now - startDateTime;

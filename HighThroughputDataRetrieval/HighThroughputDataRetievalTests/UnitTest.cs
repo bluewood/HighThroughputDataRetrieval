@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using HighThroughputDataRetrievalBackend.IO;
 using NUnit.Framework;
 using HighThroughputDataRetrievalBackend.Util;
-using NUnit.Framework;
 using System.Net;
 using System.Xml;
 
@@ -254,167 +249,167 @@ namespace HighThroughputDataRetievalTests
 
         }
 
-        [Test]
-        public void TestGetArticleInfomation()
-        {
-            //_proteinTest = "salmonella";
-            //_organismTest = "";
-            //_keywordTest = "Hiv-1";
+        //[Test]
+        //public void TestGetArticleInfomation()
+        //{
+        //    //_proteinTest = "salmonella";
+        //    //_organismTest = "";
+        //    //_keywordTest = "Hiv-1";
 
-            int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
+        //    int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
             
-            int lowerBound = count/20;
-            for (int i = 0; i < lowerBound; i++)
-            {
-                _unitTestDataRetrieval.GetArticleInfomation();
-            }
-            DataTable unitTestDataTable = _unitTestDataRetrieval.GetArticleInfomation();
+        //    int lowerBound = count/20;
+        //    for (int i = 0; i < lowerBound; i++)
+        //    {
+        //        _unitTestDataRetrieval.GetArticleInfomation();
+        //    }
+        //    DataTable unitTestDataTable = _unitTestDataRetrieval.GetArticleInfomation();
 
             
-            Console.WriteLine(@"count: " + count);
-            Console.WriteLine(@"row count:" + unitTestDataTable.Rows.Count);
-            Assert.AreEqual(count,unitTestDataTable.Rows.Count);
-            //Assert.AreEqual(true, unitTestDataTable.Rows.Contains("Enteric Pathogens in HIV/AIDS from a Tertiary Care Hospital."));
-            Assert.AreEqual("Future horizons in hair restoration.", unitTestDataTable.Rows[8]["Title"].ToString());
+        //    Console.WriteLine(@"count: " + count);
+        //    Console.WriteLine(@"row count:" + unitTestDataTable.Rows.Count);
+        //    Assert.AreEqual(count,unitTestDataTable.Rows.Count);
+        //    //Assert.AreEqual(true, unitTestDataTable.Rows.Contains("Enteric Pathogens in HIV/AIDS from a Tertiary Care Hospital."));
+        //    Assert.AreEqual("Future horizons in hair restoration.", unitTestDataTable.Rows[8]["Title"].ToString());
 
 
-        }
+        //}
 
-        [Test]
-        public void TestFillArticleDataTables()
-        {
-            const string pubmedSearchPrefix = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=";
+        //[Test]
+        //public void TestFillArticleDataTables()
+        //{
+        //    const string pubmedSearchPrefix = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=";
            
-            int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
+        //    int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
 
-            int lowBound = count/20;
-            int retrievedArticleCount = 0;
-            int numberOfRetrieving = 20;
+        //    int lowBound = count/20;
+        //    int retrievedArticleCount = 0;
+        //    int numberOfRetrieving = 20;
 
-            List<string> idList = _unitTestDataRetrieval.IdList;
+        //    List<string> idList = _unitTestDataRetrieval.IdList;
 
-            for (int i = 0; i < lowBound; i++)
-            {
-                if (retrievedArticleCount == count)
-                    break;
+        //    for (int i = 0; i < lowBound; i++)
+        //    {
+        //        if (retrievedArticleCount == count)
+        //            break;
 
-                // the Url is too long when retrieving articles over 100 at a time, so occur exception
-                // so retrieving 20 articles at a time when user click more
+        //        // the Url is too long when retrieving articles over 100 at a time, so occur exception
+        //        // so retrieving 20 articles at a time when user click more
                
 
-                string ids = string.Join(",",idList.GetRange(retrievedArticleCount, numberOfRetrieving));
-                retrievedArticleCount += numberOfRetrieving;
+        //        string ids = string.Join(",",idList.GetRange(retrievedArticleCount, numberOfRetrieving));
+        //        retrievedArticleCount += numberOfRetrieving;
 
-                // make url
-                string assembleUrl = string.Format("{0}{1}&{2}", pubmedSearchPrefix, ids, "retmode=xml");
-
-
-                // Retrieve article information from PubMed through the URL
-                var client = new WebClient();
-                string urlResult = "";
-                try
-                {
-                    urlResult = client.DownloadString(assembleUrl);
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine(exc.Message);
-                }
+        //        // make url
+        //        string assembleUrl = string.Format("{0}{1}&{2}", pubmedSearchPrefix, ids, "retmode=xml");
 
 
-                // load result in xmlformat and parse per article
-                var doc = new XmlDocument();
-                doc.LoadXml(urlResult);
-                XmlNodeList articleListFromXml = doc.GetElementsByTagName("PubmedArticle");
+        //        // Retrieve article information from PubMed through the URL
+        //        var client = new WebClient();
+        //        string urlResult = "";
+        //        try
+        //        {
+        //            urlResult = client.DownloadString(assembleUrl);
+        //        }
+        //        catch (Exception exc)
+        //        {
+        //            Console.WriteLine(exc.Message);
+        //        }
 
-                _unitTestDataRetrieval.FillArticleDataTables(articleListFromXml, pubmedSearchPrefix);
+
+        //        // load result in xmlformat and parse per article
+        //        var doc = new XmlDocument();
+        //        doc.LoadXml(urlResult);
+        //        XmlNodeList articleListFromXml = doc.GetElementsByTagName("PubmedArticle");
+
+        //        _unitTestDataRetrieval.FillArticleDataTables(articleListFromXml, pubmedSearchPrefix);
           
-            } // end of for
+        //    } // end of for
          
 
-            // the Url is too long when retrieving articles over 100 at a time, so occur exception
-            // so retrieving 20 articles at a time when user click more
+        //    // the Url is too long when retrieving articles over 100 at a time, so occur exception
+        //    // so retrieving 20 articles at a time when user click more
             
-            if ((count - retrievedArticleCount) < numberOfRetrieving)
-                numberOfRetrieving = count - retrievedArticleCount;
+        //    if ((count - retrievedArticleCount) < numberOfRetrieving)
+        //        numberOfRetrieving = count - retrievedArticleCount;
 
-            string idsLast = string.Join(",", idList.GetRange(retrievedArticleCount, numberOfRetrieving));
-            retrievedArticleCount += numberOfRetrieving;
+        //    string idsLast = string.Join(",", idList.GetRange(retrievedArticleCount, numberOfRetrieving));
+        //    retrievedArticleCount += numberOfRetrieving;
 
-            // make url
-            string assembleUrlLast = string.Format("{0}{1}&{2}", pubmedSearchPrefix, idsLast, "retmode=xml");
-
-
-            // Retrieve article information from PubMed through the URL
-            var clientLast = new WebClient();
-            string urlResultLast = "";
-            try
-            {
-                urlResultLast = clientLast.DownloadString(assembleUrlLast);
-            }
-            catch (Exception exc)
-            {
-                Console.WriteLine(exc.Message);
-            }
+        //    // make url
+        //    string assembleUrlLast = string.Format("{0}{1}&{2}", pubmedSearchPrefix, idsLast, "retmode=xml");
 
 
-            // load result in xmlformat and parse per article
-            var docLast = new XmlDocument();
-            docLast.LoadXml(urlResultLast);
-            XmlNodeList articleListFromXmlLast = docLast.GetElementsByTagName("PubmedArticle");
-            _unitTestDataRetrieval.FillArticleDataTables(articleListFromXmlLast, pubmedSearchPrefix);
+        //    // Retrieve article information from PubMed through the URL
+        //    var clientLast = new WebClient();
+        //    string urlResultLast = "";
+        //    try
+        //    {
+        //        urlResultLast = clientLast.DownloadString(assembleUrlLast);
+        //    }
+        //    catch (Exception exc)
+        //    {
+        //        Console.WriteLine(exc.Message);
+        //    }
 
-            DataSet articleDataSet = _unitTestDataRetrieval.GetDataSet();
 
-            string articleTitle = "Functional analysis of serially expanded human iPS cell-derived RPE cultures.";
+        //    // load result in xmlformat and parse per article
+        //    var docLast = new XmlDocument();
+        //    docLast.LoadXml(urlResultLast);
+        //    XmlNodeList articleListFromXmlLast = docLast.GetElementsByTagName("PubmedArticle");
+        //    _unitTestDataRetrieval.FillArticleDataTables(articleListFromXmlLast, pubmedSearchPrefix);
 
-            // check T_Article
-            //Assert.AreEqual(articleTitle, articleDataT);
-        }
+        //    DataSet articleDataSet = _unitTestDataRetrieval.GetDataSet();
 
-        [Test]
-        public void TestGetDataSet()
-        {
-            _proteinTest = "ips";
-            _organismTest = "Human";
-            _keywordTest = "cell";
+        //    string articleTitle = "Functional analysis of serially expanded human iPS cell-derived RPE cultures.";
 
-            string name = _proteinTest + _organismTest + _keywordTest;
+        //    // check T_Article
+        //    //Assert.AreEqual(articleTitle, articleDataT);
+        //}
 
-            int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
+        //[Test]
+        //public void TestGetDataSet()
+        //{
+        //    _proteinTest = "ips";
+        //    _organismTest = "Human";
+        //    _keywordTest = "cell";
+
+        //    string name = _proteinTest + _organismTest + _keywordTest;
+
+        //    int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
             
 
-            int lowBound = count/20;
-            for (int i = 0; i < lowBound; i++)
-            {
-                _unitTestDataRetrieval.GetArticleInfomation();
-            }
-            _unitTestDataRetrieval.GetArticleInfomation();
+        //    int lowBound = count/20;
+        //    for (int i = 0; i < lowBound; i++)
+        //    {
+        //        _unitTestDataRetrieval.GetArticleInfomation();
+        //    }
+        //    _unitTestDataRetrieval.GetArticleInfomation();
 
-            DataSet queryArticleDataSet = _unitTestDataRetrieval.GetDataSet();
+        //    DataSet queryArticleDataSet = _unitTestDataRetrieval.GetDataSet();
 
-            // check Query data table
-            Assert.AreEqual(name, queryArticleDataSet.Tables["T_Query"].Rows[0]["Name"]);
-            Assert.AreEqual(count, queryArticleDataSet.Tables["T_Query"].Rows[0]["ResultCount"]);
+        //    // check Query data table
+        //    Assert.AreEqual(name, queryArticleDataSet.Tables["T_Query"].Rows[0]["Name"]);
+        //    Assert.AreEqual(count, queryArticleDataSet.Tables["T_Query"].Rows[0]["ResultCount"]);
 
-            // check Protein, Organism, Keyword data table
-            Assert.AreEqual(_proteinTest, queryArticleDataSet.Tables["T_Protein"].Rows[0]["Protein"]);
-            Assert.AreEqual(_organismTest, queryArticleDataSet.Tables["T_Organism"].Rows[0]["Organism"]);
-            Assert.AreEqual(_keywordTest, queryArticleDataSet.Tables["T_Keyword"].Rows[0]["Keyword"]);
+        //    // check Protein, Organism, Keyword data table
+        //    Assert.AreEqual(_proteinTest, queryArticleDataSet.Tables["T_Protein"].Rows[0]["Protein"]);
+        //    Assert.AreEqual(_organismTest, queryArticleDataSet.Tables["T_Organism"].Rows[0]["Organism"]);
+        //    Assert.AreEqual(_keywordTest, queryArticleDataSet.Tables["T_Keyword"].Rows[0]["Keyword"]);
 
-            // check Article data table
-            Assert.AreEqual(count, queryArticleDataSet.Tables["T_Article"].Rows.Count);
-            Assert.AreEqual("iPS cells in humans.", queryArticleDataSet.Tables["T_Article"].Rows[6]["Title"]);
+        //    // check Article data table
+        //    Assert.AreEqual(count, queryArticleDataSet.Tables["T_Article"].Rows.Count);
+        //    Assert.AreEqual("iPS cells in humans.", queryArticleDataSet.Tables["T_Article"].Rows[6]["Title"]);
 
-           // check Author data table
-            Assert.AreEqual("Cyranoski", queryArticleDataSet.Tables["T_Authors"].Rows[0]["LastName"]);
+        //   // check Author data table
+        //    Assert.AreEqual("Cyranoski", queryArticleDataSet.Tables["T_Authors"].Rows[0]["LastName"]);
 
-            // check Journal data table
-            Assert.AreEqual("Nature biotechnology", queryArticleDataSet.Tables["T_Journals"].Rows[0]["Title"]);
+        //    // check Journal data table
+        //    Assert.AreEqual("Nature biotechnology", queryArticleDataSet.Tables["T_Journals"].Rows[0]["Title"]);
 
-            // check Journal Release data table
-            Assert.AreEqual("1546-1696", queryArticleDataSet.Tables["T_JournalRelease"].Rows[0]["JournalRelease"]);
-        }
+        //    // check Journal Release data table
+        //    Assert.AreEqual("1546-1696", queryArticleDataSet.Tables["T_JournalRelease"].Rows[0]["JournalRelease"]);
+        //}
 
         #endregion
 

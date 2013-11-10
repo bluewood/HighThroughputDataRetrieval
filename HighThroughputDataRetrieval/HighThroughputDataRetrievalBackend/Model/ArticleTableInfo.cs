@@ -10,7 +10,7 @@ namespace HighThroughputDataRetrievalBackend.Model
         public string ArticleTitle { get; set; }
         public string Url { get; set; }
         public string Author { get; set; }
-        public int Year { get; set; }
+        public string Year { get; set; }
         public string Journal { get; set; }
     }
 }
