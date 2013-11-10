@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using HighThroughputDataRetrievalBackend.Util;
+using HighThroughputDataRetrievalBackend.IO;
 using NUnit.Framework;
 
 namespace HighThroughputDataRetievalTests
@@ -17,9 +18,9 @@ namespace HighThroughputDataRetievalTests
             Console.WriteLine(@"Welcome to a simple PubMed Search...");
 
 
-            const string proteinFromUser = "ips";
+            const string proteinFromUser = "Mavs";
             const string organixmFromUser = "Human";
-            const string keywordFromUser = "cell";
+            const string keywordFromUser = "";
 
             // get protein, organism
             //while (string.IsNullOrEmpty(proteinFromUser) && string.IsNullOrEmpty(organixmFromUser))
@@ -59,14 +60,14 @@ namespace HighThroughputDataRetievalTests
 
             Console.WriteLine(@"count : " + count);
 
-            int lowBound = count/20;
+            //int lowBound = count/20;
 
-            for (int i = 0; i < lowBound; i++)
-            {
-                test.GetArticleInfomation();
-            }
+            //for (int i = 0; i < lowBound; i++)
+            //{
+            //    test.GetArticleInfomation();
+            //}
             
-            DataTable articleDataTable = test.GetArticleInfomation();
+            DataTable articleDataTable = test.GetArticleInfomation(count, idList);
             //for (int i = 0; i < articleDataTable.Rows.Count; i++)
             //{
             //    if (idList[i] != articleDataTable.Rows[i]["PMID"].ToString())
@@ -98,12 +99,18 @@ namespace HighThroughputDataRetievalTests
             //data_base.CopydatasetToDatabase("C:/Users/Owner/Desktop/mydb.db3", ds_Article);
 
 
-
+            DataSet queryArticleDataSet = test.GetDataSet();
+            queryArticleDataSet.WriteXml("check.xml");
 
             // get total running time
             TimeSpan runTime = DateTime.Now - startDateTime;
             Console.WriteLine(@"Completed in " + runTime.Hours + @" h " + runTime.Minutes + @" min + " + runTime.Seconds + @" sec.");
             //Console.ReadKey();
+            Console.WriteLine(test.ArticleDataTable.Rows.Count);
+     
+            SqliteInputOutput.Create_database("E:\\PoteinTest.db3");
+            SqliteInputOutput.CopydatasetToDatabase("E:\\PoteinTest.db3", queryArticleDataSet);
+
         }
     }
 }

@@ -4,29 +4,17 @@
 winexe
 C#
 .cs
-<<<<<<< HEAD
-C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\
-=======
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\
->>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
 HighThroughputDataRetrieval
 none
 false
 DEBUG;TRACE
-<<<<<<< HEAD
-C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\App.xaml
-21190899401
-
-9-1064693132
-17-56037265
-=======
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\App.xaml
 21190899401
 
 9-1086413551
-19-1517348500
->>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
+17-341312166
 HelpDocumentView.xaml;MainWindow.xaml;
 
-False
+True
 

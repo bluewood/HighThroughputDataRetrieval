@@ -54,7 +54,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                             listCol.Add(dc.ColumnName);
 
                         cmd.CommandText = string.Format(
-                            "INSERT INTO {0}({1}) VALUES (@{2});", table.TableName,
+   "INSERT INTO {0}({1}) VALUES (@{2})" , table.TableName,
                             string.Join(", ", listCol),
                             string.Join(", @", listCol));
 

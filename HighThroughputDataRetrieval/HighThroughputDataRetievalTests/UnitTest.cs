@@ -254,31 +254,31 @@ namespace HighThroughputDataRetievalTests
 
         }
 
-        [Test]
-        public void TestGetArticleInfomation()
-        {
-            //_proteinTest = "salmonella";
-            //_organismTest = "";
-            //_keywordTest = "Hiv-1";
+       // [Test]
+        //public void TestGetArticleInfomation()
+        //{
+        //    //_proteinTest = "salmonella";
+        //    //_organismTest = "";
+        //    //_keywordTest = "Hiv-1";
 
-            int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
+        //    int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
             
-            int lowerBound = count/20;
-            for (int i = 0; i < lowerBound; i++)
-            {
-                _unitTestDataRetrieval.GetArticleInfomation();
-            }
-            DataTable unitTestDataTable = _unitTestDataRetrieval.GetArticleInfomation();
+        //    int lowerBound = count/20;
+        //    for (int i = 0; i < lowerBound; i++)
+        //    {
+        //        _unitTestDataRetrieval.GetArticleInfomation();
+        //    }
+        //    DataTable unitTestDataTable = _unitTestDataRetrieval.GetArticleInfomation();
 
             
-            Console.WriteLine(@"count: " + count);
-            Console.WriteLine(@"row count:" + unitTestDataTable.Rows.Count);
-            Assert.AreEqual(count,unitTestDataTable.Rows.Count);
-            //Assert.AreEqual(true, unitTestDataTable.Rows.Contains("Enteric Pathogens in HIV/AIDS from a Tertiary Care Hospital."));
-            Assert.AreEqual("Future horizons in hair restoration.", unitTestDataTable.Rows[8]["Title"].ToString());
+        //    Console.WriteLine(@"count: " + count);
+        //    Console.WriteLine(@"row count:" + unitTestDataTable.Rows.Count);
+        //    Assert.AreEqual(count,unitTestDataTable.Rows.Count);
+        //    //Assert.AreEqual(true, unitTestDataTable.Rows.Contains("Enteric Pathogens in HIV/AIDS from a Tertiary Care Hospital."));
+        //    Assert.AreEqual("Future horizons in hair restoration.", unitTestDataTable.Rows[8]["Title"].ToString());
 
 
-        }
+        //}
 
         [Test]
         public void TestFillArticleDataTables()
@@ -372,49 +372,49 @@ namespace HighThroughputDataRetievalTests
             //Assert.AreEqual(articleTitle, articleDataT);
         }
 
-        [Test]
-        public void TestGetDataSet()
-        {
-            _proteinTest = "ips";
-            _organismTest = "Human";
-            _keywordTest = "cell";
+        //[Test]
+        //public void TestGetDataSet()
+        //{
+        //    _proteinTest = "ips";
+        //    _organismTest = "Human";
+        //    _keywordTest = "cell";
 
-            string name = _proteinTest + _organismTest + _keywordTest;
+        //    string name = _proteinTest + _organismTest + _keywordTest;
 
-            int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
+        //    int count = _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest);
             
 
-            int lowBound = count/20;
-            for (int i = 0; i < lowBound; i++)
-            {
-                _unitTestDataRetrieval.GetArticleInfomation();
-            }
-            _unitTestDataRetrieval.GetArticleInfomation();
+        //    int lowBound = count/20;
+        //    for (int i = 0; i < lowBound; i++)
+        //    {
+        //        _unitTestDataRetrieval.GetArticleInfomation();
+        //    }
+        //    _unitTestDataRetrieval.GetArticleInfomation();
 
-            DataSet queryArticleDataSet = _unitTestDataRetrieval.GetDataSet();
+        //    DataSet queryArticleDataSet = _unitTestDataRetrieval.GetDataSet();
 
-            // check Query data table
-            Assert.AreEqual(name, queryArticleDataSet.Tables["T_Query"].Rows[0]["Name"]);
-            Assert.AreEqual(count, queryArticleDataSet.Tables["T_Query"].Rows[0]["ResultCount"]);
+        //    // check Query data table
+        //    Assert.AreEqual(name, queryArticleDataSet.Tables["T_Query"].Rows[0]["Name"]);
+        //    Assert.AreEqual(count, queryArticleDataSet.Tables["T_Query"].Rows[0]["ResultCount"]);
 
-            // check Protein, Organism, Keyword data table
-            Assert.AreEqual(_proteinTest, queryArticleDataSet.Tables["T_Protein"].Rows[0]["Protein"]);
-            Assert.AreEqual(_organismTest, queryArticleDataSet.Tables["T_Organism"].Rows[0]["Organism"]);
-            Assert.AreEqual(_keywordTest, queryArticleDataSet.Tables["T_Keyword"].Rows[0]["Keyword"]);
+        //    // check Protein, Organism, Keyword data table
+        //    Assert.AreEqual(_proteinTest, queryArticleDataSet.Tables["T_Protein"].Rows[0]["Protein"]);
+        //    Assert.AreEqual(_organismTest, queryArticleDataSet.Tables["T_Organism"].Rows[0]["Organism"]);
+        //    Assert.AreEqual(_keywordTest, queryArticleDataSet.Tables["T_Keyword"].Rows[0]["Keyword"]);
 
-            // check Article data table
-            Assert.AreEqual(count, queryArticleDataSet.Tables["T_Article"].Rows.Count);
-            Assert.AreEqual("iPS cells in humans.", queryArticleDataSet.Tables["T_Article"].Rows[6]["Title"]);
+        //    // check Article data table
+        //    Assert.AreEqual(count, queryArticleDataSet.Tables["T_Article"].Rows.Count);
+        //    Assert.AreEqual("iPS cells in humans.", queryArticleDataSet.Tables["T_Article"].Rows[6]["Title"]);
 
-           // check Author data table
-            Assert.AreEqual("Cyranoski", queryArticleDataSet.Tables["T_Authors"].Rows[0]["LastName"]);
+        //   // check Author data table
+        //    Assert.AreEqual("Cyranoski", queryArticleDataSet.Tables["T_Authors"].Rows[0]["LastName"]);
 
-            // check Journal data table
-            Assert.AreEqual("Nature biotechnology", queryArticleDataSet.Tables["T_Journals"].Rows[0]["Title"]);
+        //    // check Journal data table
+        //    Assert.AreEqual("Nature biotechnology", queryArticleDataSet.Tables["T_Journals"].Rows[0]["Title"]);
 
-            // check Journal Release data table
-            Assert.AreEqual("1546-1696", queryArticleDataSet.Tables["T_JournalRelease"].Rows[0]["JournalRelease"]);
-        }
+        //    // check Journal Release data table
+        //    Assert.AreEqual("1546-1696", queryArticleDataSet.Tables["T_JournalRelease"].Rows[0]["JournalRelease"]);
+        //}
 
         #endregion
 

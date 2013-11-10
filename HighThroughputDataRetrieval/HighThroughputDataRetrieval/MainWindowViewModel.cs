@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,18 +9,17 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
-using System.Windows.Documents;
+
 using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
 using HighThroughputDataRetrievalBackend.Util;
-<<<<<<< HEAD
+using HighThroughputDataRetrievalBackend.IO;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
-=======
+
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using Microsoft.Win32;
->>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
+
 
 namespace HighThroughputDataRetrieval
 {
@@ -40,30 +39,31 @@ namespace HighThroughputDataRetrieval
         public int SelectIndex { get; set; }
 
         #region Fields of paging 
-        private int start = 0;
-        private int itemCount =5 ;
-        private int totalItems = 0;
-        private ICommand firstCommand;
-        private ICommand previousCommand;
-        private ICommand nextCommand;
-        private ICommand lastCommand;
+        private int _start = 0;
+        private const int ItemCount = 5;
+        private int _totalItems = 0;
+        private ICommand _firstCommand;
+        private ICommand _previousCommand;
+        private ICommand _nextCommand;
+        private ICommand _lastCommand;
 
 
-        public int Start { get { return start + 1; } }
+        public int Start { get { return _start + 1; } }
 
         /// <summary>
         /// Gets the index of the last article
         /// </summary>
-        public int End { get { return start + itemCount < totalItems ? start + itemCount : totalItems; } }
+        public int End { get { return _start + ItemCount < _totalItems ? _start + ItemCount : _totalItems; } }
 
         /// <summary>
         /// The number of total article.
         /// </summary>
-        public int TotalItems { get { return totalItems; } }
+        public int TotalItems { get { return _totalItems; } }
 
 // ReSharper disable once InconsistentNaming
         public ObservableCollection<ArticleTableInfo> _ResultTable;
 
+// ReSharper disable once InconsistentNaming
         public ObservableCollection<ArticleTableInfo> _FillArticleTableInfo;
 
         #endregion
@@ -89,7 +89,7 @@ namespace HighThroughputDataRetrieval
                 //Hyperlink link = new Hyperlink(FillArticleTableInfo[SelectIndex].Url.ToString());
                // Uri uri = new Uri(FillArticleTableInfo[SelectIndex].Url.ToString());
 
-                Process.Start(FillArticleTableInfo[SelectIndex].Url.ToString());
+                Process.Start(FillArticleTableInfo[SelectIndex].Url);
             }
         }
        
@@ -105,7 +105,7 @@ namespace HighThroughputDataRetrieval
         }
         public void RetrievalArticleInfo()
         {
-            this._ResultTable = new ObservableCollection<ArticleTableInfo>();
+            _ResultTable = new ObservableCollection<ArticleTableInfo>();
             string[] myArticle = new string[15];
             string[] myAuthor = new string[15];
             int[] myYear = new int[15];
@@ -177,9 +177,9 @@ namespace HighThroughputDataRetrieval
             }
             for (int i = 0; i < article.Rows.Count; i++)
             {
-                _ResultTable.Add(new ArticleTableInfo() { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
+                _ResultTable.Add(new ArticleTableInfo { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
             }
-            totalItems = _ResultTable.Count;
+            _totalItems = _ResultTable.Count;
         }
 
         #region Constructor
@@ -190,23 +190,13 @@ namespace HighThroughputDataRetrieval
             PubMedSearch = new PubMedDataRetrieval();
             CountListWithProteins = new ObservableCollection<HitCountTable>();
             CountList = new List<int>();
-<<<<<<< HEAD
-            this.RetrievalArticleInfo();
+            RetrievalArticleInfo();
             Refresh();
-=======
+            SqliteInputOutput.Create_database("../../Document/HTDR_Database.db3");
 
-<<<<<<< HEAD
-            LoadDataGrid();
             _progressDialog = new ProgressDialog();
             _progressDialog.DoWork += _progressDialog_DoWork;
-=======
-<<<<<<< HEAD
-            this.RetrievalArticleInfo();
-=======
-            this.RetrieveArticleinformation();
->>>>>>> a63efa0ce16776e27a673206cdc6be4c6f7a7d77
->>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
->>>>>>> 4ba78c50815cde516d9b8b460f3eaec3b02cbc6b
+
         }
 
         #endregion // Constructor
@@ -434,13 +424,13 @@ namespace HighThroughputDataRetrieval
                     {
                         using (StreamWriter writer = new StreamWriter(stream))
                         {
-                            while (count < this._ResultTable.Count)
+                            while (count < _ResultTable.Count)
                             {
-                                writer.WriteLine(this._ResultTable[count].ArticleTitle);
-                                writer.WriteLine(this._ResultTable[count].Author);
-                                writer.WriteLine(this._ResultTable[count].Journal);
-                                writer.WriteLine(this._ResultTable[count].Year);
-                                writer.WriteLine(this._ResultTable[count].Url);
+                                writer.WriteLine(_ResultTable[count].ArticleTitle);
+                                writer.WriteLine(_ResultTable[count].Author);
+                                writer.WriteLine(_ResultTable[count].Journal);
+                                writer.WriteLine(_ResultTable[count].Year);
+                                writer.WriteLine(_ResultTable[count].Url);
                                 count++;
                             }
                             writer.Close();
@@ -458,23 +448,14 @@ namespace HighThroughputDataRetrieval
             {
                 get
                 {
-                    if (firstCommand == null)
-                    {
-                        firstCommand = new RelayCommand_
+                    return _firstCommand ?? (_firstCommand = new RelayCommand_
                         (
-                            param =>
-                            {
-                                start = 0;
-                                Refresh();
-                            },
-                            param =>
-                            {
-                                return start - itemCount >= 0 ? true : false;
-                            }
-                        );
-                    }
-
-                    return firstCommand;
+                        param =>
+                        {
+                            _start = 0;
+                            Refresh();
+                        },
+                        param => _start - ItemCount >= 0));
                 }
             }
 
@@ -485,23 +466,14 @@ namespace HighThroughputDataRetrieval
             {
                 get
                 {
-                    if (previousCommand == null)
-                    {
-                        previousCommand = new RelayCommand_
+                    return _previousCommand ?? (_previousCommand = new RelayCommand_
                         (
-                            param =>
-                            {
-                                start -= itemCount;
-                                Refresh();
-                            },
-                            param =>
-                            {
-                                return start - itemCount >= 0 ? true : false;
-                            }
-                        );
-                    }
-
-                    return previousCommand;
+                        param =>
+                        {
+                            _start -= ItemCount;
+                            Refresh();
+                        },
+                        param => _start - ItemCount >= 0));
                 }
             }
 
@@ -512,23 +484,15 @@ namespace HighThroughputDataRetrieval
             {
                 get
                 {
-                    if (nextCommand == null)
-                    {
-                        nextCommand = new RelayCommand_
+                    return _nextCommand ?? (_nextCommand = new RelayCommand_
                         (
-                            param =>
-                            {
-                                start += itemCount;
-                                Refresh();
-                            },
-                            param =>
-                            {
-                                return start + itemCount < totalItems ? true : false;
-                            }
-                        );
-                    }
-
-                    return nextCommand;
+                        param =>
+                        {
+                            _start += ItemCount;
+                            Refresh();
+                        },
+                        param => { return _start + ItemCount < _totalItems ? true : false; }
+                        ));
                 }
             }
 
@@ -539,24 +503,24 @@ namespace HighThroughputDataRetrieval
             {
                 get
                 {
-                    if (lastCommand == null)
+                    if (_lastCommand == null)
                     {
-                        lastCommand = new RelayCommand_
+                        _lastCommand = new RelayCommand_
                         (
                             param =>
                             {
-                                start = (totalItems / itemCount - 1) * itemCount;
-                                start += totalItems % itemCount == 0 ? 0 : itemCount;
+                                _start = (_totalItems / ItemCount - 1) * ItemCount;
+                                _start += _totalItems % ItemCount == 0 ? 0 : ItemCount;
                                 Refresh();
                             },
                             param =>
                             {
-                                return start + itemCount < totalItems ? true : false;
+                                return _start + ItemCount < _totalItems ? true : false;
                             }
                         );
                     }
 
-                    return lastCommand;
+                    return _lastCommand;
                 }
             }
 
@@ -565,7 +529,7 @@ namespace HighThroughputDataRetrieval
             /// </summary>
             private void Refresh()
             {
-                FillPage(start);
+                FillPage(_start);
                 OnPropertyChanged("Start");
                 OnPropertyChanged("End");
                 OnPropertyChanged("TotalItems");
@@ -575,7 +539,7 @@ namespace HighThroughputDataRetrieval
             public void FillPage(int startNum)
             {
                 this._FillArticleTableInfo = new ObservableCollection<ArticleTableInfo>();
-                for (int i = startNum; i < startNum + itemCount && i < totalItems; i++)
+                for (int i = startNum; i < startNum + ItemCount && i < _totalItems; i++)
 
                 {
                   _FillArticleTableInfo.Add(_ResultTable[i]);
@@ -600,16 +564,4 @@ namespace HighThroughputDataRetrieval
         }
         #endregion // INotifyPropertyChanged Members
     }
-<<<<<<< HEAD
-    public class DataGrid
-    {
-        public string ArticleTitle { get; set; }
-        public string Url { get; set; }
-        public string Author { get; set; }
-        public int Year { get; set; }
-        public string Journal { get; set; }
-    }
-=======
-   
->>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
 }

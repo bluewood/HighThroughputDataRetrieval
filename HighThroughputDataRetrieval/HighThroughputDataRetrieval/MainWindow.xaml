@@ -70,12 +70,11 @@
                     <DataGrid  AutoGenerateColumns="False" Height="498" HorizontalAlignment="Center" Margin="10,45,0,10" Name="ArticleInfoTabletDataGrid" VerticalAlignment="Top" Width="800"
                      ItemsSource="{Binding FillArticleTableInfo, NotifyOnTargetUpdated=True}" IsReadOnly="True" SelectedIndex="{Binding Path=SelectIndex}">
                     <DataGrid.Columns >
-                            <DataGridHyperlinkColumn Header="Title" Binding="{Binding Path=Url}" 
-                                                     ContentBinding="{Binding Path=ArticleTitle}"  MaxWidth="200"/>
-                          
+                           
 
-                          
-                        <DataGridTextColumn Header="Author" Binding="{Binding Path= Author}" Width="200" />
+                            <DataGridTextColumn Header="Title" Binding="{Binding Path= ArticleTitle}" Width="200" />
+
+                            <DataGridTextColumn Header="Author" Binding="{Binding Path= Author}" Width="200" />
                         <DataGridTextColumn Header="Year" Binding="{Binding Path= Year}" Width="200" />
                         <DataGridTextColumn Header="Journal" Binding="{Binding Path=Journal}" MinWidth="200" />
                     </DataGrid.Columns>

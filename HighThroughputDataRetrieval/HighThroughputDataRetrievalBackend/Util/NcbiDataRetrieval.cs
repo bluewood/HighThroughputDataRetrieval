@@ -17,7 +17,7 @@ namespace HighThroughputDataRetrievalBackend.Util
         // List for PMIDs and xmlList for articles
         public List<string> IdList { set; get; }
         //protected XmlNodeList ArticleList;
-        public int RetrievedArticleCount { set; get; }
+        //public int RetrievedArticleCount { set; get; }
         public int KeyOrder { set; get; }
         public string ProteinFromUser { set; get; }
         public string OrganismFromUser { set; get; }
@@ -57,7 +57,7 @@ namespace HighThroughputDataRetrievalBackend.Util
 
         public abstract int GetCount(string protein, string organism, string keyword);
         public abstract void FillQueryDataTables(string name, int count, XmlNodeList pmidList);
-        public abstract DataTable GetArticleInfomation();
+        public abstract DataTable GetArticleInfomation(int count, List<string> idList);
         public abstract void FillArticleDataTables(XmlNodeList articleList, string pubmedSearchPrefix);
         public abstract DataSet GetDataSet();
 
