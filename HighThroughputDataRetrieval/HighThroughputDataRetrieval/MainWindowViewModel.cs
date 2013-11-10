@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
@@ -14,34 +15,71 @@ using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+<<<<<<< HEAD
+=======
+using Microsoft.Win32;
+>>>>>>> 2c9ff56905d392a7214dcfe8fe1c2912986ae4ae
 
 
 namespace HighThroughputDataRetrieval
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        #region Fields
+        # region Fields
 
         public UserInput UserInputFromModel;
-        //
-        // Hyesun added for GetCount
         public NcbiDataRetrieval PubMedSearch { get; set; }
         public List<int> CountList { get; set; }
         public IEnumerable<string> ProteinList { get; set; }
+<<<<<<< HEAD
         public ObservableCollection<HitCountTable> CountProteinTable { get; set; }
         public int SelectedIndex { get; set; }
         public List<string> IDList { get; set; } 
         //
         //
         private ObservableCollection<ArticleTableInfo> _resultTable;
+=======
+        public ObservableCollection<HitCountTable> CountListWithProteins { get; set; }
+        public int SelectIndex { get; set; }
 
+        
+        #region Fields of paging 
+        private int start = 0;
+        private int itemCount =5 ;
+        private int totalItems = 0;
+        private ICommand firstCommand;
+        private ICommand previousCommand;
+        private ICommand nextCommand;
+        private ICommand lastCommand;
+
+
+        public int Start { get { return start + 1; } }
+
+        /// <summary>
+        /// Gets the index of the last article
+        /// </summary>
+        public int End { get { return start + itemCount < totalItems ? start + itemCount : totalItems; } }
+
+        /// <summary>
+        /// The number of total article.
+        /// </summary>
+        public int TotalItems { get { return totalItems; } }
+
+// ReSharper disable once InconsistentNaming
+        public ObservableCollection<ArticleTableInfo> _ResultTable;
+>>>>>>> 2c9ff56905d392a7214dcfe8fe1c2912986ae4ae
+
+        public ObservableCollection<ArticleTableInfo> _FillArticleTableInfo;
+
+        #endregion
         RelayCommand _openFileCommand;
         RelayCommand _searchPubMedCommand;
         RelayCommand _openHelpDocumentCommand;
         RelayCommand _retrieveArticleInfoCommand;
-        RelayCommand _ExportCommand;
-
+        RelayCommand _exportCommand;
+        private RelayCommand _ArticleInfotableClick;
         #endregion // Fields
+<<<<<<< HEAD
 
         #region Constructor
 
@@ -186,6 +224,42 @@ namespace HighThroughputDataRetrieval
                 _resultTable.Add(new ArticleTableInfo() { ArticleTitle = articleTitle, Author = authors, Year = pubDate, Journal = journalTitle, Url = url });
             }
 
+=======
+         
+        public ICommand ArticleInfoTableClick {
+            get
+            {
+                return _ArticleInfotableClick ?? (_ArticleInfotableClick = new RelayCommand(Article_Info_Table_Click));
+            }
+        }
+
+        public void Article_Info_Table_Click()
+        {
+            if (MessageBox.Show("Go to PubMed ?", "Message", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                //Hyperlink link = new Hyperlink(FillArticleTableInfo[SelectIndex].Url.ToString());
+               // Uri uri = new Uri(FillArticleTableInfo[SelectIndex].Url.ToString());
+
+                Process.Start(FillArticleTableInfo[SelectIndex].Url.ToString());
+            }
+        }
+       
+
+        public ObservableCollection<ArticleTableInfo> FillArticleTableInfo
+        {
+            get { return _FillArticleTableInfo; }
+            set
+            {
+                _FillArticleTableInfo = value;
+                OnPropertyChanged("FillArticleTableInfo");
+            }
+        }
+        public void RetrievalArticleInfo()
+        {
+            
+            
+        }
+>>>>>>> 2c9ff56905d392a7214dcfe8fe1c2912986ae4ae
 
             //MessageBox.Show("Retrieving article info done!");
 
@@ -251,7 +325,24 @@ namespace HighThroughputDataRetrieval
             //    }
             //}
 
+<<<<<<< HEAD
 
+=======
+        public MainWindowViewModel()      
+        {
+            UserInputFromModel  = new UserInput();
+            PubMedSearch = new PubMedDataRetrieval();
+            CountListWithProteins = new ObservableCollection<HitCountTable>();
+            CountList = new List<int>();
+            this.RetrievalArticleInfo();
+            Refresh();
+
+            LoadDataGrid();
+            _progressDialog = new ProgressDialog();
+            _progressDialog.DoWork += _progressDialog_DoWork;
+
+           
+>>>>>>> 2c9ff56905d392a7214dcfe8fe1c2912986ae4ae
         }
 
 
@@ -465,7 +556,7 @@ namespace HighThroughputDataRetrieval
             #region buttion_export
             public ICommand ExpordCommand
             {
-                get { return _ExportCommand ?? (_ExportCommand = new RelayCommand(Expord)); }
+                get { return _exportCommand ?? (_exportCommand = new RelayCommand(Expord)); }
             }
             public void Expord()
             {
@@ -482,13 +573,13 @@ namespace HighThroughputDataRetrieval
                     {
                         using (StreamWriter writer = new StreamWriter(stream))
                         {
-                            while (count < this.ResultTable.Count)
+                            while (count < this._ResultTable.Count)
                             {
-                                writer.WriteLine(this.ResultTable[count].ArticleTitle);
-                                writer.WriteLine(this.ResultTable[count].Author);
-                                writer.WriteLine(this.ResultTable[count].Journal);
-                                writer.WriteLine(this.ResultTable[count].Year);
-                                writer.WriteLine(this.ResultTable[count].Url);
+                                writer.WriteLine(this._ResultTable[count].ArticleTitle);
+                                writer.WriteLine(this._ResultTable[count].Author);
+                                writer.WriteLine(this._ResultTable[count].Journal);
+                                writer.WriteLine(this._ResultTable[count].Year);
+                                writer.WriteLine(this._ResultTable[count].Url);
                                 count++;
                             }
                             writer.Close();
@@ -500,6 +591,142 @@ namespace HighThroughputDataRetrieval
             }
             #endregion
 
+
+            #region paging
+            public ICommand FirstCommand
+            {
+                get
+                {
+                    if (firstCommand == null)
+                    {
+                        firstCommand = new RelayCommand_
+                        (
+                            param =>
+                            {
+                                start = 0;
+                                Refresh();
+                            },
+                            param =>
+                            {
+                                return start - itemCount >= 0 ? true : false;
+                            }
+                        );
+                    }
+
+                    return firstCommand;
+                }
+            }
+
+            /// <summary>
+            /// Gets the command for moving to the previous page
+            /// </summary>
+            public ICommand PreviousCommand
+            {
+                get
+                {
+                    if (previousCommand == null)
+                    {
+                        previousCommand = new RelayCommand_
+                        (
+                            param =>
+                            {
+                                start -= itemCount;
+                                Refresh();
+                            },
+                            param =>
+                            {
+                                return start - itemCount >= 0 ? true : false;
+                            }
+                        );
+                    }
+
+                    return previousCommand;
+                }
+            }
+
+            /// <summary>
+            /// Gets the command for moving to the next page 
+            /// </summary>
+            public ICommand NextCommand
+            {
+                get
+                {
+                    if (nextCommand == null)
+                    {
+                        nextCommand = new RelayCommand_
+                        (
+                            param =>
+                            {
+                                start += itemCount;
+                                Refresh();
+                            },
+                            param =>
+                            {
+                                return start + itemCount < totalItems ? true : false;
+                            }
+                        );
+                    }
+
+                    return nextCommand;
+                }
+            }
+
+            /// <summary>
+            /// Gets the command for moving to the last page
+            /// </summary>
+            public ICommand LastCommand
+            {
+                get
+                {
+                    if (lastCommand == null)
+                    {
+                        lastCommand = new RelayCommand_
+                        (
+                            param =>
+                            {
+                                start = (totalItems / itemCount - 1) * itemCount;
+                                start += totalItems % itemCount == 0 ? 0 : itemCount;
+                                Refresh();
+                            },
+                            param =>
+                            {
+                                return start + itemCount < totalItems ? true : false;
+                            }
+                        );
+                    }
+
+                    return lastCommand;
+                }
+            }
+
+            /// <summary>
+            /// Refreshes the list article info
+            /// </summary>
+            private void Refresh()
+            {
+                FillPage(start);
+                OnPropertyChanged("Start");
+                OnPropertyChanged("End");
+                OnPropertyChanged("TotalItems");
+                OnPropertyChanged("FillArticleTableInfo");
+            }
+
+            public void FillPage(int startNum)
+            {
+                this._FillArticleTableInfo = new ObservableCollection<ArticleTableInfo>();
+                for (int i = startNum; i < startNum + itemCount && i < totalItems; i++)
+
+                {
+                  _FillArticleTableInfo.Add(_ResultTable[i]);
+                }
+            }
+
+            /// <summary>
+            /// Notifies subscribers of changed properties.
+            /// </summary>
+            /// <param name="propertyName">Name of the changed property.</param>
+           
+            #endregion
 
             #region INotifyPropertyChanged Members
             public event PropertyChangedEventHandler PropertyChanged;
@@ -513,6 +740,7 @@ namespace HighThroughputDataRetrieval
         #endregion // INotifyPropertyChanged Members
     }
 
+<<<<<<< HEAD
     public class DataGrid
     {
         public string ArticleTitle { get; set; }
@@ -523,5 +751,8 @@ namespace HighThroughputDataRetrieval
     }
 
    
+=======
+    
+>>>>>>> 2c9ff56905d392a7214dcfe8fe1c2912986ae4ae
 
 }

@@ -74,8 +74,8 @@ namespace HighThroughputDataRetrieval
     internal class RelayCommand : ICommand
     {
         #region Fields
-        readonly Action _execute;
-        readonly Func<bool> _canExecute;
+        private readonly Action _execute;
+        private readonly Func<bool> _canExecute;
         #endregion // Fields
 
         #region Constructors
@@ -87,7 +87,7 @@ namespace HighThroughputDataRetrieval
             : this(execute, null)
         {
         }
-
+     
         /// <summary>
         /// Creating a new command.
         /// </summary>
@@ -130,4 +130,49 @@ namespace HighThroughputDataRetrieval
         }
         #endregion // ICommand Members
     }
+
+
+    internal class RelayCommand_ : ICommand
+    {
+        private readonly Action<object> execute;
+
+        private readonly Predicate<object> canExecute;
+
+        public RelayCommand_(Action<object> execute)
+            : this(execute, null)
+        {
+        }
+
+        public RelayCommand_(Action<object> execute, Predicate<object> canExecute)
+        {
+            if (execute == null)
+            {
+                throw new ArgumentNullException("execute");
+            }
+
+            this.execute = execute;
+            this.canExecute = canExecute;
+        }
+
+        #region ICommand Members
+
+        public bool CanExecute(object parameter)
+        {
+            return canExecute == null || canExecute(parameter);
+        }
+
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
+
+        public void Execute(object parameter)
+        {
+            execute(parameter);
+        }
+
+        #endregion
+    }
+
 }

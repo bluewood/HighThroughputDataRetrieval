@@ -15,15 +15,6 @@ namespace HighThroughputDataRetrieval
         {
             InitializeComponent();
         }
-         private void dataGrid1_GotFocus(object sender, RoutedEventArgs e)
-        {
-
-            if (MessageBox.Show("Go to PubMed ?", "Message", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                Hyperlink link = (Hyperlink)e.OriginalSource;
-                Process.Start(link.NavigateUri.AbsoluteUri);
-            }
-
-        }
+        
     }
 }

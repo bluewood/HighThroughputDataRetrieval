@@ -136,11 +136,11 @@ namespace HighThroughputDataRetrievalBackend.IO
 
                 foreach (DataTable dt in data.Tables)
                 {
-                    string sCmd1 = string.Format("DROP TABLE IF EXISTS {0};", dt.TableName);
-                    SQLiteCommand cmd1 = new SQLiteCommand(sCmd1, conn);
-                    cmd1.ExecuteNonQuery();
+                    //string sCmd1 = string.Format("DROP TABLE IF EXISTS {0};", dt.TableName);
+                    //SQLiteCommand cmd1 = new SQLiteCommand(sCmd1, conn);
+                    //cmd1.ExecuteNonQuery();
 
-                    string sCmd2 = string.Format("CREATE TABLE {0} (", dt.TableName);
+                    string sCmd2 = string.Format("CREATE TABLE IF NOT EXISTS {0} (", dt.TableName);
                     // get the collum name and type 
                     List<string> listOfColum = new List<string>();
                     List<string> listOfPk = new List<string>();
@@ -168,7 +168,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                     }
                     sCmd2 += ");";
 
-                    cmd1 = new SQLiteCommand(sCmd2, conn);
+                    SQLiteCommand cmd1 = new SQLiteCommand(sCmd2, conn);
                     Console.WriteLine(sCmd2);
                     cmd1.ExecuteNonQuery();
                 }
@@ -271,7 +271,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                     }
                 }
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                // Console.WriteLine(@"Error in CopyToDatabase:" + exc.ToString());
                 bReturn = false;
@@ -316,7 +316,7 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             }
 
-            catch (Exception exc)
+            catch (Exception)
             {
                 return null;
                 // Console.WriteLine("Exception in GetTable(): " +exc.ToString());
@@ -453,7 +453,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                 }
 
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                // Console.WriteLine("Exception in RunSelectQuery: " + exc.ToString());
                 rt = false;
@@ -573,7 +573,7 @@ namespace HighThroughputDataRetrievalBackend.IO
 
             }
 
-            catch (Exception fail)
+            catch (Exception)
             {
                 //System.Console.WriteLine(fail.Message);
                 returnCode = false;
