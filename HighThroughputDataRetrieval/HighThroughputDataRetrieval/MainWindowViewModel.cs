@@ -13,14 +13,12 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
 using HighThroughputDataRetrievalBackend.Util;
-<<<<<<< HEAD
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
-=======
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using Microsoft.Win32;
->>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
+
 
 namespace HighThroughputDataRetrieval
 {
@@ -105,44 +103,7 @@ namespace HighThroughputDataRetrieval
         }
         public void RetrievalArticleInfo()
         {
-            this._ResultTable = new ObservableCollection<ArticleTableInfo>();
-            string[] myArticle = new string[15];
-            string[] myAuthor = new string[15];
-            int[] myYear = new int[15];
-            string[] myJournal = new string[15];
-            string[] myUrl = new string[15];
-            //example table in dataset
-            DataTable article = new DataTable("Article");
-            article.Columns.Add("Title", typeof(string));
-            article.Columns.Add("PMID", typeof(int));
-            article.Columns.Add("URL", typeof(string));
-            article.Rows.Add("Water-soluble LYNX1 residues important for interaction with muscle-type and/or neuronal nicotinic receptors", 1, "http://www.ncbi.nlm.nih.gov/pubmed/");
-            article.Rows.Add("[Bacterial expression of water-soluble domain of Lynx1, endogenic neuromodulator of humannicotinic acetylcholine receptors]", 2, "http://www.ncbi.nlm.nih.gov/pubmed/");
-            article.Rows.Add("abcd ", 3, "http://www.ncbi.nlm.nih.gov/pubmed/");
-            article.Rows.Add("abcd1", 4, "http://www.ncbi.nlm.nih.gov/pubmed/");
-            article.Rows.Add("lasdasd ", 5, "http://www.ncbi.nlm.nih.gov/pubmed/");
-            article.Rows.Add("Last", 6, "http://www.ncbi.nlm.nih.gov/pubmed/");
-           
-            DataTable author = new DataTable("Author");
-            author.Columns.Add("Author", typeof(string));
-            author.Columns.Add("PMID", typeof(int));
-            author.Rows.Add("Lyukmanova EN,…Tsetlin VI", 1);
-            author.Rows.Add("Shulepko MA, … Kirpichnikov MP", 2);
-            author.Rows.Add("Lyukmanova EN,…Tsetlin VI", 3);
-            author.Rows.Add("Shulepko MA, … Kirpichnikov MP", 4);
-            author.Rows.Add("Lyukmanova EN,…Tsetlin VI", 5);
-            author.Rows.Add("Shulepko MA, … Kirpichnikov MP", 6);
-
-            DataTable journal = new DataTable("Jornal");
-            journal.Columns.Add("Jornal", typeof(string));
-            journal.Columns.Add("Year", typeof(int));
-            journal.Columns.Add("PMID", typeof(int));
-            journal.Rows.Add("J Biol Chem", 2013, 1);
-            journal.Rows.Add("Bioorg Khim", 2011, 2);
-            journal.Rows.Add("J Biol Chem", 2013, 3);
-            journal.Rows.Add("Bioorg Khim", 2011, 4);
-            journal.Rows.Add("J Biol Chem", 2013, 5);
-            journal.Rows.Add("Bioorg Khim", 2011, 6);
+            
 
             //get myArticle
             for (int i = 0; i < article.Rows.Count; i++)
@@ -190,23 +151,17 @@ namespace HighThroughputDataRetrieval
             PubMedSearch = new PubMedDataRetrieval();
             CountListWithProteins = new ObservableCollection<HitCountTable>();
             CountList = new List<int>();
-<<<<<<< HEAD
             this.RetrievalArticleInfo();
             Refresh();
-=======
 
-<<<<<<< HEAD
             LoadDataGrid();
             _progressDialog = new ProgressDialog();
             _progressDialog.DoWork += _progressDialog_DoWork;
-=======
-<<<<<<< HEAD
+
             this.RetrievalArticleInfo();
-=======
+
             this.RetrieveArticleinformation();
->>>>>>> a63efa0ce16776e27a673206cdc6be4c6f7a7d77
->>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
->>>>>>> 4ba78c50815cde516d9b8b460f3eaec3b02cbc6b
+
         }
 
         #endregion // Constructor
@@ -600,16 +555,7 @@ namespace HighThroughputDataRetrieval
         }
         #endregion // INotifyPropertyChanged Members
     }
-<<<<<<< HEAD
-    public class DataGrid
-    {
-        public string ArticleTitle { get; set; }
-        public string Url { get; set; }
-        public string Author { get; set; }
-        public int Year { get; set; }
-        public string Journal { get; set; }
-    }
-=======
-   
->>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
+
+    
+
 }
