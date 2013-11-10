@@ -27,16 +27,13 @@ namespace HighThroughputDataRetrieval
         # region Fields
 
         public UserInput UserInputFromModel;
-        //
-        // Hyesun added for GetCount
         public NcbiDataRetrieval PubMedSearch { get; set; }
         public List<int> CountList { get; set; }
         public IEnumerable<string> ProteinList { get; set; }
         public ObservableCollection<HitCountTable> CountListWithProteins { get; set; }
-        //
-
         public int SelectIndex { get; set; }
 
+        
         #region Fields of paging 
         private int start = 0;
         private int itemCount =5 ;
@@ -104,43 +101,7 @@ namespace HighThroughputDataRetrieval
         public void RetrievalArticleInfo()
         {
             
-
-            //get myArticle
-            for (int i = 0; i < article.Rows.Count; i++)
-            {
-                myArticle[i] = string.Format(article.Rows[i].ItemArray[0].ToString());
-                myUrl[i] = string.Format(article.Rows[i].ItemArray[2].ToString());
-
-            }
-            //get myAuthor
-
-            for (int i = 0; i < article.Rows.Count; i++)
-            {
-                for (int j = 0; j < author.Rows.Count; j++)
-                {
-                    if ((int)article.Rows[i].ItemArray[1] == (int)author.Rows[j].ItemArray[1])
-                    {
-                        myAuthor[i] = (string)author.Rows[j].ItemArray[0];
-                    }
-                }
-            }
-            //get myJournal and my Year
-            for (int i = 0; i < article.Rows.Count; i++)
-            {
-                for (int j = 0; j < journal.Rows.Count; j++)
-                {
-                    if ((int)article.Rows[i].ItemArray[1] == (int)journal.Rows[j].ItemArray[2])
-                    {
-                        myJournal[i] = (string)journal.Rows[j].ItemArray[0];
-                        myYear[i] = (int)journal.Rows[j].ItemArray[1];
-                    }
-                }
-            }
-            for (int i = 0; i < article.Rows.Count; i++)
-            {
-                _ResultTable.Add(new ArticleTableInfo() { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
-            }
-            totalItems = _ResultTable.Count;
+            
         }
 
         #region Constructor
@@ -158,10 +119,7 @@ namespace HighThroughputDataRetrieval
             _progressDialog = new ProgressDialog();
             _progressDialog.DoWork += _progressDialog_DoWork;
 
-            this.RetrievalArticleInfo();
-
-            this.RetrieveArticleinformation();
-
+           
         }
 
         #endregion // Constructor
