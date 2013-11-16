@@ -17,7 +17,7 @@ namespace HighThroughputDataRetrievalBackend.Util
         public PubMedDataRetrieval()
         {
             IdList = new List<string>();
-            //RetrievedArticleCount = 0;
+            ArticleCount = 0;
             KeyOrder = 1;
             ProteinFromUser = "";
             OrganismFromUser = "";
@@ -186,13 +186,14 @@ namespace HighThroughputDataRetrievalBackend.Util
         // Funtion: Retrieve number of articles and PMIDs and put them into the dataset
         //          based on one protein, one organizm, and one keyword at a time. 9/6/2013
         // Return: count number of int type
-        override public int GetCount(string protein, string organism, string  keyword)
+        override public int GetCount(string protein, string organism, string keyword)
         {
-            ProteinFromUser = protein;
-            OrganismFromUser = organism;
-            KeywordFromUser = keyword;
 
             #region Members
+
+            ProteinFromUser = protein.ToUpper();
+            OrganismFromUser = organism.ToUpper();
+            KeywordFromUser = keyword.ToUpper();
             
             const string pubmedSearchPrefix = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils//esearch.fcgi?db=pubmed&retmax=10000&";
 
@@ -222,15 +223,15 @@ namespace HighThroughputDataRetrievalBackend.Util
             xmlDocument.LoadXml(urlResult);
 
             // name is the name in T_Query table and needed to check duplication query
-            string name = protein + organism + keyword;
+            string name = ProteinFromUser + OrganismFromUser + KeywordFromUser;
 
             // get count from xml string
-            int count = int.Parse(xmlDocument.GetElementsByTagName("Count")[0].InnerText);
+            ArticleCount = int.Parse(xmlDocument.GetElementsByTagName("Count")[0].InnerText);
 
             //T_Query, if query already exists and the count number in the data table is also same 
             //return the count number 
             DataRow rowQuery;
-            if (Dictionary.TryGetValue(name, out rowQuery) && rowQuery["ResultCount"].Equals(count)) // count == rowQuery.Field<int>("ResultCount") ??? need to test
+            if (Dictionary.TryGetValue(name, out rowQuery) && rowQuery["ResultCount"].Equals(ArticleCount)) // count == rowQuery.Field<int>("ResultCount") ??? need to test
             {
                 // already exists
                 // return int.Parse(rowQuery["ResultCount"].ToString());
@@ -241,9 +242,9 @@ namespace HighThroughputDataRetrievalBackend.Util
             XmlNodeList pmidListFromXml = xmlDocument.GetElementsByTagName("Id");
 
             // fill Query, Protein, Organism, Keyword, KeywordList, QueryArticle, QuerySession datatables
-            FillQueryDataTables(name, count, pmidListFromXml);
+            FillQueryDataTables(name,pmidListFromXml);
 
-            return count;  
+            return ArticleCount;  
 
         }
 
@@ -251,10 +252,11 @@ namespace HighThroughputDataRetrievalBackend.Util
         /// 
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="count"></param>
         /// <param name="pmidListFromXml"></param>
-        override public void FillQueryDataTables(string name, int count, XmlNodeList pmidListFromXml)
+        override public bool FillQueryDataTables(string name, XmlNodeList pmidListFromXml)
         {
+            if (name == "" && pmidListFromXml.Count == 0)
+                return false;
             try
             {
                 // T_Protein 
@@ -320,7 +322,7 @@ namespace HighThroughputDataRetrievalBackend.Util
                 rowQuery["ProteinID"] = rowProtein["ProteinID"]; //.ToString();
                 rowQuery["OrganismID"] = rowOrganism["OrganismID"]; //.ToString();
                 rowQuery["KeywordListID"] = rowQuery["QueryID"]; //.ToString(); // keywordListID = QueryID because one query has one keywordList
-                rowQuery["ResultCount"] = count; // new count from the xml string
+                rowQuery["ResultCount"] = ArticleCount; // new count from the xml string
 
                 // Add the row of T_Query into the T_Query datatable and the dictionary
                 QueryDataTable.Rows.Add(rowQuery);
@@ -350,15 +352,16 @@ namespace HighThroughputDataRetrievalBackend.Util
                 rowQuerySession["ProteinID"] = rowQuery["ProteinID"];
                 rowQuerySession["DateTime"] = DateTime.Now;
                 QuerySessionDataTable.Rows.Add(rowQuerySession);
+
             }
             catch (Exception exception)
             {
                 
                 Console.WriteLine(exception.Message);
             }
- 
-            //T_ProteinList ???         
-            //T_AlternativeProteinName ???
+
+            
+            return true;
         }
         
         // Name: getArticleInfo()
@@ -420,9 +423,11 @@ namespace HighThroughputDataRetrievalBackend.Util
            return ArticleDataTable;
 
         }
-
-        public override void FillArticleDataTables(XmlNodeList articleListFromXml, string pubmedSearchPrefix)
+        // make pubmedSearchPrefix null ???
+        public override bool FillArticleDataTables(XmlNodeList articleListFromXml, string pubmedSearchPrefix)
         {
+            if (articleListFromXml.Count == 0 && pubmedSearchPrefix == "")
+                return false;
             try
             {
                 
@@ -577,7 +582,9 @@ namespace HighThroughputDataRetrievalBackend.Util
             {
                 Console.WriteLine(exception.Message);
             }
-          
+
+
+            return true;
         }
 
         public override DataSet GetDataSet()
