@@ -273,9 +273,11 @@ namespace HighThroughputDataRetrieval
         public void RetrieveArticleInfo()
         {
             _resultTable = new ObservableCollection<ArticleTableInfo>();
+
+
             int count = CountProteinTable[SelectedIndex].CountInHitCountTable;
             string protein = CountProteinTable[SelectedIndex].ProteinInHitCountTable;
-            string name = protein + OrganismFromModel + KeywordFromModel;
+            string name = protein.ToUpper() + OrganismFromModel.ToUpper() + KeywordFromModel.ToUpper();
 
             DataTable queryDataTable = PubMedSearch.QueryDataTable;
             DataTable queryArticleDataTable = PubMedSearch.QueryArticlesDataTable;
@@ -292,7 +294,8 @@ namespace HighThroughputDataRetrieval
             }
 
             // get PMIDs from queryArticleDataTable using queryID
-            DataRow[] queryArticleDataRows = queryArticleDataTable.Select("QueryID = " + queryID);
+            string filerExpression = string.Format("QueryID = {0}{1}{2}", "'", queryID.ToString(), "'");
+            DataRow[] queryArticleDataRows = queryArticleDataTable.Select(filerExpression);
             foreach (DataRow row in queryArticleDataRows)
             {
                 IDList.Add(row["PMID"].ToString());
@@ -325,62 +328,80 @@ namespace HighThroughputDataRetrieval
                 string url = row["URL"].ToString();
                 string pubDate = row["PubDate"].ToString();
 
+
                 // get authors from authorListDataTable using article's PMID
-                string pmid = string.Format("{0}{1}{2}", "'", row["PMID"].ToString(), "'");
-                DataRow[] authorListDataRows = authorListDataTable.Select("PMID =" + pmid);
+                string filterExpression = string.Format("{0}{1}{2}", "'", row["PMID"].ToString(), "'");
+                DataRow[] authorListDataRows = authorListDataTable.Select("PMID =" + filterExpression);
 
-                // most authors' name is last name and first name, 
-                // but some author has suffix such as Junior
-                // and also some author has just only have collective name
-                // only print first and last author on the grid.
-
-                // get first author 
-                DataRow authorFirstDataRow = authorsDataTable.Rows.Find(authorListDataRows[0]["AuthorID"].ToString());
-                string authorFirst = authorFirstDataRow["Suffix"].ToString();
-
-                if (authorFirst != "") // author has suffix, so put " "
+                string authors = "";
+                if (authorListDataRows.Count() != 0)
                 {
-                    authorFirst += " ";
+                    DataRow firstAuthorID = authorListDataRows.First();
+                    DataRow lastAuthorID = authorListDataRows.Last();
+                    //DataRow authorFirst = authorListDataRows;
+                    //int index = authorListDataRows.Count();
+                    // most authors' name is last name and first name, 
+                    // but some author has suffix such as Junior
+                    // and also some author has just only have collective name
+                    // only print first and last author on the grid.
+
+                    // get first author 
+                    DataRow authorFirstDataRow = authorsDataTable.Rows.Find(firstAuthorID["AuthorID"].ToString());
+                    string authorFirst = authorFirstDataRow["Suffix"].ToString();
+
+                    if (authorFirst != "") // author has suffix, so put " "
+                    {
+                        authorFirst += " ";
+                    }
+                    authorFirst += (authorFirstDataRow["LastName"].ToString() + ", "
+                                    + authorFirstDataRow["ForeName"].ToString());
+
+                    // author name is not last name and first name, CollectiveName
+                    if (authorFirst == ", ")
+                    {
+                        authorFirst = authorFirstDataRow["CollectiveName"].ToString();
+                    }
+
+
+                    // get last author
+                    //int lastAuthorIndex = authorListDataRows.Count() - 1;
+                    DataRow authorLastDataRow =
+                        authorsDataTable.Rows.Find(lastAuthorID["AuthorID"].ToString());
+                    string authorLast = authorLastDataRow["Suffix"].ToString();
+
+                    if (authorLast != "") // author has suffix, so put " "
+                    {
+                        authorLast += " ";
+                    }
+
+                    authorLast += (authorLastDataRow["LastName"].ToString() + ", "
+                                   + authorLastDataRow["ForeName"].ToString());
+
+                    if (authorLast == ", ") // author has collective name, not last name and first name.
+                    {
+                        authorLast = authorLastDataRow["CollectiveName"].ToString();
+                    }
+
+                    
+                    // combine the first author and the last author
+                    authors = authorFirst + " ... " + authorLast;
+
                 }
-                authorFirst += (authorFirstDataRow["LastName"].ToString() + ", "
-                                + authorFirstDataRow["ForeName"].ToString());
+                           
 
-                // author name is not last name and first name, CollectiveName
-                if (authorFirst == "")
-                {
-                    authorFirst = authorFirstDataRow["CollectiveName"].ToString();
-                }
-
-
-                // get last author
-                int lastAuthorIndex = authorListDataRows.Count() - 1;
-                DataRow authorLastDataRow =
-                    authorsDataTable.Rows.Find(authorListDataRows[lastAuthorIndex]["AuthorID"].ToString());
-                string authorLast = authorLastDataRow["Suffix"].ToString();
-
-                if (authorLast != "") // author has suffix, so put " "
-                {
-                    authorLast += " ";
-                }
-
-                authorLast += (authorLastDataRow["LastName"].ToString() + ", "
-                               + authorLastDataRow["ForeName"].ToString());
-
-                if (authorLast == "") // author has collective name, not last name and first name.
-                {
-                    authorLast = authorLastDataRow["CollectiveName"].ToString();
-                }
-
-                // combine the first author and the last author
-                string authors = authorFirst + " ... " + authorLast;
-
-
+                // get journal title
                 string journalRelease = row["JournalRelease"].ToString();
-                DataRow journalReleaseDataRow = journalReleaseDataTable.Rows.Find(journalRelease);
-                DataRow journalDataRow = journalDataTable.Rows.Find(journalReleaseDataRow["JournalID"].ToString());
-                string journalTitle = journalDataRow["Title"].ToString();
 
+                string journalTitle = "";
+                if (journalRelease != "")
+                {
+                    DataRow journalReleaseDataRow = journalReleaseDataTable.Rows.Find(journalRelease);
+                    DataRow journalDataRow = journalDataTable.Rows.Find(journalReleaseDataRow["JournalID"].ToString());
+                    journalTitle = journalDataRow["Title"].ToString();
+                }
+                    
 
+                // put in window
                 _resultTable.Add(new ArticleTableInfo()
                 {
                     ArticleTitle = articleTitle,
@@ -389,7 +410,10 @@ namespace HighThroughputDataRetrieval
                     Journal = journalTitle,
                     Url = url
                 });
-            }
+
+            } // end of foreach
+
+            string isdone = "hahaha";
         }
         #endregion // RetrieveArticleInfo
      

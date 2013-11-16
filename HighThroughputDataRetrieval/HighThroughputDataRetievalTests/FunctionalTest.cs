@@ -18,9 +18,9 @@ namespace HighThroughputDataRetievalTests
             Console.WriteLine(@"Welcome to a simple PubMed Search...");
 
 
-            const string proteinFromUser = "Mavs";
+            const string proteinFromUser = "isp";
             const string organixmFromUser = "Human";
-            const string keywordFromUser = "";
+            const string keywordFromUser = "cell";
 
             // get protein, organism
             //while (string.IsNullOrEmpty(proteinFromUser) && string.IsNullOrEmpty(organixmFromUser))
@@ -99,8 +99,8 @@ namespace HighThroughputDataRetievalTests
             //data_base.CopydatasetToDatabase("C:/Users/Owner/Desktop/mydb.db3", ds_Article);
 
 
-            DataSet queryArticleDataSet = test.GetDataSet();
-            queryArticleDataSet.WriteXml("check.xml");
+            //DataSet queryArticleDataSet = test.GetDataSet();
+            //queryArticleDataSet.WriteXml("check.xml");
 
             // get total running time
             TimeSpan runTime = DateTime.Now - startDateTime;
@@ -108,8 +108,8 @@ namespace HighThroughputDataRetievalTests
             //Console.ReadKey();
             Console.WriteLine(test.ArticleDataTable.Rows.Count);
      
-            SqliteInputOutput.Create_database("E:\\PoteinTest.db3");
-            SqliteInputOutput.CopydatasetToDatabase("E:\\PoteinTest.db3", queryArticleDataSet);
+            //SqliteInputOutput.Create_database("E:\\PoteinTest.db3");
+            //SqliteInputOutput.CopydatasetToDatabase("E:\\PoteinTest.db3", queryArticleDataSet);
 
         }
     }

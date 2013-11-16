@@ -18,11 +18,8 @@
         </LinearGradientBrush>
     </Window.Background>
 
-    <Grid>
-        
-        <TabControl Margin="5" TabStripPlacement="Top" Padding="10"
-                     FontSize="16">
-            <!--Style="{StaticResource TabControlStyle}"-->
+    <Grid>       
+        <TabControl Margin="5" TabStripPlacement="Top" Padding="10" FontSize="16">
             <TabItem Name="MainTab" Header="Main">
                <Grid>
                     <Button Content="Import txt" Height="23" HorizontalAlignment="Left" Margin="5,5,0,0" Name="Importtxt" VerticalAlignment="Top" Width="100" Command="{Binding Path=OpenFileCommand}" />
@@ -45,6 +42,7 @@
                 <Grid Width="800" Height="504" HorizontalAlignment="Center">
                     <DataGrid ItemsSource="{Binding CountProteinTable}" AutoGenerateColumns="False" Height="445" Name="HitCountTableDataGrid" Width="790" HorizontalAlignment="Center" Margin="-2,55,6,2" 
                               SelectedIndex="{Binding SelectedIndex}" IsReadOnly="True">
+                        
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Number of Publication" Width="400" Binding="{Binding CountInHitCountTable}"/>
                             <DataGridTextColumn Header="Protein" Width="400" Binding="{Binding ProteinInHitCountTable}"/>
@@ -53,9 +51,9 @@
                         <DataGrid.InputBindings>
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RetrieveArticleInfoCommand}" CommandParameter="{Binding ElementName=HitCountTableDataGrid, Path=SelectedIndex}" />
                         </DataGrid.InputBindings>
+                        
                     </DataGrid>
                     <Label Content="Hit Count Table" Height="28" HorizontalAlignment="Left" Margin="332,6,0,0" Name="HitCountTableLabel" VerticalAlignment="Top" />
-                    <!--<Image Height="40" HorizontalAlignment="Left" Margin="754,9,0,0" Name="QuestionMarkImageInHitCountTable" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg" />-->
                     <Button Height="40" Width="40" Margin="750,12,6,450" Command="{Binding Path=OpenHelpDocumentCommand}">
                         <Button.Content>
                             <Image HorizontalAlignment="Center" Name="QuestionMarkImageInHitCountTable" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg"/>
@@ -64,27 +62,20 @@
                 </Grid>
             </TabItem>           
             <TabItem Header="Article abstract" >
-                <Grid>
-
-                   
-                    
-                    
-                    <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="button1" VerticalAlignment="Top" Width="75"  Command="{Binding Path=ExpordCommand}" />
+                <Grid>                                    
+                    <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="ExportButton" VerticalAlignment="Top" Width="75"  Command="{Binding Path=ExportCommand}" />
                     <TextBlock Height="23" HorizontalAlignment="Left" Margin="66,16,0,0" Name="textBlock1" Text="Result" VerticalAlignment="Top" Width="84" />
 
                     <DataGrid  AutoGenerateColumns="False" Height="498" HorizontalAlignment="Center" Margin="10,45,0,10" Name="ArticleInfoTabletDataGrid" VerticalAlignment="Top" Width="800"
                      ItemsSource="{Binding FillArticleTableInfo, NotifyOnTargetUpdated=True}" IsReadOnly="True" SelectedIndex="{Binding Path=SelectIndex}">
                     <DataGrid.Columns >
-                           
-
-                            <DataGridTextColumn Header="Title" Binding="{Binding Path= ArticleTitle}" Width="200" />
-
-                            <DataGridTextColumn Header="Author" Binding="{Binding Path= Author}" Width="200" />
+                        <DataGridTextColumn Header="Title" Binding="{Binding Path= ArticleTitle}" Width="200" />
+                         <DataGridTextColumn Header="Author" Binding="{Binding Path= Author}" Width="200" />
                         <DataGridTextColumn Header="Year" Binding="{Binding Path= Year}" Width="200" />
                         <DataGridTextColumn Header="Journal" Binding="{Binding Path=Journal}" MinWidth="200" />
                     </DataGrid.Columns>
                         <DataGrid.InputBindings>
-                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding ArticleInfoTableClick}" CommandParameter="{Binding ElementName=ArticleInfoTabletDataGrid, Path=SelectedItem}" />
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding ArticleInfoTableClickCommand}" CommandParameter="{Binding ElementName=ArticleInfoTabletDataGrid, Path=SelectedItem}" />
                         </DataGrid.InputBindings>
                     </DataGrid>
                     

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using HighThroughputDataRetrievalBackend.IO;
 using NUnit.Framework;
@@ -200,11 +199,19 @@ namespace HighThroughputDataRetievalTests
         //Data Retrieval Unit testing 
         #region Data Retrieval Unit testing 
         [Test]
-        public void TestGetCountAndIds()
+        public void TestGetCount()
         {
-            // before run, double check there is new articles in pubmed
-            Assert.AreEqual(1589, _unitTestDataRetrieval.GetCount(_proteinTest, _organismTest, _keywordTest));
+            // before run, double check there is new articles in pubmed !!!
+
+            // count = 0
             Assert.AreEqual(0, _unitTestDataRetrieval.GetCount("", "", ""));
+
+            // small count
+            Assert.AreEqual(118, _unitTestDataRetrieval.GetCount("isp", "Human", "cell"));
+
+            // large count
+            Assert.AreEqual(238690, _unitTestDataRetrieval.GetCount("Hiv", "Human", ""));
+            
         }
 
         [Test]
@@ -213,6 +220,7 @@ namespace HighThroughputDataRetievalTests
 
             const string pubmedSearchPrefix = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils//esearch.fcgi?db=pubmed&retmax=10000&";
 
+            // small count
             // combine protein, organism, and keyword and construct the URL
             string terms = string.Format("{0},{1},{2}", _proteinTest, _organismTest, _keywordTest);           
             string assembleUrl = string.Format("{0}&term={1}", pubmedSearchPrefix, terms);
@@ -229,16 +237,13 @@ namespace HighThroughputDataRetievalTests
             string name = _proteinTest + _organismTest + _keywordTest;
 
             // get count from xml string
-            int count = int.Parse(xmlDocument.GetElementsByTagName("Count")[0].InnerText);
+            _unitTestDataRetrieval.ArticleCount = int.Parse(xmlDocument.GetElementsByTagName("Count")[0].InnerText);
         
             // get PMIDs from xml string in the XmlNodeList
             XmlNodeList pmidListFromXml = xmlDocument.GetElementsByTagName("Id");
 
-            _unitTestDataRetrieval.FillQueryDataTables(name, count, pmidListFromXml);
+            Assert.AreEqual(true, _unitTestDataRetrieval.FillQueryDataTables(name, pmidListFromXml));
 
-            DataSet queryDataSet = _unitTestDataRetrieval.GetDataSet();
-            queryDataSet.Tables["T_Query"].WriteXml("queryTable.xml");
-            //Console.WriteLine(((queryDataSet.Tables["T_Query"]).Rows[0]["Name"]).ToString());
 
             //Assert.AreEqual(name, queryDataSet.Tables["T_Query"].Rows[0]["Name"].ToString());
             //Assert.AreEqual(count, queryDataSet.Tables["T_Query"].Rows[0]["ResultCount"]);
@@ -247,13 +252,15 @@ namespace HighThroughputDataRetievalTests
             //Assert.AreEqual(_keywordTest, queryDataSet.Tables["T_Keyword"].Rows[0]["Keyword"].ToString());
             // Check T_Query
 
+            // larger count
+
         }
 
-<<<<<<< HEAD
+
        // [Test]
-=======
+
         //[Test]
->>>>>>> a3be286fe852bb8bb7a1312965571f7fb33f2dbd
+
         //public void TestGetArticleInfomation()
         //{
         //    //_proteinTest = "salmonella";
