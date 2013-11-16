@@ -54,7 +54,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                             listCol.Add(dc.ColumnName);
 
                         cmd.CommandText = string.Format(
-   "INSERT INTO {0}({1}) VALUES (@{2})" , table.TableName,
+                            "INSERT INTO {0}({1}) VALUES (@{2})" , table.TableName,
                             string.Join(", ", listCol),
                             string.Join(", @", listCol));
 
@@ -211,7 +211,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                 List<string> listOfColum = new List<string>();
                 List<string> listOfPk = new List<string>();
                 DataColumn[] col = table.PrimaryKey;
-// ReSharper disable once LoopCanBeConvertedToQuery
+            // ReSharper disable once LoopCanBeConvertedToQuery
                 foreach (DataColumn dc in table.Columns)
                 {
                     string colum = dc.ColumnName + " ";
@@ -224,7 +224,7 @@ namespace HighThroughputDataRetrievalBackend.IO
                 {
                     scmd1 += ",";
                     scmd1 += "PRIMARY KEY (";
-// ReSharper disable once LoopCanBeConvertedToQuery
+                // ReSharper disable once LoopCanBeConvertedToQuery
                     foreach (DataColumn c in col)
                     {
                         string pk = string.Join(", ", c.ColumnName);
@@ -652,5 +652,13 @@ namespace HighThroughputDataRetrievalBackend.IO
             }
             return returnCode;
         }
+
+
+       
+    
+
     }
+
+
+        
 }
