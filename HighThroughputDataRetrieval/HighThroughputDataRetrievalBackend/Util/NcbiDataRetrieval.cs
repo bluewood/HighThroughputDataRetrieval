@@ -14,9 +14,17 @@ namespace HighThroughputDataRetrievalBackend.Util
     {
         #region Properities
 
+        public int QueryID { set; get; }
+        public int QueryArticleID { set; get; }
+        public int KeywordID { set; get; }
+        public int OrganismID { set; get; }
+        public int QuerySessionID { set; get; }
+        public int ProteinID { set; get; }
+        public int ProteinListID { set; get; }
+
+
         public List<string> IdList { set; get; }
         public int ArticleCount { set; get; }
-        public int KeyOrder { set; get; }
         public string ProteinFromUser { set; get; }
         public string OrganismFromUser { set; get; }
         public string KeywordFromUser { set; get; }
@@ -24,24 +32,17 @@ namespace HighThroughputDataRetrievalBackend.Util
         // datatables 
         public DataTable QueryDataTable { set; get; }
         public DataTable QueryArticlesDataTable { set; get; }
-        public DataTable KeywordListDataTable { set; get; }
         public DataTable KeywordDataTable { set; get; }
         public DataTable OrganismDataTable { set; get; }
-        public DataTable ProteinsDataTable { set; get; }
+        public DataTable ProteinDataTable { set; get; }
         public DataTable ProteinListDataTable { set; get; }
         public DataTable QuerySessionDataTable { set; get; }
-        public DataTable AlternativeProteinNameDataTable { set; get; }
         public DataTable ArticleDataTable { set; get; }
         public DataTable AuthorListDataTable { set; get; }
         public DataTable AuthorsDataTable { set; get; }
         public DataTable JournalReleaseDataTable { set; get; }
         public DataTable JournalDataTable { set; get; }
-        public DataTable ArticleInfoDataTable { set; get; }
-        //public DataTable TagListDataTable;
-        //public DataTable TagsDataTable;
-        //public DataTable CategoryListDataTable;
-        //public DataTable CategoriesDataTable;
-
+       
         // Dataset to include the datatables
         public DataSet QueryArticlesDataSet { set; get; }
 
@@ -54,11 +55,10 @@ namespace HighThroughputDataRetrievalBackend.Util
         #region Methods
 
         public abstract int GetCount(string protein, string organism, string keyword);
-        public abstract bool FillQueryDataTables(string name,  XmlNodeList pmidList);
+        public abstract bool FillQueryDataTables(string name, XmlNodeList pmidList);
         public abstract DataTable GetArticleInfomation(int count, List<string> idList);
-        public abstract bool FillArticleDataTables(XmlNodeList articleList, string pubmedSearchPrefix);
+        public abstract bool FillArticleDataTables(XmlNodeList articleList);
         public abstract DataSet GetDataSet();
-
 
         #endregion // methods
 

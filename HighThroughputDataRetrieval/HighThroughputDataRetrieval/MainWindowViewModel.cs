@@ -12,7 +12,6 @@ using System.Windows;
 using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
 using HighThroughputDataRetrievalBackend.Util;
-using HighThroughputDataRetrievalBackend.IO;
 using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
 using MessageBox = System.Windows.MessageBox;
@@ -29,18 +28,18 @@ namespace HighThroughputDataRetrieval
         public List<int> CountList { get; set; }
         public IEnumerable<string> ProteinList { get; set; }
         public ObservableCollection<HitCountTable> CountProteinTable { get; set; }
-        public int SelectedIndex { get; set; } // in HitCountTable
-        public int SelectIndex { get; set; }   // in ArticleInfoTable
+        public int SelectedIndex { get; set; } // in HitCountTable and ArticleInfoTAble
         public List<string> IDList { get; set; } 
         private ObservableCollection<ArticleTableInfo> _resultTable;
         public ObservableCollection<HitCountTable> CountListWithProteins { get; set; }
-        
 
+        // Dictionary to avoid duplication
+        public static Dictionary<string, DataRow> Dictionary { set; get; }
         
         #region Fields of paging 
 
         private int _start = 0;
-        private const int ItemCount = 5;
+        private const int ItemCount = 15;
         private int _totalItems = 0;
         private ICommand _firstCommand;
         private ICommand _previousCommand;
@@ -59,10 +58,6 @@ namespace HighThroughputDataRetrieval
         /// </summary>
         public int TotalItems { get { return _totalItems; } }
 
-// ReSharper disable once InconsistentNaming
-        //public ObservableCollection<ArticleTableInfo> _ResultTable;
-
-// ReSharper disable once InconsistentNaming
         public ObservableCollection<ArticleTableInfo> _FillArticleTableInfo;
 
         #endregion // fields of paging
@@ -87,8 +82,9 @@ namespace HighThroughputDataRetrieval
             CountList = new List<int>();
             IDList = new List<string>();
 
-            _progressDialog = new ProgressDialog();
-            _progressDialog.DoWork += _progressDialog_DoWork;
+         
+
+            RecoverDictionary();
 
 
         }
@@ -122,7 +118,7 @@ namespace HighThroughputDataRetrieval
                 //Hyperlink link = new Hyperlink(FillArticleTableInfo[SelectIndex].Url.ToString());
                // Uri uri = new Uri(FillArticleTableInfo[SelectIndex].Url.ToString());
 
-                Process.Start(FillArticleTableInfo[SelectIndex].Url);
+                Process.Start(FillArticleTableInfo[SelectedIndex].Url);
             }
         }
 
@@ -217,51 +213,6 @@ namespace HighThroughputDataRetrieval
 
         #endregion // search pubmed
 
-
-        #region progressing bar
-        /// <summary>
-        /// Nan: need revision, change to multi-threading 
-        /// current progress bar is on single thread, which is time consuming
-        /// </summary>
-        private ProgressDialog _progressDialog = new ProgressDialog()
-        {
-            Text = "Retrieving count number from PubMed...",
-            Description = "Processing...",
-            ShowTimeRemaining = true,
-        };
-
-        public void ShowProgressDialog()
-        {
-            if (_progressDialog.IsBusy)
-                MessageBox.Show("The progress dialog is already displayed.");
-            else
-                _progressDialog.Show(); // Show a modeless dialog
-        }
-
-        private void _progressDialog_DoWork(object sender, DoWorkEventArgs e)
-        {
-            int x = 0;
-            // Implement the operation that the progress bar is showing progress of here, same as you would do with a background worker.
-            foreach (string protein in ProteinList)
-            {
-                Thread.Sleep(500);
-                // Periodically check CancellationPending and abort the operation if required.
-                if (_progressDialog.CancellationPending)
-                    return;
-
-                //int count = PubMedSearch.GetCount(protein, OrganismFromModel, KeywordFromModel);
-                //CountList.Add(count);
-                //CountListWithProteins.Add(new HitCountTable(count, protein));
-
-                x++;
-                // ReportProgress can also modify the main text and description; pass null to leave them unchanged.
-                // If _progressDialog.ShowTimeRemaining is set to true, the time will automatically be calculated based on
-                // the frequency of the calls to ReportProgress.
-                _progressDialog.ReportProgress(x, null, string.Format(System.Globalization.CultureInfo.CurrentCulture, "Processing: {0}%", (int)x / ProteinList.Count()));
-            }
-        }
-        #endregion 
-    
 
         #region RetrieveArticleInfo
 
@@ -665,6 +616,14 @@ namespace HighThroughputDataRetrieval
         #endregion // KeywordFromModel
 
         #endregion // properties
+
+        #region Helper Methods
+
+        public void RecoverDictionary()
+        {
+            
+        }
+        #endregion
     }
    
    
