@@ -34,10 +34,7 @@ namespace HighThroughputDataRetrievalBackend.Util
         public DataTable AuthorsDataTable { set; get; }
         public DataTable JournalReleaseDataTable { set; get; }
         public DataTable JournalDataTable { set; get; }
-        //public DataTable TagListDataTable;
-        //public DataTable TagsDataTable;
-        //public DataTable CategoryListDataTable;
-        //public DataTable CategoriesDataTable;
+        
 
         // Dataset to include the datatables
         public DataSet QueryArticlesDataSet { set; get; }
