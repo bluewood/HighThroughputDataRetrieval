@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -28,7 +28,6 @@ namespace HighThroughputDataRetrievalBackend.Util
             QueryDataTable = new DataTable("T_Query");
             QueryDataTable.Columns.Add("QueryID", typeof(int));
             QueryDataTable.Columns.Add("Name");
-            //dt_Query.Columns.Add("Description"); what information for???
             //QueryDataTable.Columns.Add("QueryStartTime");
             //QueryDataTable.Columns.Add("QueryEndTime");
             QueryDataTable.Columns.Add("ProteinID", typeof(int));
@@ -43,13 +42,6 @@ namespace HighThroughputDataRetrievalBackend.Util
             QueryArticlesDataTable.Columns.Add("QueryID", typeof(int));
             QueryArticlesDataTable.Columns.Add("PMID"); // should be int or string???
             QueryArticlesDataTable.PrimaryKey = new[] { QueryArticlesDataTable.Columns["QueryArticleID"] };
-
-
-            KeywordListDataTable = new DataTable("T_KeyWordList");
-            KeywordListDataTable.Columns.Add("KeywordListID", typeof(int));
-            KeywordListDataTable.Columns.Add("KeywordOrder", typeof(int));
-            KeywordListDataTable.Columns.Add("KeywordID", typeof(int));
-            KeywordListDataTable.PrimaryKey = new [] { KeywordListDataTable.Columns["KeywordListID"]};
 
 
             KeywordDataTable = new DataTable("T_Keyword");
