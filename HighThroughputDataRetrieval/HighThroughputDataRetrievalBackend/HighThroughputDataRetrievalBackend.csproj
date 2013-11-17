@@ -62,7 +62,7 @@
     <Compile Include="IO\SqliteInputOutput.cs" />
     <Compile Include="Model\ArticleTableInfo.cs" />
     <Compile Include="Model\HitCountTable.cs" />
-    <Compile Include="Model\UserInput.cs" />
+    <Compile Include="Util\UserInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

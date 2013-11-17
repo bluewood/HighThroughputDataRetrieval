@@ -1,0 +1,1695 @@
+
+ 
+This repository
+Explore
+Gist
+Blog
+Help
+bluewood
+4  Unwatch
+Star 0 Fork 0PRIVATE bluewood / HighThroughputDataRetrieval
+HighThroughputDataRetrieval / HighThroughputDataRetrieval / HighThroughputDataRetrieval / MainWindowViewModel.cs
+838 ????? HighThroughputDataRetrieval/HighThroughputDataRetrieval/MainWindowViewModel.cs View file @ 1ece512
+...	...	
+@@ -1,839 +1 @@
+1	 	
+-?
+2	 	
+-using System.Collections.Generic;
+3	 	
+-using System.Collections.ObjectModel;
+4	 	
+-using System.ComponentModel;
+5	 	
+-using System.Data;
+6	 	
+-using System.IO;
+7	 	
+-using System.Linq;
+8	 	
+-using System.Text.RegularExpressions;
+9	 	
+-using System.Threading;
+10	 	
+-<<<<<<< HEAD
+11	 	
+-using System.Windows;
+12	 	
+-
+13	 	
+-using System.Windows.Input;
+14	 	
+-using HighThroughputDataRetrievalBackend.Model;
+15	 	
+-using HighThroughputDataRetrievalBackend.Util;
+16	 	
+-using HighThroughputDataRetrievalBackend.IO;
+17	 	
+-using Microsoft.Win32;
+18	 	
+-using Ookii.Dialogs.Wpf;
+19	 	
+-
+20	 	
+-using MessageBox = System.Windows.MessageBox;
+21	 	
+-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+22	 	
+-=======
+23	 	
+-using System.Windows.Forms.VisualStyles;
+24	 	
+-using System.Windows.Input;
+25	 	
+-using HighThroughputDataRetrievalBackend.Model;
+26	 	
+-using HighThroughputDataRetrievalBackend.Util;
+27	 	
+-using Microsoft.Win32;
+28	 	
+-using Ookii.Dialogs.Wpf;
+29	 	
+-using MessageBox = System.Windows.MessageBox;
+30	 	
+-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+31	 	
+-<<<<<<< HEAD
+32	 	
+-=======
+33	 	
+-using Microsoft.Win32;
+34	 	
+->>>>>>> 2c9ff56905d392a7214dcfe8fe1c2912986ae4ae
+35	 	
+->>>>>>> a3be286fe852bb8bb7a1312965571f7fb33f2dbd
+36	 	
+-
+37	 	
+-
+38	 	
+-namespace HighThroughputDataRetrieval
+39	 	
+-{
+40	 	
+-    public class MainWindowViewModel : INotifyPropertyChanged
+41	 	
+-    {
+42	 	
+-        # region Fields
+43	 	
+-
+44	 	
+-        public UserInput UserInputFromModel;
+45	 	
+-        public NcbiDataRetrieval PubMedSearch { get; set; }
+46	 	
+-        public List<int> CountList { get; set; }
+47	 	
+-        public IEnumerable<string> ProteinList { get; set; }
+48	 	
+-<<<<<<< HEAD
+49	 	
+-        public ObservableCollection<HitCountTable> CountProteinTable { get; set; }
+50	 	
+-        public int SelectedIndex { get; set; }
+51	 	
+-        public List<string> IDList { get; set; } 
+52	 	
+-        //
+53	 	
+-        //
+54	 	
+-        private ObservableCollection<ArticleTableInfo> _resultTable;
+55	 	
+-=======
+56	 	
+-        public ObservableCollection<HitCountTable> CountListWithProteins { get; set; }
+57	 	
+-        public int SelectIndex { get; set; }
+58	 	
+-
+59	 	
+-        
+60	 	
+-        #region Fields of paging 
+61	 	
+-        private int _start = 0;
+62	 	
+-        private const int ItemCount = 5;
+63	 	
+-        private int _totalItems = 0;
+64	 	
+-        private ICommand _firstCommand;
+65	 	
+-        private ICommand _previousCommand;
+66	 	
+-        private ICommand _nextCommand;
+67	 	
+-        private ICommand _lastCommand;
+68	 	
+-
+69	 	
+-
+70	 	
+-        public int Start { get { return _start + 1; } }
+71	 	
+-
+72	 	
+-        /// <summary>
+73	 	
+-        /// Gets the index of the last article
+74	 	
+-        /// </summary>
+75	 	
+-        public int End { get { return _start + ItemCount < _totalItems ? _start + ItemCount : _totalItems; } }
+76	 	
+-
+77	 	
+-        /// <summary>
+78	 	
+-        /// The number of total article.
+79	 	
+-        /// </summary>
+80	 	
+-        public int TotalItems { get { return _totalItems; } }
+81	 	
+-
+82	 	
+-// ReSharper disable once InconsistentNaming
+83	 	
+-        public ObservableCollection<ArticleTableInfo> _ResultTable;
+84	 	
+->>>>>>> 2c9ff56905d392a7214dcfe8fe1c2912986ae4ae
+85	 	
+-
+86	 	
+-// ReSharper disable once InconsistentNaming
+87	 	
+-        public ObservableCollection<ArticleTableInfo> _FillArticleTableInfo;
+88	 	
+-
+89	 	
+-        #endregion
+90	 	
+-        RelayCommand _openFileCommand;
+91	 	
+-        RelayCommand _searchPubMedCommand;
+92	 	
+-        RelayCommand _openHelpDocumentCommand;
+93	 	
+-        RelayCommand _retrieveArticleInfoCommand;
+94	 	
+-        RelayCommand _exportCommand;
+95	 	
+-        private RelayCommand _ArticleInfotableClick;
+96	 	
+-        #endregion // Fields
+97	 	
+-<<<<<<< HEAD
+98	 	
+-
+99	 	
+-        #region Constructor
+100	 	
+-
+101	 	
+-        public MainWindowViewModel()
+102	 	
+-        {
+103	 	
+-            UserInputFromModel = new UserInput();
+104	 	
+-            PubMedSearch = new PubMedDataRetrieval();
+105	 	
+-            CountProteinTable = new ObservableCollection<HitCountTable>();
+106	 	
+-            CountList = new List<int>();
+107	 	
+-            IDList = new List<string>();
+108	 	
+-
+109	 	
+-            _progressDialog = new ProgressDialog();
+110	 	
+-            _progressDialog.DoWork += _progressDialog_DoWork;
+111	 	
+-
+112	 	
+-            //this.RetrieveArticleInfo();
+113	 	
+-
+114	 	
+-        }
+115	 	
+-
+116	 	
+-        #endregion // Constructor
+117	 	
+-
+118	 	
+-
+119	 	
+-        public ObservableCollection<ArticleTableInfo> ResultTable
+120	 	
+-        {
+121	 	
+-            get { return _resultTable; }
+122	 	
+-            set
+123	 	
+-            {
+124	 	
+-                _resultTable = value;
+125	 	
+-                OnPropertyChanged("ProteinFromModel");
+126	 	
+-            }
+127	 	
+-        }
+128	 	
+-
+129	 	
+-        public void RetrieveArticleInfo()     
+130	 	
+-        {
+131	 	
+-            _resultTable = new ObservableCollection<ArticleTableInfo>();
+132	 	
+-            int count = CountProteinTable[SelectedIndex].CountInHitCountTable;
+133	 	
+-            string protein = CountProteinTable[SelectedIndex].ProteinInHitCountTable;
+134	 	
+-            string name = protein + OrganismFromModel + KeywordFromModel;
+135	 	
+-            
+136	 	
+-            DataTable queryDataTable = PubMedSearch.QueryDataTable;
+137	 	
+-            DataTable queryArticleDataTable = PubMedSearch.QueryArticlesDataTable;
+138	 	
+-
+139	 	
+-            // get queryID from queryDataTable using name
+140	 	
+-            string queryID = "";
+141	 	
+-            foreach (DataRow row in queryDataTable.Rows)
+142	 	
+-            {
+143	 	
+-                if (row["Name"].ToString() == name)
+144	 	
+-                {
+145	 	
+-                    queryID = row["QueryID"].ToString();
+146	 	
+-                    break;
+147	 	
+-                }
+148	 	
+-            }
+149	 	
+-
+150	 	
+-            // get PMIDs from queryArticleDataTable using queryID
+151	 	
+-            DataRow[] queryArticleDataRows = queryArticleDataTable.Select("QueryID = " + queryID);
+152	 	
+-            foreach (DataRow row in queryArticleDataRows)
+153	 	
+-            {
+154	 	
+-                IDList.Add(row["PMID"].ToString());
+155	 	
+-            }
+156	 	
+-
+157	 	
+-            // retrieve article information with the count and the ID list
+158	 	
+-            // after call this method, the datatables are filled with article information
+159	 	
+-            DataTable articleDataTable = PubMedSearch.GetArticleInfomation(count, IDList);
+160	 	
+-
+161	 	
+-            // get authorListDataTable
+162	 	
+-            DataTable authorListDataTable = PubMedSearch.AuthorListDataTable;
+163	 	
+-
+164	 	
+-            // get authroDataTable
+165	 	
+-            DataTable authorsDataTable = PubMedSearch.AuthorsDataTable;
+166	 	
+-
+167	 	
+-            // get journalReleaseDataTable 
+168	 	
+-            DataTable journalReleaseDataTable = PubMedSearch.JournalReleaseDataTable;
+169	 	
+-
+170	 	
+-            // get journalDataTable
+171	 	
+-            DataTable journalDataTable = PubMedSearch.JournalDataTable;
+172	 	
+-
+173	 	
+-           //DataSet temp = PubMedSearch.GetDataSet();
+174	 	
+-           //temp.WriteXml("check.xml");
+175	 	
+-          
+176	 	
+-            // get article, author, and journal information
+177	 	
+-            foreach (DataRow row in articleDataTable.Rows)
+178	 	
+-            {
+179	 	
+-                // get title, url, and published date
+180	 	
+-                string articleTitle = row["Title"].ToString();
+181	 	
+-                string url = row["URL"].ToString();
+182	 	
+-                string pubDate = row["PubDate"].ToString();
+183	 	
+-
+184	 	
+-                // get authors from authorListDataTable using article's PMID
+185	 	
+-                string pmid = string.Format("{0}{1}{2}", "'", row["PMID"].ToString(), "'");
+186	 	
+-                DataRow[] authorListDataRows = authorListDataTable.Select("PMID =" + pmid);
+187	 	
+-
+188	 	
+-                // most authors' name is last name and first name, 
+189	 	
+-                // but some author has suffix such as Junior
+190	 	
+-                // and also some author has just only have collective name
+191	 	
+-                // only print first and last author on the grid.
+192	 	
+-
+193	 	
+-                // get first author 
+194	 	
+-                DataRow authorFirstDataRow = authorsDataTable.Rows.Find(authorListDataRows[0]["AuthorID"].ToString());
+195	 	
+-                string authorFirst = authorFirstDataRow["Suffix"].ToString();
+196	 	
+-
+197	 	
+-                if (authorFirst != "") // author has suffix, so put " "
+198	 	
+-                {
+199	 	
+-                    authorFirst += " ";
+200	 	
+-                }
+201	 	
+-                authorFirst += (authorFirstDataRow["LastName"].ToString() + ", "
+202	 	
+-                                + authorFirstDataRow["ForeName"].ToString());
+203	 	
+-
+204	 	
+-                // author name is not last name and first name, CollectiveName
+205	 	
+-                if (authorFirst == "") 
+206	 	
+-                {
+207	 	
+-                    authorFirst = authorFirstDataRow["CollectiveName"].ToString();
+208	 	
+-                }
+209	 	
+-
+210	 	
+-
+211	 	
+-                // get last author
+212	 	
+-                int lastAuthorIndex = authorListDataRows.Count() - 1;
+213	 	
+-                DataRow authorLastDataRow = authorsDataTable.Rows.Find(authorListDataRows[lastAuthorIndex]["AuthorID"].ToString());
+214	 	
+-                string authorLast = authorLastDataRow["Suffix"].ToString();
+215	 	
+-
+216	 	
+-                if (authorLast != "") // author has suffix, so put " "
+217	 	
+-                {
+218	 	
+-                    authorLast += " ";
+219	 	
+-                }
+220	 	
+-
+221	 	
+-                authorLast += (authorLastDataRow["LastName"].ToString() + ", "
+222	 	
+-                               + authorLastDataRow["ForeName"].ToString());
+223	 	
+-
+224	 	
+-                if (authorLast == "") // author has collective name, not last name and first name.
+225	 	
+-                {
+226	 	
+-                    authorLast = authorLastDataRow["CollectiveName"].ToString();
+227	 	
+-                }
+228	 	
+-
+229	 	
+-                // combine the first author and the last author
+230	 	
+-                string authors = authorFirst + " ... " + authorLast;
+231	 	
+-
+232	 	
+-
+233	 	
+-                string journalRelease = row["JournalRelease"].ToString();
+234	 	
+-                DataRow journalReleaseDataRow = journalReleaseDataTable.Rows.Find(journalRelease);
+235	 	
+-                DataRow journalDataRow = journalDataTable.Rows.Find(journalReleaseDataRow["JournalID"].ToString());
+236	 	
+-                string journalTitle = journalDataRow["Title"].ToString();
+237	 	
+-
+238	 	
+-
+239	 	
+-                _resultTable.Add(new ArticleTableInfo() { ArticleTitle = articleTitle, Author = authors, Year = pubDate, Journal = journalTitle, Url = url });
+240	 	
+-            }
+241	 	
+-
+242	 	
+-=======
+243	 	
+-         
+244	 	
+-        public ICommand ArticleInfoTableClick {
+245	 	
+-            get
+246	 	
+-            {
+247	 	
+-                return _ArticleInfotableClick ?? (_ArticleInfotableClick = new RelayCommand(Article_Info_Table_Click));
+248	 	
+-            }
+249	 	
+-        }
+250	 	
+-
+251	 	
+-        public void Article_Info_Table_Click()
+252	 	
+-        {
+253	 	
+-            if (MessageBox.Show("Go to PubMed ?", "Message", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+254	 	
+-            {
+255	 	
+-                //Hyperlink link = new Hyperlink(FillArticleTableInfo[SelectIndex].Url.ToString());
+256	 	
+-               // Uri uri = new Uri(FillArticleTableInfo[SelectIndex].Url.ToString());
+257	 	
+-
+258	 	
+-                Process.Start(FillArticleTableInfo[SelectIndex].Url);
+259	 	
+-            }
+260	 	
+-        }
+261	 	
+-       
+262	 	
+-
+263	 	
+-        public ObservableCollection<ArticleTableInfo> FillArticleTableInfo
+264	 	
+-        {
+265	 	
+-            get { return _FillArticleTableInfo; }
+266	 	
+-            set
+267	 	
+-            {
+268	 	
+-                _FillArticleTableInfo = value;
+269	 	
+-                OnPropertyChanged("FillArticleTableInfo");
+270	 	
+-            }
+271	 	
+-        }
+272	 	
+-        public void RetrievalArticleInfo()
+273	 	
+-        {
+274	 	
+-<<<<<<< HEAD
+275	 	
+-            _ResultTable = new ObservableCollection<ArticleTableInfo>();
+276	 	
+-            string[] myArticle = new string[15];
+277	 	
+-            string[] myAuthor = new string[15];
+278	 	
+-            int[] myYear = new int[15];
+279	 	
+-            string[] myJournal = new string[15];
+280	 	
+-            string[] myUrl = new string[15];
+281	 	
+-            //example table in dataset
+282	 	
+-            DataTable article = new DataTable("Article");
+283	 	
+-            article.Columns.Add("Title", typeof(string));
+284	 	
+-            article.Columns.Add("PMID", typeof(int));
+285	 	
+-            article.Columns.Add("URL", typeof(string));
+286	 	
+-            article.Rows.Add("Water-soluble LYNX1 residues important for interaction with muscle-type and/or neuronal nicotinic receptors", 1, "http://www.ncbi.nlm.nih.gov/pubmed/");
+287	 	
+-            article.Rows.Add("[Bacterial expression of water-soluble domain of Lynx1, endogenic neuromodulator of humannicotinic acetylcholine receptors]", 2, "http://www.ncbi.nlm.nih.gov/pubmed/");
+288	 	
+-            article.Rows.Add("abcd ", 3, "http://www.ncbi.nlm.nih.gov/pubmed/");
+289	 	
+-            article.Rows.Add("abcd1", 4, "http://www.ncbi.nlm.nih.gov/pubmed/");
+290	 	
+-            article.Rows.Add("lasdasd ", 5, "http://www.ncbi.nlm.nih.gov/pubmed/");
+291	 	
+-            article.Rows.Add("Last", 6, "http://www.ncbi.nlm.nih.gov/pubmed/");
+292	 	
+-           
+293	 	
+-            DataTable author = new DataTable("Author");
+294	 	
+-            author.Columns.Add("Author", typeof(string));
+295	 	
+-            author.Columns.Add("PMID", typeof(int));
+296	 	
+-            author.Rows.Add("Lyukmanova EN,…Tsetlin VI", 1);
+297	 	
+-            author.Rows.Add("Shulepko MA, … Kirpichnikov MP", 2);
+298	 	
+-            author.Rows.Add("Lyukmanova EN,…Tsetlin VI", 3);
+299	 	
+-            author.Rows.Add("Shulepko MA, … Kirpichnikov MP", 4);
+300	 	
+-            author.Rows.Add("Lyukmanova EN,…Tsetlin VI", 5);
+301	 	
+-            author.Rows.Add("Shulepko MA, … Kirpichnikov MP", 6);
+302	 	
+-
+303	 	
+-            DataTable journal = new DataTable("Jornal");
+304	 	
+-            journal.Columns.Add("Jornal", typeof(string));
+305	 	
+-            journal.Columns.Add("Year", typeof(int));
+306	 	
+-            journal.Columns.Add("PMID", typeof(int));
+307	 	
+-            journal.Rows.Add("J Biol Chem", 2013, 1);
+308	 	
+-            journal.Rows.Add("Bioorg Khim", 2011, 2);
+309	 	
+-            journal.Rows.Add("J Biol Chem", 2013, 3);
+310	 	
+-            journal.Rows.Add("Bioorg Khim", 2011, 4);
+311	 	
+-            journal.Rows.Add("J Biol Chem", 2013, 5);
+312	 	
+-            journal.Rows.Add("Bioorg Khim", 2011, 6);
+313	 	
+-
+314	 	
+-            //get myArticle
+315	 	
+-            for (int i = 0; i < article.Rows.Count; i++)
+316	 	
+-            {
+317	 	
+-                myArticle[i] = string.Format(article.Rows[i].ItemArray[0].ToString());
+318	 	
+-                myUrl[i] = string.Format(article.Rows[i].ItemArray[2].ToString());
+319	 	
+-
+320	 	
+-            }
+321	 	
+-            //get myAuthor
+322	 	
+-
+323	 	
+-            for (int i = 0; i < article.Rows.Count; i++)
+324	 	
+-            {
+325	 	
+-                for (int j = 0; j < author.Rows.Count; j++)
+326	 	
+-                {
+327	 	
+-                    if ((int)article.Rows[i].ItemArray[1] == (int)author.Rows[j].ItemArray[1])
+328	 	
+-                    {
+329	 	
+-                        myAuthor[i] = (string)author.Rows[j].ItemArray[0];
+330	 	
+-                    }
+331	 	
+-                }
+332	 	
+-            }
+333	 	
+-            //get myJournal and my Year
+334	 	
+-            for (int i = 0; i < article.Rows.Count; i++)
+335	 	
+-            {
+336	 	
+-                for (int j = 0; j < journal.Rows.Count; j++)
+337	 	
+-                {
+338	 	
+-                    if ((int)article.Rows[i].ItemArray[1] == (int)journal.Rows[j].ItemArray[2])
+339	 	
+-                    {
+340	 	
+-                        myJournal[i] = (string)journal.Rows[j].ItemArray[0];
+341	 	
+-                        myYear[i] = (int)journal.Rows[j].ItemArray[1];
+342	 	
+-                    }
+343	 	
+-                }
+344	 	
+-            }
+345	 	
+-            for (int i = 0; i < article.Rows.Count; i++)
+346	 	
+-            {
+347	 	
+-                _ResultTable.Add(new ArticleTableInfo { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
+348	 	
+-            }
+349	 	
+-            _totalItems = _ResultTable.Count;
+350	 	
+-=======
+351	 	
+-            
+352	 	
+-            
+353	 	
+->>>>>>> a3be286fe852bb8bb7a1312965571f7fb33f2dbd
+354	 	
+-        }
+355	 	
+->>>>>>> 2c9ff56905d392a7214dcfe8fe1c2912986ae4ae
+356	 	
+-
+357	 	
+-            //MessageBox.Show("Retrieving article info done!");
+358	 	
+-
+359	 	
+-            //for (int i = 0; i < article.Rows.Count; i++)
+360	 	
+-            //{
+361	 	
+-            //    _resultTable.Add(new ArticleTableInfo() { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
+362	 	
+-            //}
+363	 	
+-            //string[] myArticle = new string[15];
+364	 	
+-            //string[] myAuthor = new string[15];
+365	 	
+-            //int[] myYear = new int[15];
+366	 	
+-            //string[] myJournal = new string[15];
+367	 	
+-            //string[] myUrl = new string[15];
+368	 	
+-            ////example table in dataset
+369	 	
+-            //DataTable article = new DataTable("Article");
+370	 	
+-            //article.Columns.Add("Title", typeof(string));
+371	 	
+-            //article.Columns.Add("PMID", typeof(int));
+372	 	
+-            //article.Columns.Add("URL", typeof(string));
+373	 	
+-            //article.Rows.Add("Water-soluble LYNX1 residues important for interaction with muscle-type and/or neuronal nicotinic receptors", 1, "http://www.ncbi.nlm.nih.gov/pubmed/");
+374	 	
+-            //article.Rows.Add("[Bacterial expression of water-soluble domain of Lynx1, endogenic neuromodulator of humannicotinic acetylcholine receptors]", 2, "http://www.ncbi.nlm.nih.gov/pubmed/");
+375	 	
+-
+376	 	
+-            //DataTable author = new DataTable("Author");
+377	 	
+-            //author.Columns.Add("Author", typeof(string));
+378	 	
+-            //author.Columns.Add("PMID", typeof(int));
+379	 	
+-            //author.Rows.Add("Lyukmanova EN,…Tsetlin VI", 1);
+380	 	
+-            //author.Rows.Add("Shulepko MA, … Kirpichnikov MP", 2);
+381	 	
+-
+382	 	
+-            //DataTable journal = new DataTable("Jornal");
+383	 	
+-            //journal.Columns.Add("Jornal", typeof(string));
+384	 	
+-            //journal.Columns.Add("Year", typeof(int));
+385	 	
+-            //journal.Columns.Add("PMID", typeof(int));
+386	 	
+-            //journal.Rows.Add("J Biol Chem", 2013, 1);
+387	 	
+-            //journal.Rows.Add("Bioorg Khim", 2011, 2);
+388	 	
+-
+389	 	
+-            ////get myArticle
+390	 	
+-            //for (int i = 0; i < article.Rows.Count; i++)
+391	 	
+-            //{
+392	 	
+-            //    myArticle[i] = string.Format(article.Rows[i].ItemArray[0].ToString());
+393	 	
+-            //    myUrl[i] = string.Format(article.Rows[i].ItemArray[2].ToString());
+394	 	
+-
+395	 	
+-            //}
+396	 	
+-            ////get myAuthor
+397	 	
+-
+398	 	
+-            //for (int i = 0; i < article.Rows.Count; i++)
+399	 	
+-            //{
+400	 	
+-            //    for (int j = 0; j < author.Rows.Count; j++)
+401	 	
+-            //    {
+402	 	
+-            //        if ((int)article.Rows[i].ItemArray[1] == (int)author.Rows[j].ItemArray[1])
+403	 	
+-            //        {
+404	 	
+-            //            myAuthor[i] = (string)author.Rows[j].ItemArray[0];
+405	 	
+-            //        }
+406	 	
+-            //    }
+407	 	
+-            //}
+408	 	
+-            ////get myJournal and my Year
+409	 	
+-            //for (int i = 0; i < article.Rows.Count; i++)
+410	 	
+-            //{
+411	 	
+-            //    for (int j = 0; j < journal.Rows.Count; j++)
+412	 	
+-            //    {
+413	 	
+-            //        if ((int)article.Rows[i].ItemArray[1] == (int)journal.Rows[j].ItemArray[2])
+414	 	
+-            //        {
+415	 	
+-            //            myJournal[i] = (string)journal.Rows[j].ItemArray[0];
+416	 	
+-            //            myYear[i] = (int)journal.Rows[j].ItemArray[1];
+417	 	
+-            //        }
+418	 	
+-            //    }
+419	 	
+-            //}
+420	 	
+-
+421	 	
+-<<<<<<< HEAD
+422	 	
+-
+423	 	
+-=======
+424	 	
+-        public MainWindowViewModel()      
+425	 	
+-        {
+426	 	
+-            UserInputFromModel  = new UserInput();
+427	 	
+-            PubMedSearch = new PubMedDataRetrieval();
+428	 	
+-            CountListWithProteins = new ObservableCollection<HitCountTable>();
+429	 	
+-            CountList = new List<int>();
+430	 	
+-<<<<<<< HEAD
+431	 	
+-            RetrievalArticleInfo();
+432	 	
+-            Refresh();
+433	 	
+-            SqliteInputOutput.Create_database("../../Document/HTDR_Database.db3");
+434	 	
+-
+435	 	
+-            _progressDialog = new ProgressDialog();
+436	 	
+-            _progressDialog.DoWork += _progressDialog_DoWork;
+437	 	
+-
+438	 	
+-=======
+439	 	
+-            this.RetrievalArticleInfo();
+440	 	
+-            Refresh();
+441	 	
+-
+442	 	
+-            LoadDataGrid();
+443	 	
+-            _progressDialog = new ProgressDialog();
+444	 	
+-            _progressDialog.DoWork += _progressDialog_DoWork;
+445	 	
+-
+446	 	
+-           
+447	 	
+->>>>>>> 2c9ff56905d392a7214dcfe8fe1c2912986ae4ae
+448	 	
+->>>>>>> a3be286fe852bb8bb7a1312965571f7fb33f2dbd
+449	 	
+-        }
+450	 	
+-
+451	 	
+-
+452	 	
+-
+453	 	
+-        #region Commands
+454	 	
+-        #region OpenFileCommand
+455	 	
+-        /// <summary>
+456	 	
+-        /// Returns the command which, when executed, runs OpenFileDialog
+457	 	
+-        /// </summary>
+458	 	
+-        public ICommand OpenFileCommand
+459	 	
+-        {
+460	 	
+-            get { return _openFileCommand ?? (_openFileCommand = new RelayCommand(OpenFile)); }
+461	 	
+-        }
+462	 	
+-
+463	 	
+-        public void OpenFile()
+464	 	
+-        {
+465	 	
+-            var ofd1 = new OpenFileDialog
+466	 	
+-            {
+467	 	
+-                InitialDirectory = "c:\\",
+468	 	
+-                Filter = "txt files (*.txt)|*.txt",
+469	 	
+-                FilterIndex = 1,
+470	 	
+-                Multiselect = false
+471	 	
+-            };
+472	 	
+-
+473	 	
+-            // Call the ShowDialog method to show the dialog box.
+474	 	
+-            bool? userClickedOK = ofd1.ShowDialog();
+475	 	
+-
+476	 	
+-            // Process input if the user clicked OK.
+477	 	
+-            if (userClickedOK == true)
+478	 	
+-            {
+479	 	
+-                // Open the selected file to read.
+480	 	
+-                using (var sr = new StreamReader(ofd1.FileName))
+481	 	
+-                {
+482	 	
+-                    UserInputFromModel.ProteinInModel = sr.ReadToEnd();
+483	 	
+-                    OnPropertyChanged("ProteinFromModel");
+484	 	
+-                }
+485	 	
+-            }
+486	 	
+-        }
+487	 	
+-        #endregion // OpenFileCommand
+488	 	
+-
+489	 	
+-        #region SearchPubMedCommand
+490	 	
+-        
+491	 	
+-        /// <summary>
+492	 	
+-        /// Returns the command which, when executed, search pubmed based on user input and retrieves
+493	 	
+-        /// hit count table
+494	 	
+-        /// </summary>
+495	 	
+-        public ICommand SearchPubMedCommand
+496	 	
+-        {
+497	 	
+-            get { return _searchPubMedCommand ?? (_searchPubMedCommand = new RelayCommand(GetCount)); }
+498	 	
+-        }
+499	 	
+-        /// <summary>
+500	 	
+-        /// Nan: need revision, change to multi-threading 
+501	 	
+-        /// current progress bar is on single thread, which is time consuming
+502	 	
+-        /// </summary>
+503	 	
+-        private ProgressDialog _progressDialog = new ProgressDialog()
+504	 	
+-        {
+505	 	
+-            Text = "Retrieving count number from PubMed...",
+506	 	
+-            Description = "Processing...",
+507	 	
+-            ShowTimeRemaining = true,
+508	 	
+-        };
+509	 	
+-
+510	 	
+-        public void ShowProgressDialog()
+511	 	
+-        {
+512	 	
+-            if (_progressDialog.IsBusy)
+513	 	
+-                MessageBox.Show("The progress dialog is already displayed.");
+514	 	
+-            else
+515	 	
+-                _progressDialog.Show(); // Show a modeless dialog
+516	 	
+-        }
+517	 	
+-
+518	 	
+-        private void _progressDialog_DoWork(object sender, DoWorkEventArgs e)
+519	 	
+-        {
+520	 	
+-            int x = 0;
+521	 	
+-            // Implement the operation that the progress bar is showing progress of here, same as you would do with a background worker.
+522	 	
+-            foreach (string protein in ProteinList)
+523	 	
+-            {
+524	 	
+-                Thread.Sleep(500);
+525	 	
+-                // Periodically check CancellationPending and abort the operation if required.
+526	 	
+-                if (_progressDialog.CancellationPending)
+527	 	
+-                    return;
+528	 	
+-
+529	 	
+-                //int count = PubMedSearch.GetCount(protein, OrganismFromModel, KeywordFromModel);
+530	 	
+-                //CountList.Add(count);
+531	 	
+-                //CountListWithProteins.Add(new HitCountTable(count, protein));
+532	 	
+-
+533	 	
+-                x++;
+534	 	
+-                // ReportProgress can also modify the main text and description; pass null to leave them unchanged.
+535	 	
+-                // If _progressDialog.ShowTimeRemaining is set to true, the time will automatically be calculated based on
+536	 	
+-                // the frequency of the calls to ReportProgress.
+537	 	
+-                _progressDialog.ReportProgress(x, null, string.Format(System.Globalization.CultureInfo.CurrentCulture, "Processing: {0}%", (int)x / ProteinList.Count()));
+538	 	
+-            }
+539	 	
+-        }
+540	 	
+-        #endregion // SearchPubMedCommand
+541	 	
+-
+542	 	
+-        #region OpenHelpDocumentCommand
+543	 	
+-        public ICommand OpenHelpDocumentCommand
+544	 	
+-        {
+545	 	
+-            get
+546	 	
+-            {
+547	 	
+-                return _openHelpDocumentCommand ?? (_openHelpDocumentCommand = new RelayCommand(OpenHelpDocument));
+548	 	
+-            }
+549	 	
+-        }
+550	 	
+-        #endregion
+551	 	
+-
+552	 	
+-        public ICommand RetrieveArticleInfoCommand
+553	 	
+-        {
+554	 	
+-            get { return _retrieveArticleInfoCommand ?? (_retrieveArticleInfoCommand = new RelayCommand(RetrieveArticleInfo)); }
+555	 	
+-        }
+556	 	
+-
+557	 	
+-        #endregion // Commands
+558	 	
+-
+559	 	
+-        #region Methods
+560	 	
+-        public void GetCount()
+561	 	
+-        {
+562	 	
+-            if (UserInputFromModel.ProteinInModel == null)
+563	 	
+-            {
+564	 	
+-                MessageBox.Show("Protein field required");
+565	 	
+-            }
+566	 	
+-            else
+567	 	
+-            {
+568	 	
+-                //var newString = string.Join(" ", Regex.Split(oldString, @"(?:\r\n|\n|\r)"));
+569	 	
+-                // parse proteins string into a list
+570	 	
+-                //ProteinList = Regex.Split(ProteinFromModel, @"(?:\r\n|\n|\r)");
+571	 	
+-                ProteinFromModel=Regex.Replace(ProteinFromModel, @"[\r\n]+", "\n", RegexOptions.Multiline).Trim();
+572	 	
+-                ProteinList=Regex.Split(ProteinFromModel, "\n");
+573	 	
+-
+574	 	
+-                //ShowProgressDialog();
+575	 	
+-
+576	 	
+-                foreach (string protein in ProteinList)
+577	 	
+-                {
+578	 	
+-                    int count = PubMedSearch.GetCount(protein, OrganismFromModel, KeywordFromModel);
+579	 	
+-                    CountList.Add(count);
+580	 	
+-                    CountProteinTable.Add(new HitCountTable(count, protein));
+581	 	
+-                }
+582	 	
+-               
+583	 	
+-                SwitchTab = true; // Switch to HitCountTableTab by setting HitCountTableTab IsSelected = true
+584	 	
+-            }
+585	 	
+-        }
+586	 	
+-
+587	 	
+-        public void OpenHelpDocument()
+588	 	
+-        {
+589	 	
+-
+590	 	
+-            var helpDocumentWindow = new HelpDocumentView();
+591	 	
+-            helpDocumentWindow.Show();
+592	 	
+-
+593	 	
+-        }
+594	 	
+-        #endregion
+595	 	
+-        
+596	 	
+-       
+597	 	
+-
+598	 	
+-        #region Properties
+599	 	
+-
+600	 	
+-        #region SwitchTab
+601	 	
+-        /// <summary>
+602	 	
+-        /// SwitchTab is a property binding to HitCountTableTab IsSelected. By setting SwitchTab=true,
+603	 	
+-        /// it will select HitCountTableTab programmatically.
+604	 	
+-        /// </summary>
+605	 	
+-        private bool _switchTab;
+606	 	
+-
+607	 	
+-        public bool SwitchTab
+608	 	
+-        {
+609	 	
+-            get { return _switchTab; }
+610	 	
+-            set
+611	 	
+-            {
+612	 	
+-                _switchTab = value;
+613	 	
+-                OnPropertyChanged("SwitchTab");
+614	 	
+-            }
+615	 	
+-        }
+616	 	
+-        #endregion
+617	 	
+-
+618	 	
+-            #region ProteinFromModel
+619	 	
+-            public string ProteinFromModel
+620	 	
+-            {
+621	 	
+-                get
+622	 	
+-                {
+623	 	
+-                    return UserInputFromModel.ProteinInModel; }
+624	 	
+-                set
+625	 	
+-                {
+626	 	
+-                    UserInputFromModel.ProteinInModel = value;
+627	 	
+-                    OnPropertyChanged("ProteinFromModel");
+628	 	
+-                }
+629	 	
+-            }
+630	 	
+-            #endregion // ProteinFromModel
+631	 	
+-
+632	 	
+-            #region OrganismFromModel
+633	 	
+-            public string OrganismFromModel
+634	 	
+-            {
+635	 	
+-                get
+636	 	
+-                { return UserInputFromModel.OrganismInModel; }
+637	 	
+-                set
+638	 	
+-                {
+639	 	
+-                    UserInputFromModel.OrganismInModel = value;
+640	 	
+-                    OnPropertyChanged("OrganismFromModel");
+641	 	
+-                }
+642	 	
+-            }
+643	 	
+-            #endregion // OrganismFromModel
+644	 	
+-
+645	 	
+-            #region KeywordFromModel
+646	 	
+-            public string KeywordFromModel
+647	 	
+-            {
+648	 	
+-                get
+649	 	
+-                { return UserInputFromModel.KeywordInModel; }
+650	 	
+-                set
+651	 	
+-                {
+652	 	
+-                    UserInputFromModel.KeywordInModel = value;
+653	 	
+-                    OnPropertyChanged("KeywordFromModel");
+654	 	
+-                }
+655	 	
+-            }
+656	 	
+-            #endregion // KeywordFromModel
+657	 	
+-        #endregion
+658	 	
+-
+659	 	
+-            #region buttion_export
+660	 	
+-            public ICommand ExpordCommand
+661	 	
+-            {
+662	 	
+-                get { return _exportCommand ?? (_exportCommand = new RelayCommand(Expord)); }
+663	 	
+-            }
+664	 	
+-            public void Expord()
+665	 	
+-            {
+666	 	
+-                int count = 0;
+667	 	
+-                SaveFileDialog sfd = new SaveFileDialog()
+668	 	
+-                {
+669	 	
+-                    DefaultExt = "txt",
+670	 	
+-                    Filter = "TXT Files (*.txt)|*.txt|All files (*.*)|*.*",
+671	 	
+-                    FilterIndex = 1
+672	 	
+-                };
+673	 	
+-                if (sfd.ShowDialog() == true)
+674	 	
+-                {
+675	 	
+-                    using (Stream stream = sfd.OpenFile())
+676	 	
+-                    {
+677	 	
+-                        using (StreamWriter writer = new StreamWriter(stream))
+678	 	
+-                        {
+679	 	
+-                            while (count < _ResultTable.Count)
+680	 	
+-                            {
+681	 	
+-                                writer.WriteLine(_ResultTable[count].ArticleTitle);
+682	 	
+-                                writer.WriteLine(_ResultTable[count].Author);
+683	 	
+-                                writer.WriteLine(_ResultTable[count].Journal);
+684	 	
+-                                writer.WriteLine(_ResultTable[count].Year);
+685	 	
+-                                writer.WriteLine(_ResultTable[count].Url);
+686	 	
+-                                count++;
+687	 	
+-                            }
+688	 	
+-                            writer.Close();
+689	 	
+-                        }
+690	 	
+-                        stream.Close();
+691	 	
+-                    }
+692	 	
+-                }
+693	 	
+-
+694	 	
+-            }
+695	 	
+-            #endregion
+696	 	
+-
+697	 	
+-
+698	 	
+-            #region paging
+699	 	
+-            public ICommand FirstCommand
+700	 	
+-            {
+701	 	
+-                get
+702	 	
+-                {
+703	 	
+-                    return _firstCommand ?? (_firstCommand = new RelayCommand_
+704	 	
+-                        (
+705	 	
+-                        param =>
+706	 	
+-                        {
+707	 	
+-                            _start = 0;
+708	 	
+-                            Refresh();
+709	 	
+-                        },
+710	 	
+-                        param => _start - ItemCount >= 0));
+711	 	
+-                }
+712	 	
+-            }
+713	 	
+-
+714	 	
+-            /// <summary>
+715	 	
+-            /// Gets the command for moving to the previous page
+716	 	
+-            /// </summary>
+717	 	
+-            public ICommand PreviousCommand
+718	 	
+-            {
+719	 	
+-                get
+720	 	
+-                {
+721	 	
+-                    return _previousCommand ?? (_previousCommand = new RelayCommand_
+722	 	
+-                        (
+723	 	
+-                        param =>
+724	 	
+-                        {
+725	 	
+-                            _start -= ItemCount;
+726	 	
+-                            Refresh();
+727	 	
+-                        },
+728	 	
+-                        param => _start - ItemCount >= 0));
+729	 	
+-                }
+730	 	
+-            }
+731	 	
+-
+732	 	
+-            /// <summary>
+733	 	
+-            /// Gets the command for moving to the next page 
+734	 	
+-            /// </summary>
+735	 	
+-            public ICommand NextCommand
+736	 	
+-            {
+737	 	
+-                get
+738	 	
+-                {
+739	 	
+-                    return _nextCommand ?? (_nextCommand = new RelayCommand_
+740	 	
+-                        (
+741	 	
+-                        param =>
+742	 	
+-                        {
+743	 	
+-                            _start += ItemCount;
+744	 	
+-                            Refresh();
+745	 	
+-                        },
+746	 	
+-                        param => { return _start + ItemCount < _totalItems ? true : false; }
+747	 	
+-                        ));
+748	 	
+-                }
+749	 	
+-            }
+750	 	
+-
+751	 	
+-            /// <summary>
+752	 	
+-            /// Gets the command for moving to the last page
+753	 	
+-            /// </summary>
+754	 	
+-            public ICommand LastCommand
+755	 	
+-            {
+756	 	
+-                get
+757	 	
+-                {
+758	 	
+-                    if (_lastCommand == null)
+759	 	
+-                    {
+760	 	
+-                        _lastCommand = new RelayCommand_
+761	 	
+-                        (
+762	 	
+-                            param =>
+763	 	
+-                            {
+764	 	
+-                                _start = (_totalItems / ItemCount - 1) * ItemCount;
+765	 	
+-                                _start += _totalItems % ItemCount == 0 ? 0 : ItemCount;
+766	 	
+-                                Refresh();
+767	 	
+-                            },
+768	 	
+-                            param =>
+769	 	
+-                            {
+770	 	
+-                                return _start + ItemCount < _totalItems ? true : false;
+771	 	
+-                            }
+772	 	
+-                        );
+773	 	
+-                    }
+774	 	
+-
+775	 	
+-                    return _lastCommand;
+776	 	
+-                }
+777	 	
+-            }
+778	 	
+-
+779	 	
+-            /// <summary>
+780	 	
+-            /// Refreshes the list article info
+781	 	
+-            /// </summary>
+782	 	
+-            private void Refresh()
+783	 	
+-            {
+784	 	
+-                FillPage(_start);
+785	 	
+-                OnPropertyChanged("Start");
+786	 	
+-                OnPropertyChanged("End");
+787	 	
+-                OnPropertyChanged("TotalItems");
+788	 	
+-                OnPropertyChanged("FillArticleTableInfo");
+789	 	
+-            }
+790	 	
+-
+791	 	
+-            public void FillPage(int startNum)
+792	 	
+-            {
+793	 	
+-                this._FillArticleTableInfo = new ObservableCollection<ArticleTableInfo>();
+794	 	
+-                for (int i = startNum; i < startNum + ItemCount && i < _totalItems; i++)
+795	 	
+-
+796	 	
+-                {
+797	 	
+-                  _FillArticleTableInfo.Add(_ResultTable[i]);
+798	 	
+-                }
+799	 	
+-            }
+800	 	
+-
+801	 	
+-            /// <summary>
+802	 	
+-            /// Notifies subscribers of changed properties.
+803	 	
+-            /// </summary>
+804	 	
+-            /// <param name="propertyName">Name of the changed property.</param>
+805	 	
+-           
+806	 	
+-            #endregion
+807	 	
+-
+808	 	
+-            #region INotifyPropertyChanged Members
+809	 	
+-            public event PropertyChangedEventHandler PropertyChanged;
+810	 	
+-
+811	 	
+-        protected virtual void OnPropertyChanged(string propertyName)
+812	 	
+-        {
+813	 	
+-            PropertyChangedEventHandler handler = PropertyChanged;
+814	 	
+-            if (handler != null)
+815	 	
+-                handler(this, new PropertyChangedEventArgs(propertyName));
+816	 	
+-        }
+817	 	
+-        #endregion // INotifyPropertyChanged Members
+818	 	
+-    }
+819	 	
+-<<<<<<< HEAD
+820	 	
+-=======
+821	 	
+-
+822	 	
+-<<<<<<< HEAD
+823	 	
+-    public class DataGrid
+824	 	
+-    {
+825	 	
+-        public string ArticleTitle { get; set; }
+826	 	
+-        public string Url { get; set; }
+827	 	
+-        public string Author { get; set; }
+828	 	
+-        public int Year { get; set; }
+829	 	
+-        public string Journal { get; set; }
+830	 	
+-    }
+831	 	
+-
+832	 	
+-   
+833	 	
+-=======
+834	 	
+-    
+835	 	
+->>>>>>> 2c9ff56905d392a7214dcfe8fe1c2912986ae4ae
+836	 	
+-
+837	 	
+->>>>>>> a3be286fe852bb8bb7a1312965571f7fb33f2dbd
+838	 	
+-}
+Commit summary: Extended description: (optional)  bluewood
+nanwu.nan123@gmail.com
+Cancel  Commit Changes
+ 
+Status API Training Shop Blog About © 2013 GitHub, Inc. Terms Privacy Security Contact

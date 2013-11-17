@@ -71,9 +71,7 @@ C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThrough
 C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\Ookii.Dialogs.Wpf.dll
 C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\Ookii.Dialogs.Wpf.xml
 =======
-<<<<<<< HEAD
 C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\bin\Debug\HighThroughputDataRetrieval.exe.config
-=======
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\Interop.AcrobatAccessLib.dll
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\Interop.AcroPDFLib.dll
 \\LAMTAC-PC\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\AxInterop.AcroPDFLib.dll

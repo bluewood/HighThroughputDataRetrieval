@@ -18,14 +18,14 @@
     </Window.Background>
 
     <Grid>
-        
         <TabControl Margin="5" TabStripPlacement="Top" Padding="10"
                      FontSize="16">
+           
             <!--Style="{StaticResource TabControlStyle}"-->
             <TabItem Name="MainTab" Header="Main">
                <Grid>
-                    <Button Content="Import txt" Height="23" HorizontalAlignment="Left" Margin="5,5,0,0" Name="Importtxt" VerticalAlignment="Top" Width="100" Command="{Binding Path=OpenFileCommand}" />
-                    <Button Content="Browse previous result" Height="23" HorizontalAlignment="Left" Margin="120,5,0,0" Name="BrowsePreviousResultButton" VerticalAlignment="Top" Width="175" />
+                    <Button Content="Import txt" Height="23" HorizontalAlignment="Left" Margin="5,5,0,0" Name="ImporttxtButton" VerticalAlignment="Top" Width="100" Command="{Binding Path=OpenFileCommand}" />
+                    <Button Content="Browse previous result" Height="23" HorizontalAlignment="Left" Margin="120,5,0,0" Name="BrowsePreviousResultButton" VerticalAlignment="Top" Width="175" Command="{Binding Path=BrowsePreviousResultCommand}" />
                     <Label Content="Protein(required)" Height="33" Name="ProteinLabel" Margin="10,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Please enter protein/gene identifiers. For example, MAVS, gag, MP etc." />
                     <Label Content="Organism(optional)" Height="33" Name="OrganismLabel" Margin="10,200,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Please enter single organism. For example, human, monkey etc."/>
                     <Label Content="Keyword(optional)" Height="33" Name="KeywordLabel" Margin="10,300,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Please enter single keyword. For example, HIV, activator  etc."/>
@@ -35,12 +35,12 @@
                     <Button Content="Search PubMed" Height="23" HorizontalAlignment="Left" Margin="600,400,0,0" Name="SearchPubMedButton" VerticalAlignment="Top" Width="120" Command="{Binding Path=SearchPubMedCommand}" />
                     <Button Height="40" Width="40" Margin="750,12,6,450" Command="{Binding Path=OpenHelpDocumentCommand}">
                         <Button.Content>
-                            <Image HorizontalAlignment="Center" Name="QuestionMarkImageInInput" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg"/>                   
+                            <Image HorizontalAlignment="Center" Name="QuestionMarkImageInInput" VerticalAlignment="Top" Source="Image\QuestionMark.jpg"/>                   
                         </Button.Content>                          
                     </Button>
                 </Grid>
             </TabItem>
-            <TabItem Name="HitCountTableTab" Header="Hit Count Table" IsSelected="{Binding Path=SwitchTab, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TabItem Name="HitCountTableTab" Header="Hit Count Table" IsSelected="{Binding Path=SwitchHitCountTableTab, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="Click publication number to view article list">
                 <Grid Width="800" Height="504" HorizontalAlignment="Center">
                     <DataGrid ItemsSource="{Binding CountListWithProteins}" AutoGenerateColumns="False" Height="445" Name="HitCountDataGrid" Width="790" HorizontalAlignment="Center" Margin="-2,55,6,2">
                         <DataGrid.Columns>
@@ -50,15 +50,15 @@
                         </DataGrid.Columns>                  
                     </DataGrid>
                     <Label Content="Hit Count Table" Height="28" HorizontalAlignment="Left" Margin="332,6,0,0" Name="HitCountTableLabel" VerticalAlignment="Top" />
-                    <!--<Image Height="40" HorizontalAlignment="Left" Margin="754,9,0,0" Name="QuestionMarkImageInHitCountTable" Stretch="Fill" VerticalAlignment="Top" Width="40" Source="Image\QuestionMark.jpg" />-->
+           
                     <Button Height="40" Width="40" Margin="750,12,6,450" Command="{Binding Path=OpenHelpDocumentCommand}">
                         <Button.Content>
                             <Image HorizontalAlignment="Center" Name="QuestionMarkImageInHitCountTable" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg"/>
                         </Button.Content>                           
                     </Button>
                 </Grid>
-            </TabItem>           
-            <TabItem Header="Article abstract" >
+            </TabItem>
+            <TabItem Header="Article abstract" IsSelected="{Binding Path=SwitchArticleAbstractTab, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <Grid>
                     <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="button1" VerticalAlignment="Top" Width="75"  Command="{Binding Path=ExpordCommand}" />
                     <TextBlock Height="23" HorizontalAlignment="Left" Margin="66,16,0,0" Name="textBlock1" Text="Result" VerticalAlignment="Top" Width="84" />

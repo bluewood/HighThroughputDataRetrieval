@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
@@ -9,17 +10,17 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using HighThroughputDataRetrievalBackend.Model;
 using HighThroughputDataRetrievalBackend.Util;
-<<<<<<< HEAD
-using Microsoft.Win32;
+using HighThroughputDataRetrievalBackend.IO;
 using Ookii.Dialogs.Wpf;
-=======
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using Microsoft.Win32;
->>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
+
 
 namespace HighThroughputDataRetrieval
 {
@@ -28,7 +29,14 @@ namespace HighThroughputDataRetrieval
         #region Fields
 
         public UserInput UserInputFromModel;
-        //
+
+        private ProgressDialog _ProgressDialog = new ProgressDialog()
+        {
+            Text = "Retrieving publication number from PubMed...",
+            Description = "Processing...",
+            ShowTimeRemaining = true,
+        };
+
         // Hyesun added for GetCount
         public NcbiDataRetrieval PubMedSearch { get; set; }
         public List<int> CountList { get; set; }
@@ -43,7 +51,7 @@ namespace HighThroughputDataRetrieval
         RelayCommand _openHelpDocumentCommand;
         RelayCommand _retrieveArticleInfoCommand;
         RelayCommand _ExportCommand;
-
+    
         #endregion // Fields
 
         public ObservableCollection<ArticleTableInfo> ResultTable
@@ -56,11 +64,7 @@ namespace HighThroughputDataRetrieval
             }
         }
 
-<<<<<<< HEAD
-        public void RetrievalArticleInfo()
-=======
-        public void RetrieveArticleinformation()
->>>>>>> a63efa0ce16776e27a673206cdc6be4c6f7a7d77
+        public void RetrieveArticleInfo()
         {
             this._ResultTable = new ObservableCollection<ArticleTableInfo>();
             string[] myArticle = new string[15];
@@ -89,12 +93,18 @@ namespace HighThroughputDataRetrieval
             journal.Rows.Add("J Biol Chem", 2013, 1);
             journal.Rows.Add("Bioorg Khim", 2011, 2);
 
+            int articleCount = article.Rows.Count;
+
+            // Run progress dialog on background worker, which is not UI thread
+            ShowProgressDialog();
+
             //get myArticle
             for (int i = 0; i < article.Rows.Count; i++)
             {
                 myArticle[i] = string.Format(article.Rows[i].ItemArray[0].ToString());
                 myUrl[i] = string.Format(article.Rows[i].ItemArray[2].ToString());
-
+                CurrentProgress = i*100/articleCount;
+                OnPropertyChanged("CurrentProgress");
             }
             //get myAuthor
 
@@ -124,29 +134,28 @@ namespace HighThroughputDataRetrieval
             {
                 _ResultTable.Add(new ArticleTableInfo() { ArticleTitle = myArticle[i], Author = myAuthor[i], Year = myYear[i], Journal = myJournal[i], Url = myUrl[i] });
             }
-
+            
+            SwitchArticleAbstractTab = true; // Switch to ArticleAbstractTab by setting ArticleAbstractTab IsSelected = true
         }
 
         #region Constructor
 
-        public MainWindowViewModel()      
+       
+
+        public MainWindowViewModel()
         {
+           // MainWindow window = new MainWindow();
+           // window.Closing += MyWindow_Closing;// Subsribes to close window event
+            
+            SqliteInputOutput.Create_database("../../../HighThroughputDataRetrievalBackend/Model/database.db3");
             UserInputFromModel  = new UserInput();
             PubMedSearch = new PubMedDataRetrieval();
             CountListWithProteins = new ObservableCollection<HitCountTable>();
             CountList = new List<int>();
 
-<<<<<<< HEAD
-            LoadDataGrid();
-            _progressDialog = new ProgressDialog();
-            _progressDialog.DoWork += _progressDialog_DoWork;
-=======
-<<<<<<< HEAD
-            this.RetrievalArticleInfo();
-=======
-            this.RetrieveArticleinformation();
->>>>>>> a63efa0ce16776e27a673206cdc6be4c6f7a7d77
->>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
+           _ProgressDialog.DoWork += _ProgressDialog_DoWork;
+
+            //RetrievalArticleInfo();
         }
 
         #endregion // Constructor
@@ -187,6 +196,22 @@ namespace HighThroughputDataRetrieval
         }
         #endregion // OpenFileCommand
 
+        #region BrowsePreviousResultCommand
+        /// <summary>
+        /// Returns the command which, when executed, load query input from database into textboxes
+
+        // </summary>
+        public ICommand BrowsePreviousResultCommand
+        {
+            get { return _openFileCommand ?? (_openFileCommand = new RelayCommand(LoadPreviousQuery)); }
+        }
+
+        void LoadPreviousQuery()
+        {
+            
+        }
+        #endregion // BrowsePreviousResultCommand
+
         #region SearchPubMedCommand
         
         /// <summary>
@@ -197,47 +222,7 @@ namespace HighThroughputDataRetrieval
         {
             get { return _searchPubMedCommand ?? (_searchPubMedCommand = new RelayCommand(GetCount)); }
         }
-        /// <summary>
-        /// Nan: need revision, change to multi-threading 
-        /// current progress bar is on single thread, which is time consuming
-        /// </summary>
-        private ProgressDialog _progressDialog = new ProgressDialog()
-        {
-            Text = "Retrieving count number from PubMed...",
-            Description = "Processing...",
-            ShowTimeRemaining = true,
-        };
-
-        public void ShowProgressDialog()
-        {
-            if (_progressDialog.IsBusy)
-                MessageBox.Show("The progress dialog is already displayed.");
-            else
-                _progressDialog.Show(); // Show a modeless dialog
-        }
-
-        private void _progressDialog_DoWork(object sender, DoWorkEventArgs e)
-        {
-            int x = 0;
-            // Implement the operation that the progress bar is showing progress of here, same as you would do with a background worker.
-            foreach (string protein in ProteinList)
-            {
-                Thread.Sleep(500);
-                // Periodically check CancellationPending and abort the operation if required.
-                if (_progressDialog.CancellationPending)
-                    return;
-
-                //int count = PubMedSearch.GetCount(protein, OrganismFromModel, KeywordFromModel);
-                //CountList.Add(count);
-                //CountListWithProteins.Add(new HitCountTable(count, protein));
-
-                x++;
-                // ReportProgress can also modify the main text and description; pass null to leave them unchanged.
-                // If _progressDialog.ShowTimeRemaining is set to true, the time will automatically be calculated based on
-                // the frequency of the calls to ReportProgress.
-                _progressDialog.ReportProgress(x, null, string.Format(System.Globalization.CultureInfo.CurrentCulture, "Processing: {0}%", (int)x / ProteinList.Count()));
-            }
-        }
+    
         #endregion // SearchPubMedCommand
 
         #region OpenHelpDocumentCommand
@@ -250,14 +235,35 @@ namespace HighThroughputDataRetrieval
         }
         #endregion
 
-        public ICommand RetrieveArticleInfo
-        {
-            get { return _openFileCommand ?? (_openFileCommand = new RelayCommand(OpenFile)); }
-        }
 
+        public ICommand RetrieveArticleInfoCommand
+        {
+            get { return _retrieveArticleInfoCommand ?? (_retrieveArticleInfoCommand = new RelayCommand(RetrieveArticleInfo)); }
+        }
         #endregion // Commands
 
         #region Methods
+        private void ShowProgressDialog()
+        {
+            if (_ProgressDialog.IsBusy)
+                MessageBox.Show("The progress dialog is already displayed.");
+            else
+                _ProgressDialog.Show(); // Show a modeless dialog
+        }
+
+        private void _ProgressDialog_DoWork(object sender, DoWorkEventArgs e)
+        {
+              while(CurrentProgress < 100)
+              {
+               Thread.Sleep(500);
+                // Periodically check CancellationPending and abort the operation if required.
+                if (_ProgressDialog.CancellationPending)
+                    return;
+                // The time will automatically be calculated based on the frequency of the calls to ReportProgress.
+                _ProgressDialog.ReportProgress(CurrentProgress, null, string.Format(System.Globalization.CultureInfo.CurrentCulture, "Processing: {0}%", CurrentProgress));
+            }
+        }
+
         public void GetCount()
         {
             if (UserInputFromModel.ProteinInModel == null)
@@ -266,55 +272,93 @@ namespace HighThroughputDataRetrieval
             }
             else
             {
-                // parse proteins string into a list
+                // Replace the repetition of occurence of "\r\n" with "\n" in ProteinFromModel to get ready for parsing,
+                // so a blank line in input textbox will not be counted
+                ProteinFromModel = Regex.Replace(ProteinFromModel, @"[\r\n]+", "\n", RegexOptions.Multiline).Trim();
+               
+                // Parse string ProteinFromModel into ProteinList by the occurence of "\n"
                 ProteinList = Regex.Split(ProteinFromModel, "\n");
 
-                ShowProgressDialog();
+                int proteinCounter = 0;
+                int totalProtein = ProteinList.Count();
 
+                // Run progress dialog on background worker, which is not UI thread
+                ShowProgressDialog();
+                
                 foreach (string protein in ProteinList)
                 {
                     int count = PubMedSearch.GetCount(protein, OrganismFromModel, KeywordFromModel);
                     CountList.Add(count);
                     CountListWithProteins.Add(new HitCountTable(count, protein));
+                    proteinCounter++;
+                    CurrentProgress = proteinCounter*100/totalProtein;
+                    OnPropertyChanged("CurrentProgress");
                 }
-               
-                SwitchTab = true; // Switch to HitCountTableTab by setting HitCountTableTab IsSelected = true
+                
+                SwitchHitCountTableTab = true; // Switch to HitCountTableTab by setting HitCountTableTab IsSelected = true
+            }
+        }
+
+        private int _currentProgress;
+        public int CurrentProgress
+        {
+            get { return _currentProgress; }
+            set
+            {
+                _currentProgress = value;
+                OnPropertyChanged("CurrentProgress");
             }
         }
 
         public void OpenHelpDocument()
         {
-
             var helpDocumentWindow = new HelpDocumentView();
             helpDocumentWindow.Show();
-
         }
-        #endregion
+        #endregion  // Methods
         
-       
-
         #region Properties
 
-        #region SwitchTab
+        #region SwitchHitCountTableTab
         /// <summary>
-        /// SwitchTab is a property binding to HitCountTableTab IsSelected. By setting SwitchTab=true,
+        /// SwitchHitCountTableTab is a property binding to HitCountTableTab IsSelected. By setting SwitchHitCountTableTab=true,
         /// it will select HitCountTableTab programmatically.
         /// </summary>
-        private bool _switchTab;
+        private bool _switchHitCountTableTab;
 
-        public bool SwitchTab
+        public bool SwitchHitCountTableTab
         {
-            get { return _switchTab; }
+            get { return _switchHitCountTableTab; }
             set
             {
-                _switchTab = value;
-                OnPropertyChanged("SwitchTab");
+                _switchHitCountTableTab = value;
+                OnPropertyChanged("SwitchHitCountTableTab");
             }
         }
-        #endregion
+        #endregion // SwitchHitCountTableTab
 
-            #region ProteinFromModel
-            public string ProteinFromModel
+
+        #region SwitchArticleAbstractTab
+
+        /// <summary>
+        /// SwitchArticleAbstractTab is a property binding to ArticleAbstractTab IsSelected. By setting SwitchArticleAbstractTab=true,
+        /// it will select ArticleAbstractTab programmatically.
+        /// </summary>
+        private bool _switchArticleAbstractTab;
+
+        public bool SwitchArticleAbstractTab
+        {
+            get { return _switchArticleAbstractTab; }
+            set
+            {
+                _switchArticleAbstractTab = value;
+                OnPropertyChanged("SwitchArticleAbstractTab");
+            }
+        }
+        #endregion // SwitchHitCountTableTab
+
+        #region ProteinFromModel
+        public string ProteinFromModel
             {
                 get
                 {
@@ -355,11 +399,11 @@ namespace HighThroughputDataRetrieval
         #endregion
 
             #region buttion_export
-            public ICommand ExpordCommand
+            public ICommand ExportCommand
             {
-                get { return _ExportCommand ?? (_ExportCommand = new RelayCommand(Expord)); }
+                get { return _ExportCommand ?? (_ExportCommand = new RelayCommand(Export)); }
             }
-            public void Expord()
+            public void Export()
             {
                 int count = 0;
                 SaveFileDialog sfd = new SaveFileDialog()
@@ -392,6 +436,27 @@ namespace HighThroughputDataRetrieval
             }
             #endregion
 
+         public void MyWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+             e.Cancel = true;
+
+            MessageBoxResult result = MessageBox.Show("Save query into database?", "My Title", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes) // Save query into database
+            {
+                //get dataset
+                //copy dataset to database
+                DataSet myDataSet = PubMedSearch.GetDataSet();
+
+
+                bool success = SqliteInputOutput.CopydatasetToDatabase("../../../HighThroughputDataRetrievalBackend/Model/database.db3", myDataSet);
+
+            }
+            else if (result == MessageBoxResult.No) // Close the application if the user would not like to save query, 
+            {
+                e.Cancel = false;
+            }
+        }
+
 
             #region INotifyPropertyChanged Members
             public event PropertyChangedEventHandler PropertyChanged;
@@ -404,16 +469,4 @@ namespace HighThroughputDataRetrieval
         }
         #endregion // INotifyPropertyChanged Members
     }
-<<<<<<< HEAD
-    public class DataGrid
-    {
-        public string ArticleTitle { get; set; }
-        public string Url { get; set; }
-        public string Author { get; set; }
-        public int Year { get; set; }
-        public string Journal { get; set; }
-    }
-=======
-   
->>>>>>> 53f4ec6e2fec155a7fb0844b533267e4df51fdb4
 }
