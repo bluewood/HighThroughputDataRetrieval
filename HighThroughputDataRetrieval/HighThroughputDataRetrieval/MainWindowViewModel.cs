@@ -60,7 +60,7 @@ namespace HighThroughputDataRetrieval
         public int TotalItems { get { return _totalItems; } }
 
 // ReSharper disable once InconsistentNaming
-        public ObservableCollection<ArticleTableInfo> _ResultTable;
+        //public ObservableCollection<ArticleTableInfo> _ResultTable;
 
 // ReSharper disable once InconsistentNaming
         public ObservableCollection<ArticleTableInfo> _FillArticleTableInfo;
@@ -413,7 +413,9 @@ namespace HighThroughputDataRetrieval
 
             } // end of foreach
 
-            string isdone = "hahaha";
+            MessageBox.Show("Retrieved done");
+            _totalItems=_resultTable.Count;
+            Refresh();
         }
         #endregion // RetrieveArticleInfo
      
@@ -426,7 +428,7 @@ namespace HighThroughputDataRetrieval
                 return _openHelpDocumentCommand ?? (_openHelpDocumentCommand = new RelayCommand(OpenHelpDocument));
             }
         }
-        
+
         public void OpenHelpDocument()
         {
 
@@ -458,13 +460,13 @@ namespace HighThroughputDataRetrieval
                 {
                     using (StreamWriter writer = new StreamWriter(stream))
                     {
-                        while (count < _ResultTable.Count)
+                        while (count < _resultTable.Count)
                         {
-                            writer.WriteLine(_ResultTable[count].ArticleTitle);
-                            writer.WriteLine(_ResultTable[count].Author);
-                            writer.WriteLine(_ResultTable[count].Journal);
-                            writer.WriteLine(_ResultTable[count].Year);
-                            writer.WriteLine(_ResultTable[count].Url);
+                            writer.WriteLine(_resultTable[count].ArticleTitle);
+                            writer.WriteLine(_resultTable[count].Author);
+                            writer.WriteLine(_resultTable[count].Journal);
+                            writer.WriteLine(_resultTable[count].Year);
+                            writer.WriteLine(_resultTable[count].Url);
                             count++;
                         }
                         writer.Close();
@@ -577,7 +579,7 @@ namespace HighThroughputDataRetrieval
             for (int i = startNum; i < startNum + ItemCount && i < _totalItems; i++)
 
             {
-                _FillArticleTableInfo.Add(_ResultTable[i]);
+                _FillArticleTableInfo.Add(_resultTable[i]);
             }
         }
 
