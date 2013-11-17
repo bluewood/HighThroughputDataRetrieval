@@ -24,19 +24,16 @@ namespace HighThroughputDataRetrievalBackend.Util
         // datatables 
         public DataTable QueryDataTable { set; get; }
         public DataTable QueryArticlesDataTable { set; get; }
-        public DataTable KeywordListDataTable { set; get; }
         public DataTable KeywordDataTable { set; get; }
         public DataTable OrganismDataTable { set; get; }
         public DataTable ProteinsDataTable { set; get; }
         public DataTable ProteinListDataTable { set; get; }
         public DataTable QuerySessionDataTable { set; get; }
-        public DataTable AlternativeProteinNameDataTable { set; get; }
         public DataTable ArticleDataTable { set; get; }
         public DataTable AuthorListDataTable { set; get; }
         public DataTable AuthorsDataTable { set; get; }
         public DataTable JournalReleaseDataTable { set; get; }
         public DataTable JournalDataTable { set; get; }
-        public DataTable ArticleInfoDataTable { set; get; }
         //public DataTable TagListDataTable;
         //public DataTable TagsDataTable;
         //public DataTable CategoryListDataTable;
