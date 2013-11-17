@@ -4,16 +4,28 @@
 winexe
 C#
 .cs
+<<<<<<< HEAD
 C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\
+=======
+C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\
+>>>>>>> 332f1feb7b960cc2c16085b9d18efa27cfd77b5a
 HighThroughputDataRetrieval
 none
 false
 DEBUG;TRACE
+<<<<<<< HEAD
 C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\App.xaml
 21190899401
 
 9-1064693132
 17-56037265
+=======
+C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\App.xaml
+21190899401
+
+9235477560
+17-1559307152
+>>>>>>> 332f1feb7b960cc2c16085b9d18efa27cfd77b5a
 HelpDocumentView.xaml;MainWindow.xaml;
 
 True

@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:HighThroughputDataRetrieval"
+        xmlns:data="clr-namespace:System.Data;assembly=System.Data"
         WindowStartupLocation="CenterScreen"
         Title="MainWindow" Height="600" Width="850">
     
@@ -17,11 +18,16 @@
         </LinearGradientBrush>
     </Window.Background>
 
+<<<<<<< HEAD
     <Grid>
         <TabControl Margin="5" TabStripPlacement="Top" Padding="10"
                      FontSize="16">
            
             <!--Style="{StaticResource TabControlStyle}"-->
+=======
+    <Grid>       
+        <TabControl Margin="5" TabStripPlacement="Top" Padding="10" FontSize="16">
+>>>>>>> 332f1feb7b960cc2c16085b9d18efa27cfd77b5a
             <TabItem Name="MainTab" Header="Main">
                <Grid>
                     <Button Content="Import txt" Height="23" HorizontalAlignment="Left" Margin="5,5,0,0" Name="ImporttxtButton" VerticalAlignment="Top" Width="100" Command="{Binding Path=OpenFileCommand}" />
@@ -42,51 +48,98 @@
             </TabItem>
             <TabItem Name="HitCountTableTab" Header="Hit Count Table" IsSelected="{Binding Path=SwitchHitCountTableTab, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="Click publication number to view article list">
                 <Grid Width="800" Height="504" HorizontalAlignment="Center">
-                    <DataGrid ItemsSource="{Binding CountListWithProteins}" AutoGenerateColumns="False" Height="445" Name="HitCountDataGrid" Width="790" HorizontalAlignment="Center" Margin="-2,55,6,2">
+                    <DataGrid ItemsSource="{Binding CountProteinTable}" AutoGenerateColumns="False" Height="445" Name="HitCountTableDataGrid" Width="790" HorizontalAlignment="Center" Margin="-2,55,6,2" 
+                              SelectedIndex="{Binding SelectedIndex}" IsReadOnly="True">
+                        
                         <DataGrid.Columns>
-                            <DataGridHyperlinkColumn Header="Number of Publication" Width="400" Binding="{Binding CountInHitCountTable}"/>
-                            <!--<DataGridTextColumn Header="Number of Publication" Width="400" Binding="{Binding CountInHitCountTable}"/>-->
+                            <DataGridTextColumn Header="Number of Publication" Width="400" Binding="{Binding CountInHitCountTable}"/>
                             <DataGridTextColumn Header="Protein" Width="400" Binding="{Binding ProteinInHitCountTable}"/>
-                        </DataGrid.Columns>                  
+                        </DataGrid.Columns>
+
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding RetrieveArticleInfoCommand}" CommandParameter="{Binding ElementName=HitCountTableDataGrid, Path=SelectedIndex}" />
+                        </DataGrid.InputBindings>
+                        
                     </DataGrid>
                     <Label Content="Hit Count Table" Height="28" HorizontalAlignment="Left" Margin="332,6,0,0" Name="HitCountTableLabel" VerticalAlignment="Top" />
+<<<<<<< HEAD
            
+=======
+>>>>>>> 332f1feb7b960cc2c16085b9d18efa27cfd77b5a
                     <Button Height="40" Width="40" Margin="750,12,6,450" Command="{Binding Path=OpenHelpDocumentCommand}">
                         <Button.Content>
                             <Image HorizontalAlignment="Center" Name="QuestionMarkImageInHitCountTable" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg"/>
                         </Button.Content>                           
                     </Button>
                 </Grid>
+<<<<<<< HEAD
             </TabItem>
             <TabItem Header="Article abstract" IsSelected="{Binding Path=SwitchArticleAbstractTab, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <Grid>
                     <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="button1" VerticalAlignment="Top" Width="75"  Command="{Binding Path=ExpordCommand}" />
+=======
+            </TabItem>           
+            <TabItem Header="Article abstract" >
+                <Grid>                                    
+                    <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="ExportButton" VerticalAlignment="Top" Width="75"  Command="{Binding Path=ExportCommand}" />
+>>>>>>> 332f1feb7b960cc2c16085b9d18efa27cfd77b5a
                     <TextBlock Height="23" HorizontalAlignment="Left" Margin="66,16,0,0" Name="textBlock1" Text="Result" VerticalAlignment="Top" Width="84" />
-                    <DataGrid  AutoGenerateColumns="False" Height="498" HorizontalAlignment="Center" Margin="10,45,0,10" Name="ResultDataGrid" VerticalAlignment="Top" Width="800"
-                  CanUserReorderColumns="False" ItemsSource="{Binding ResultTable}" >
+
+                    <DataGrid  AutoGenerateColumns="False" Height="498" HorizontalAlignment="Center" Margin="10,45,0,10" Name="ArticleInfoTabletDataGrid" VerticalAlignment="Top" Width="800"
+                     ItemsSource="{Binding FillArticleTableInfo, NotifyOnTargetUpdated=True}" IsReadOnly="True" SelectedIndex="{Binding Path=SelectIndex}">
                     <DataGrid.Columns >
-                        <DataGridHyperlinkColumn Header="Title" Binding="{Binding Path=Url}" 
-                                                     ContentBinding="{Binding Path=ArticleTitle}"  MaxWidth="100">
-                                <DataGridHyperlinkColumn.ElementStyle>
-                                    <Style TargetType="TextBlock">
-                                        <EventSetter Event="Hyperlink.Click" Handler="dataGrid1_GotFocus" />
-
-                                    </Style>
-                                </DataGridHyperlinkColumn.ElementStyle>
-
-                            </DataGridHyperlinkColumn>
-
-                          
-                        <DataGridTextColumn Header="Author" Binding="{Binding Path= Author}" Width="100" />
-                        <DataGridTextColumn Header="Year" Binding="{Binding Path= Year}" Width="100" />
-                        <DataGridTextColumn Header="Journal" Binding="{Binding Path=Journal}" MinWidth="100" />
+                        <DataGridTextColumn Header="Title" Binding="{Binding Path= ArticleTitle}" Width="200" />
+                         <DataGridTextColumn Header="Author" Binding="{Binding Path= Author}" Width="200" />
+                        <DataGridTextColumn Header="Year" Binding="{Binding Path= Year}" Width="200" />
+                        <DataGridTextColumn Header="Journal" Binding="{Binding Path=Journal}" MinWidth="200" />
                     </DataGrid.Columns>
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding ArticleInfoTableClickCommand}" CommandParameter="{Binding ElementName=ArticleInfoTabletDataGrid, Path=SelectedItem}" />
+                        </DataGrid.InputBindings>
                     </DataGrid>
+                    
                     <Button Height="40" Width="40" Margin="750,12,6,450" Command="{Binding Path=OpenHelpDocumentCommand}">
                         <Button.Content>
                             <Image HorizontalAlignment="Center" Name="QuestionMarkImageInArticleTable" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg" />
                         </Button.Content>
                     </Button>
+                    <StackPanel
+                            Margin="4"
+                            Grid.Row="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                        <Button    
+                             Height="30" Width="30"
+                            Margin="4,0"
+                            Content="&lt;&lt;"
+                            Command="{Binding FirstCommand}"/>
+                        <Button
+                             Height="30" Width="30"
+                            Margin="4,0"
+                            Content="&lt;"
+                            Command="{Binding PreviousCommand}"/>
+                        <StackPanel
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                            <TextBlock
+                                Text="{Binding Start}"/>
+                            <TextBlock Text=" to "/>
+                            <TextBlock Text="{Binding End}"/>
+                            <TextBlock Text=" of "/>
+                            <TextBlock Text="{Binding TotalItems}"/>
+                        </StackPanel>
+                        <Button
+                             Height="30" Width="30"
+                            Margin="4,0"
+                            Content="&gt;"
+                            Command="{Binding NextCommand}"/>
+                        <Button
+                             Height="30" Width="30"
+                            Margin="4,0"
+                            Content="&gt;&gt;"
+                            Command="{Binding LastCommand}"/>
+                    </StackPanel>
+
                 </Grid>
             </TabItem>
         

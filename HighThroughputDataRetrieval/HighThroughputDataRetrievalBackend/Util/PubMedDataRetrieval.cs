@@ -17,7 +17,7 @@ namespace HighThroughputDataRetrievalBackend.Util
         public PubMedDataRetrieval()
         {
             IdList = new List<string>();
-            RetrievedArticleCount = 0;
+            ArticleCount = 0;
             KeyOrder = 1;
             ProteinFromUser = "";
             OrganismFromUser = "";
@@ -35,7 +35,7 @@ namespace HighThroughputDataRetrievalBackend.Util
             QueryDataTable.Columns.Add("OrganismID", typeof(int));
             QueryDataTable.Columns.Add("KeywordListID", typeof(int));
             QueryDataTable.Columns.Add("ResultCount", typeof(int));
-            QueryDataTable.PrimaryKey = new[] {QueryDataTable.Columns["QueryID"]};
+            QueryDataTable.PrimaryKey = new[] {QueryDataTable.Columns["QueryID"] };
 
 
             QueryArticlesDataTable = new DataTable("T_QueryArticles");
@@ -112,9 +112,9 @@ namespace HighThroughputDataRetrievalBackend.Util
             AuthorListDataTable.Columns.Add("AuthorListID", typeof(int));
             AuthorListDataTable.Columns.Add("AuthorID",typeof(int));
             AuthorListDataTable.Columns.Add("AuthorOrder", typeof(int));
-            AuthorListDataTable.PrimaryKey = new[] { AuthorListDataTable.Columns["PMID"], 
-                                                        AuthorListDataTable.Columns["AuthorListID"], 
-                                                        AuthorListDataTable.Columns["AuthorID"] };
+            //AuthorListDataTable.PrimaryKey = new[] { AuthorListDataTable.Columns["PMID"], 
+            //                                            AuthorListDataTable.Columns["AuthorListID"], 
+            //                                            AuthorListDataTable.Columns["AuthorID"] };
            
             AuthorsDataTable = new DataTable("T_Authors");
             AuthorsDataTable.Columns.Add("AuthorID", typeof(int));
@@ -131,8 +131,7 @@ namespace HighThroughputDataRetrievalBackend.Util
             JournalReleaseDataTable.Columns.Add("Year"); // should be int or string???
             JournalReleaseDataTable.Columns.Add("Volume");
             JournalReleaseDataTable.Columns.Add("Issue");
-            JournalReleaseDataTable.PrimaryKey = new[] { JournalReleaseDataTable.Columns["JournalRelease"], 
-                                                            JournalReleaseDataTable.Columns["JournalID"] };
+            JournalReleaseDataTable.PrimaryKey = new[] { JournalReleaseDataTable.Columns["JournalRelease"] };
            
             JournalDataTable = new DataTable("T_Journals");
             JournalDataTable.Columns.Add("JournalID", typeof(int));
@@ -187,19 +186,19 @@ namespace HighThroughputDataRetrievalBackend.Util
         // Funtion: Retrieve number of articles and PMIDs and put them into the dataset
         //          based on one protein, one organizm, and one keyword at a time. 9/6/2013
         // Return: count number of int type
-        override public int GetCount(string protein, string organism, string  keyword)
+        override public int GetCount(string protein, string organism, string keyword)
         {
-            ProteinFromUser = protein;
-            OrganismFromUser = organism;
-            KeywordFromUser = keyword;
 
             #region Members
+
+            ProteinFromUser = protein.ToUpper();
+            OrganismFromUser = organism.ToUpper();
+            KeywordFromUser = keyword.ToUpper();
             
             const string pubmedSearchPrefix = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils//esearch.fcgi?db=pubmed&retmax=10000&";
 
             // combine proteins and keyword
             string terms = string.Format("{0},{1},{2}", ProteinFromUser, OrganismFromUser, KeywordFromUser);
-
             string assembleUrl = string.Format("{0}&term={1}",pubmedSearchPrefix,terms);
 
             #endregion
@@ -224,15 +223,15 @@ namespace HighThroughputDataRetrievalBackend.Util
             xmlDocument.LoadXml(urlResult);
 
             // name is the name in T_Query table and needed to check duplication query
-            string name = protein + organism + keyword;
+            string name = ProteinFromUser + OrganismFromUser + KeywordFromUser;
 
             // get count from xml string
-            int count = int.Parse(xmlDocument.GetElementsByTagName("Count")[0].InnerText);
+            ArticleCount = int.Parse(xmlDocument.GetElementsByTagName("Count")[0].InnerText);
 
             //T_Query, if query already exists and the count number in the data table is also same 
             //return the count number 
             DataRow rowQuery;
-            if (Dictionary.TryGetValue(name, out rowQuery) && rowQuery["ResultCount"].Equals(count)) // count == rowQuery.Field<int>("ResultCount") ??? need to test
+            if (Dictionary.TryGetValue(name, out rowQuery) && rowQuery["ResultCount"].Equals(ArticleCount)) // count == rowQuery.Field<int>("ResultCount") ??? need to test
             {
                 // already exists
                 // return int.Parse(rowQuery["ResultCount"].ToString());
@@ -243,9 +242,9 @@ namespace HighThroughputDataRetrievalBackend.Util
             XmlNodeList pmidListFromXml = xmlDocument.GetElementsByTagName("Id");
 
             // fill Query, Protein, Organism, Keyword, KeywordList, QueryArticle, QuerySession datatables
-            FillQueryDataTables(name, count, pmidListFromXml);
+            FillQueryDataTables(name,pmidListFromXml);
 
-            return count;  
+            return ArticleCount;  
 
         }
 
@@ -253,10 +252,11 @@ namespace HighThroughputDataRetrievalBackend.Util
         /// 
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="count"></param>
         /// <param name="pmidListFromXml"></param>
-        override public void FillQueryDataTables(string name, int count, XmlNodeList pmidListFromXml)
+        override public bool FillQueryDataTables(string name, XmlNodeList pmidListFromXml)
         {
+            if (name == "" && pmidListFromXml.Count == 0)
+                return false;
             try
             {
                 // T_Protein 
@@ -322,7 +322,7 @@ namespace HighThroughputDataRetrievalBackend.Util
                 rowQuery["ProteinID"] = rowProtein["ProteinID"]; //.ToString();
                 rowQuery["OrganismID"] = rowOrganism["OrganismID"]; //.ToString();
                 rowQuery["KeywordListID"] = rowQuery["QueryID"]; //.ToString(); // keywordListID = QueryID because one query has one keywordList
-                rowQuery["ResultCount"] = count; // new count from the xml string
+                rowQuery["ResultCount"] = ArticleCount; // new count from the xml string
 
                 // Add the row of T_Query into the T_Query datatable and the dictionary
                 QueryDataTable.Rows.Add(rowQuery);
@@ -352,15 +352,16 @@ namespace HighThroughputDataRetrievalBackend.Util
                 rowQuerySession["ProteinID"] = rowQuery["ProteinID"];
                 rowQuerySession["DateTime"] = DateTime.Now;
                 QuerySessionDataTable.Rows.Add(rowQuerySession);
+
             }
             catch (Exception exception)
             {
                 
                 Console.WriteLine(exception.Message);
             }
- 
-            //T_ProteinList ???         
-            //T_AlternativeProteinName ???
+
+            
+            return true;
         }
         
         // Name: getArticleInfo()
@@ -373,58 +374,60 @@ namespace HighThroughputDataRetrievalBackend.Util
         ///  
         /// </summary>
         /// <returns></returns>
-        override public DataTable GetArticleInfomation()
+        override public DataTable GetArticleInfomation(int count, List<string> idList)
         {               
 
-            if(RetrievedArticleCount == IdList.Count)
-                return null;
-            
-            #region Members
-            const string pubmedSearchPrefix = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=";
-            #endregion
-
-            // the Url is too long when retrieving articles over 100 at a time, so occur exception
-            // so retrieving 20 articles at a time when user click more
-            int numberOfRetrieving = 20;
-            if ((IdList.Count - RetrievedArticleCount) < numberOfRetrieving)
-                numberOfRetrieving = IdList.Count - RetrievedArticleCount;
-            //int numberOfRetrieving = ((IdList.Count - RetrievedArticleCount) < numberOfRetrieving)
-            //    ? (IdList.Count - RetrievedArticleCount) : 20;
-
-            string ids = string.Join(",", IdList.GetRange(RetrievedArticleCount, numberOfRetrieving));
-            RetrievedArticleCount += numberOfRetrieving;
-            
-            // make url
-            string assembleUrl = string.Format("{0}{1}&{2}", pubmedSearchPrefix, ids, "retmode=xml");
-            //Console.WriteLine(assembleUrl);
-
-            // Retrieve article information from PubMed through the URL
-            var client = new WebClient();
-            string urlResult = "";
-            try
+            int i = 0;
+            while(i<count)
             {
-                urlResult = client.DownloadString(assembleUrl);
+                #region Members
+                const string pubmedSearchPrefix = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=";
+                #endregion
+
+                // the Url is too long when retrieving articles over 100 at a time, so occur exception
+                // so retrieving 20 articles at a time until retrieving number of count
+                int numberOfRetrieving = ((count-i) < 20)? (count-i):20;
+                
+                // get 20 ids into string
+                string ids = string.Join(",", idList.GetRange(i, numberOfRetrieving));
+                i += numberOfRetrieving;
+
+                // make url
+                string assembleUrl = string.Format("{0}{1}&{2}", pubmedSearchPrefix, ids, "retmode=xml");
+                //Console.WriteLine(assembleUrl);
+
+                // Retrieve article information from PubMed through the URL
+                var client = new WebClient();
+                string urlResult = "";
+                try
+                {
+                    urlResult = client.DownloadString(assembleUrl);
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc.Message);
+                }
+
+                // load result in xmlformat and parse per article
+                var doc = new XmlDocument();
+                doc.LoadXml(urlResult);
+                XmlNodeList articleListFromXml = doc.GetElementsByTagName("PubmedArticle");
+
+                //// fill article part datatables
+                FillArticleDataTables(articleListFromXml, pubmedSearchPrefix);
+                
             }
-            catch (Exception exc)
-            {
-                Console.WriteLine(exc.Message);
-            }
-
-            // load result in xmlformat and parse per article
-            var doc = new XmlDocument();
-            doc.LoadXml(urlResult);
-            XmlNodeList articleListFromXml = doc.GetElementsByTagName("PubmedArticle");
-
-           //// fill article part datatables
-           FillArticleDataTables(articleListFromXml, pubmedSearchPrefix);
-
+            
+   
 
            return ArticleDataTable;
 
         }
-
-        public override void FillArticleDataTables(XmlNodeList articleListFromXml, string pubmedSearchPrefix)
+        // make pubmedSearchPrefix null ???
+        public override bool FillArticleDataTables(XmlNodeList articleListFromXml, string pubmedSearchPrefix)
         {
+            if (articleListFromXml.Count == 0 && pubmedSearchPrefix == "")
+                return false;
             try
             {
                 
@@ -438,7 +441,7 @@ namespace HighThroughputDataRetrievalBackend.Util
                     // check article already exists. if yes, move to the next article
                     if (Dictionary.ContainsKey(pmid))
                     {
-                        Console.WriteLine(pmid);
+                        //Console.WriteLine(pmid);
                         continue;
                     }
                         
@@ -579,7 +582,9 @@ namespace HighThroughputDataRetrievalBackend.Util
             {
                 Console.WriteLine(exception.Message);
             }
-          
+
+
+            return true;
         }
 
         public override DataSet GetDataSet()
