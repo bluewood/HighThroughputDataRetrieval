@@ -1,0 +1,12 @@
+﻿<Window x:Class="HighThroughputDataRetrieval.HelpDocumentView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:packaging="clr-namespace:System.Windows.Xps.Packaging;assembly=ReachFramework"
+        Title="HelpDocumentView" Height="500" Width="1000">
+    <Grid Width="1000" Height ="500">
+        <DocumentViewer Name="HelpDocumentViewer">
+            <FixedDocument>
+            </FixedDocument>
+        </DocumentViewer>
+    </Grid>
+</Window>
