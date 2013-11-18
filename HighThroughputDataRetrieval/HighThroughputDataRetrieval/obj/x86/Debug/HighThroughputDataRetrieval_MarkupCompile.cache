@@ -4,17 +4,43 @@
 winexe
 C#
 .cs
+<<<<<<< HEAD
 C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\
+=======
+<<<<<<< HEAD
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\
+=======
+C:\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\obj\x86\Debug\
+>>>>>>> 332f1feb7b960cc2c16085b9d18efa27cfd77b5a
+>>>>>>> 3bd83f841e2825570481cad37f61ef15e7f68d6a
 HighThroughputDataRetrieval
 none
 false
 DEBUG;TRACE
+<<<<<<< HEAD
 C:\Users\Owner\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\App.xaml
 21190899401
 
 8-1605058802
 17-1559307152
 HelpDocumentView.xaml;MainWindow.xaml;
+=======
+<<<<<<< HEAD
+C:\Users\Nan\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\App.xaml
+21190899401
+
+8-1605058802
+17-56037265
+HelpDocumentView.xaml;MainWindow.xaml;
+=======
+C:\Users\lamtac\HighThroughputDataRetrieval\HighThroughputDataRetrieval\HighThroughputDataRetrieval\App.xaml
+11151548125
+
+7322855081
+17-1647988969
+MainWindow.xaml;
+>>>>>>> 332f1feb7b960cc2c16085b9d18efa27cfd77b5a
+>>>>>>> 3bd83f841e2825570481cad37f61ef15e7f68d6a
 
 False
 
