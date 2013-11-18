@@ -21,6 +21,8 @@ namespace HighThroughputDataRetrievalBackend.Util
         public int QuerySessionID { set; get; }
         public int ProteinID { set; get; }
         public int ProteinListID { set; get; }
+        public int AuthorID { set; get; }
+        public int AuthorListID { set; get; }
 
 
         public List<string> IdList { set; get; }

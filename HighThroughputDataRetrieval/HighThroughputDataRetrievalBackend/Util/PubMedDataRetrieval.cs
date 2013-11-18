@@ -15,7 +15,8 @@ namespace HighThroughputDataRetrievalBackend.Util
     {
         // constructor: initialize all properties 
         public PubMedDataRetrieval(int newQueryID = 1, int newQueryArticleID = 1, int newKeywordID =1,
-            int newOrganismID =1, int newQuerySessionID = 1, int newProteinID = 1, int newProteinListID = 1)
+            int newOrganismID =1, int newQuerySessionID = 1, int newProteinID = 1, int newProteinListID = 1,
+            int newAuthorID = 1)
         {
 
             QueryID = newQueryID;
@@ -25,14 +26,16 @@ namespace HighThroughputDataRetrievalBackend.Util
             QuerySessionID = newQuerySessionID;
             ProteinID = newProteinID;
             ProteinListID = newProteinListID;
+            AuthorID = newAuthorID;
 
             IdList = new List<string>();
             ArticleCount = 0;
             ProteinFromUser = "";
             OrganismFromUser = "";
-            KeywordFromUser = "";          
+            KeywordFromUser = "";
 
 
+            #region Query part datatables
             /* initialize datatables and columns */            
             QueryDataTable = new DataTable("T_Query");
             QueryDataTable.Columns.Add("QueryID", typeof(int));
@@ -41,7 +44,7 @@ namespace HighThroughputDataRetrievalBackend.Util
             //QueryDataTable.Columns.Add("QueryEndTime");
             QueryDataTable.Columns.Add("ProteinID", typeof(int));
             QueryDataTable.Columns.Add("OrganismID", typeof(int));
-            QueryDataTable.Columns.Add("KeywordListID", typeof(int));
+            QueryDataTable.Columns.Add("KeywordID", typeof(int));
             QueryDataTable.Columns.Add("ResultCount", typeof(int));
             QueryDataTable.PrimaryKey = new[] {QueryDataTable.Columns["QueryID"]};
 
@@ -67,7 +70,7 @@ namespace HighThroughputDataRetrievalBackend.Util
             QuerySessionDataTable = new DataTable("T_QuerySession");
             QuerySessionDataTable.Columns.Add("QuerySessionID", typeof(int));
             QuerySessionDataTable.Columns.Add("QueryID", typeof(int));
-            QuerySessionDataTable.Columns.Add("ProteinID", typeof(int));
+            QuerySessionDataTable.Columns.Add("ProteinListID", typeof(int));
             QuerySessionDataTable.Columns.Add("DateTime", typeof(DateTime));
           
 
@@ -80,8 +83,10 @@ namespace HighThroughputDataRetrievalBackend.Util
             ProteinListDataTable.Columns.Add("ProteinListID", typeof(int));
             ProteinListDataTable.Columns.Add("QuerySessionID", typeof(int));
             ProteinListDataTable.Columns.Add("ProteinID", typeof(int));
-         
-  
+
+            #endregion 
+
+            #region Article info part datatables
             ArticleDataTable = new DataTable("T_Article");
             ArticleDataTable.Columns.Add("PMID");
             ArticleDataTable.Columns.Add("AuthorListID", typeof(int));
@@ -126,7 +131,8 @@ namespace HighThroughputDataRetrievalBackend.Util
             JournalDataTable.Columns.Add("JournalID", typeof(int));
             JournalDataTable.Columns.Add("Title");
             JournalDataTable.PrimaryKey = new[] { JournalDataTable.Columns["JournalID"] };
-         
+
+            #endregion
 
             QueryArticlesDataSet = new DataSet("QueryArticlesSet");
 
@@ -135,11 +141,15 @@ namespace HighThroughputDataRetrievalBackend.Util
         }
 
 
-        // Name: getCout()
-        // Parameters: one protein, one organism, and keywords list of string type 
-        // Funtion: Retrieve number of articles and PMIDs and put them into the dataset
-        //          based on one protein, one organizm, and one keyword at a time. 9/6/2013
-        // Return: count number of int type
+        /// <summary>
+        ///  GetCount() retrieves the number of articles according to the query
+        /// and their ids from Pubmed. It calls FillQueryDataTables() to fill data
+        /// into query part data tables.
+        /// </summary>
+        /// <param name="protein"></param>
+        /// <param name="organism"></param>
+        /// <param name="keyword"></param>
+        /// <returns>count</returns>
         override public int GetCount(string protein, string organism, string keyword)
         {
 
@@ -155,7 +165,7 @@ namespace HighThroughputDataRetrievalBackend.Util
             string terms = string.Format("{0},{1},{2}", ProteinFromUser, OrganismFromUser, KeywordFromUser);
             string assembleUrl = string.Format("{0}&term={1}",pubmedSearchPrefix,terms);
 
-            #endregion
+            #endregion // members
 
 
             // connect pubmed and retrieve the information that are count number and PMID list.
@@ -176,7 +186,7 @@ namespace HighThroughputDataRetrievalBackend.Util
             var xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(urlResult);
 
-            // name is the name in T_Query table and needed to check duplication query
+            // name is the name in T_Query table and is nesassary to check duplication query
             string name = ProteinFromUser + OrganismFromUser + KeywordFromUser;
 
             // get count from xml string
@@ -214,53 +224,66 @@ namespace HighThroughputDataRetrievalBackend.Util
 
             try
             {
-                // T_Protein 
-                DataRow rowProtein;
-                if (!(Dictionary.TryGetValue(ProteinFromUser, out rowProtein)))
+                // T_Protein and T_ProteinList
+                DataRow rowProtein = null;
+                if (ProteinFromUser != null)
                 {
-                    // not exist -> create new row of T_Protein and fill it.
-                    rowProtein = ProteinDataTable.NewRow();
-                    rowProtein["ProteinID"] = ProteinID++;
-                    rowProtein["Protein"] = ProteinFromUser;
+                    
+                    if (!(Dictionary.TryGetValue(ProteinFromUser, out rowProtein)))
+                    {
+                        // not exist -> create new row of T_Protein and fill it.
+                        rowProtein = ProteinDataTable.NewRow();
+                        rowProtein["ProteinID"] = ProteinID++;
+                        rowProtein["Protein"] = ProteinFromUser;
 
-                    // add the row into the T_Protein data table and the dictionary
-                    ProteinDataTable.Rows.Add(rowProtein);
-                    Dictionary.Add(ProteinFromUser, rowProtein);
+                        // add the row into the T_Protein data table and the dictionary
+                        ProteinDataTable.Rows.Add(rowProtein);
+                        Dictionary.Add(ProteinFromUser, rowProtein);
+                    }
+
+                    // No matter protein exists in the dictionary, need to put in the list
+                    DataRow rowProteinList = ProteinListDataTable.NewRow();
+                    rowProteinList["ProteinListID"] = ProteinListID;
+                    rowProteinList["QuerySessionID"] = QuerySessionID;
+                    rowProteinList["ProteinID"] = rowProtein["Protein"];
+                    ProteinListDataTable.Rows.Add(rowProteinList);
                 }
-
-                // T_Organism
-                DataRow rowOrganism;
-                if (!(Dictionary.TryGetValue(OrganismFromUser, out rowOrganism)))
-                {
-                    // not exist -> create new row of T_Organism and fill it.
-                    rowOrganism = OrganismDataTable.NewRow();
-                    rowOrganism["OrganismID"] = OrganismID++;
-                    rowOrganism["Organism"] = OrganismFromUser;
-
-                    // add the row into T_Organism data table and the dictionary
-                    OrganismDataTable.Rows.Add(rowOrganism);
-                    Dictionary.Add(OrganismFromUser, rowOrganism);
-                }
-
-
-                // T_Keyword
-                DataRow rowKeyword;
-                if (!(Dictionary.TryGetValue(KeywordFromUser, out rowKeyword)))
-                {
-                    // not exist -> create new row of T_Keyword and fill it
-                    rowKeyword = KeywordDataTable.NewRow();
-                    rowKeyword["KeywordID"] = KeywordID++;
-                    rowKeyword["Keyword"] = KeywordFromUser;
-
-                    // add the row into T_Keyword data table and the dictionary.
-                    KeywordDataTable.Rows.Add(rowKeyword);
-                    Dictionary.Add(KeywordFromUser, rowKeyword);
-
-                }
-
-
                 
 
+                // T_Organism
+                DataRow rowOrganism = null;
+                if ((OrganismFromUser != null) && (!(Dictionary.TryGetValue(OrganismFromUser, out rowOrganism))))
+                {
+                        // not exist -> create new row of T_Organism and fill it.
+                        rowOrganism = OrganismDataTable.NewRow();
+                        rowOrganism["OrganismID"] = OrganismID++;
+                        rowOrganism["Organism"] = OrganismFromUser;
+
+                        // add the row into T_Organism data table and the dictionary
+                        OrganismDataTable.Rows.Add(rowOrganism);
+                        Dictionary.Add(OrganismFromUser, rowOrganism);
+                    
+                }
+                
+
+                // T_Keyword
+                DataRow rowKeyword = null;
+                if ((KeywordFromUser != null) && (!(Dictionary.TryGetValue(KeywordFromUser, out rowKeyword)))) 
+                {
+
+                        // not exist -> create new row of T_Keyword and fill it
+                        rowKeyword = KeywordDataTable.NewRow();
+                        rowKeyword["KeywordID"] = KeywordID++;
+                        rowKeyword["Keyword"] = KeywordFromUser;
+
+                        // add the row into T_Keyword data table and the dictionary.
+                        KeywordDataTable.Rows.Add(rowKeyword);
+                        Dictionary.Add(KeywordFromUser, rowKeyword);
+
+                }
+                
+
+                
                 // The rest of T_Query
                 DataRow rowQuery = QueryDataTable.NewRow();
                 rowQuery["QueryID"] = QueryID++;
@@ -269,7 +292,7 @@ namespace HighThroughputDataRetrievalBackend.Util
                 //rowQuery["QueryEndTime"]=;
                 rowQuery["ProteinID"] = rowProtein["ProteinID"]; //.ToString();
                 rowQuery["OrganismID"] = rowOrganism["OrganismID"]; //.ToString();
-                rowQuery["KeywordListID"] = rowQuery["QueryID"]; //.ToString(); // keywordListID = QueryID because one query has one keywordList
+                rowQuery["Keyword"] = rowKeyword["KeywordID"]; //.ToString(); // keywordListID = QueryID because one query has one keywordList
                 rowQuery["ResultCount"] = ArticleCount; // new count from the xml string
 
                 // Add the row of T_Query into the T_Query datatable and the dictionary
@@ -295,9 +318,9 @@ namespace HighThroughputDataRetrievalBackend.Util
                 // T_QuerySession
                 // create new row, fill information, and add the row into the QuerySession data table
                 DataRow rowQuerySession = QuerySessionDataTable.NewRow();
-                rowQuerySession["QuerySessionID"] = QuerySessionDataTable.Rows.Count + 1;
+                rowQuerySession["QuerySessionID"] = QuerySessionID;
                 rowQuerySession["QueryID"] = rowQuery["QueryID"];
-                rowQuerySession["ProteinID"] = rowQuery["ProteinID"];
+                rowQuerySession["ProteinListID"] = rowQuery["ProteinID"];
                 rowQuerySession["DateTime"] = DateTime.Now;
                 QuerySessionDataTable.Rows.Add(rowQuerySession);
 
@@ -371,7 +394,8 @@ namespace HighThroughputDataRetrievalBackend.Util
            return ArticleDataTable;
 
         }
-        // make pubmedSearchPrefix null ???
+
+        
         public override bool FillArticleDataTables(XmlNodeList articleListFromXml)
         {
             const string urlPrefix = "http://www.ncbi.nlm.nih.gov/pubmed/";
@@ -401,29 +425,20 @@ namespace HighThroughputDataRetrievalBackend.Util
                     rowArticle["PMID"] = pmid;
                     rowArticle["AuthorListID"] = ArticleDataTable.Rows.Count + 1;
                     rowArticle["Title"] = article.SelectSingleNode("descendant::ArticleTitle").InnerText;
-                    rowArticle["PubDate"] = article.SelectSingleNode("descendant::ArticleDate") != null
-                        ? article.SelectSingleNode("descendant::ArticleDate").InnerText
-                        : null;
-                    rowArticle["Language"] = article.SelectSingleNode("descendant::Language") != null
-                        ? article.SelectSingleNode("descendant::Language").InnerText
-                        : null;
-                    rowArticle["doi"] = article.SelectSingleNode("descendant::ArticleIdList/ArticleId[@IdType='doi']") !=
-                                        null
-                        ? article.SelectSingleNode("descendant::ArticleIdList/ArticleId[@IdType='doi']").InnerText
-                        : null;
-                    rowArticle["Abstract"] = article.SelectSingleNode("descendant::Abstract") != null
-                        ? article.SelectSingleNode("descendant::Abstract").InnerText
-                        : null;
-                    // ??? What is journal release???
-                    rowArticle["JournalRelease"] = article.SelectSingleNode("descendant::ISSN") != null
-                        ? article.SelectSingleNode("descendant::ISSN").InnerText
-                        : null;
-                    rowArticle["Pages"] = article.SelectSingleNode("descendant::MedlinePgn") != null
-                        ? article.SelectSingleNode("descendant::MedlinePgn").InnerText
-                        : null;
-                    rowArticle["Affiliation"] = article.SelectSingleNode("descendant::Affiliation") != null
-                        ? article.SelectSingleNode("descendant::Affiliation").InnerText
-                        : null;
+                    rowArticle["PubDate"] = article.SelectSingleNode("descendant::ArticleDate") != null?
+                        article.SelectSingleNode("descendant::ArticleDate").InnerText: null;
+                    rowArticle["Language"] = article.SelectSingleNode("descendant::Language") != null?
+                        article.SelectSingleNode("descendant::Language").InnerText: null;
+                    rowArticle["doi"] = article.SelectSingleNode("descendant::ArticleIdList/ArticleId[@IdType='doi']") != null?
+                        article.SelectSingleNode("descendant::ArticleIdList/ArticleId[@IdType='doi']").InnerText: null;
+                    rowArticle["Abstract"] = article.SelectSingleNode("descendant::Abstract") != null?
+                        article.SelectSingleNode("descendant::Abstract").InnerText: null;
+                    rowArticle["JournalRelease"] = article.SelectSingleNode("descendant::ISSN") != null?
+                        article.SelectSingleNode("descendant::ISSN").InnerText: null;
+                    rowArticle["Pages"] = article.SelectSingleNode("descendant::MedlinePgn") != null?
+                        article.SelectSingleNode("descendant::MedlinePgn").InnerText: null;
+                    rowArticle["Affiliation"] = article.SelectSingleNode("descendant::Affiliation") != null?
+                        article.SelectSingleNode("descendant::Affiliation").InnerText: null;
                     rowArticle["URL"] = urlPrefix + pmid;
 
                     // add a row into the T_Article and the dictionary
@@ -438,12 +453,12 @@ namespace HighThroughputDataRetrievalBackend.Util
                     foreach (XmlNode author in authorList)
                     {
                         // get author name
-                        string suffix = author.SelectSingleNode("descendant::Suffix") != null
-                            ? author.SelectSingleNode("descendant::Suffix").InnerText: null;
-                        string lastName = author.SelectSingleNode("descendant::LastName") != null
-                            ? author.SelectSingleNode("descendant::LastName").InnerText: null;
-                        string foreName = author.SelectSingleNode("descendant::ForeName") != null
-                            ? author.SelectSingleNode("descendant::ForeName").InnerText: null;
+                        string suffix = author.SelectSingleNode("descendant::Suffix") != null?
+                            author.SelectSingleNode("descendant::Suffix").InnerText: null;
+                        string lastName = author.SelectSingleNode("descendant::LastName") != null?
+                            author.SelectSingleNode("descendant::LastName").InnerText: null;
+                        string foreName = author.SelectSingleNode("descendant::ForeName") != null?
+                            author.SelectSingleNode("descendant::ForeName").InnerText: null;
 
                         string authorName = suffix + lastName + foreName;
 
@@ -451,7 +466,9 @@ namespace HighThroughputDataRetrievalBackend.Util
                         if (authorName == "")
                         {
                              collectiveName = author.SelectSingleNode("descendant::CollectiveName") != null ?
-                            author.SelectSingleNode("descendant::CollectiveName").InnerText : null;
+                                author.SelectSingleNode("descendant::CollectiveName").InnerText : null;
+
+                            authorName = collectiveName;
                         }
                            
 
@@ -464,7 +481,7 @@ namespace HighThroughputDataRetrievalBackend.Util
 
 
                         DataRow rowAuthor = AuthorsDataTable.NewRow();
-                        rowAuthor["AuthorID"] = AuthorsDataTable.Rows.Count + 1;
+                        rowAuthor["AuthorID"] = AuthorID++;
                         rowAuthor["Suffix"] = suffix;
                         rowAuthor["LastName"] = lastName;
                         rowAuthor["ForeName"] = foreName;
@@ -480,22 +497,23 @@ namespace HighThroughputDataRetrievalBackend.Util
                         // add a row into the T_AuthorList
                         DataRow rowAuthorList = AuthorListDataTable.NewRow();
                         rowAuthorList["PMID"] = pmid;
-                        rowAuthorList["AuthorListID"] = ArticleDataTable.Rows.Count;
-                        rowAuthorList["AuthorID"] = AuthorsDataTable.Rows.Count;
+                        rowAuthorList["AuthorListID"] = AuthorListID;
+                        rowAuthorList["AuthorID"] = rowAuthor["AuthorID"];
                         rowAuthorList["AuthorOrder"] = authorOrder++;
                         AuthorListDataTable.Rows.Add(rowAuthorList);
 
 
                     } // end of inner foreach T_Authors and T_AuthorList
 
+                    AuthorListID++;
+
 
 
                     // T_Journals
-                    string journalTitle = article.SelectSingleNode("descendant::Title") != null
-                        ? article.SelectSingleNode("descendant::Title").InnerText
-                        : null;
-                    DataRow rowJournals;
+                    string journalTitle = article.SelectSingleNode("descendant::Title") != null?
+                        article.SelectSingleNode("descendant::Title").InnerText: null;
 
+                    DataRow rowJournals;
                     // not exists, return false --> fill the datatable
                     // exists, return true with rowJournal
                     if (!(Dictionary.TryGetValue(journalTitle, out rowJournals)))
