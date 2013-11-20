@@ -18,16 +18,13 @@
         </LinearGradientBrush>
     </Window.Background>
 
-<<<<<<< HEAD
     <Grid>
         <TabControl Margin="5" TabStripPlacement="Top" Padding="10"
                      FontSize="16">
            
             <!--Style="{StaticResource TabControlStyle}"-->
-=======
     <Grid>       
         <TabControl Margin="5" TabStripPlacement="Top" Padding="10" FontSize="16">
->>>>>>> 332f1feb7b960cc2c16085b9d18efa27cfd77b5a
             <TabItem Name="MainTab" Header="Main">
                <Grid>
                     <Button Content="Import txt" Height="23" HorizontalAlignment="Left" Margin="5,5,0,0" Name="ImporttxtButton" VerticalAlignment="Top" Width="100" Command="{Binding Path=OpenFileCommand}" />
@@ -62,27 +59,23 @@
                         
                     </DataGrid>
                     <Label Content="Hit Count Table" Height="28" HorizontalAlignment="Left" Margin="332,6,0,0" Name="HitCountTableLabel" VerticalAlignment="Top" />
-<<<<<<< HEAD
-           
-=======
->>>>>>> 332f1feb7b960cc2c16085b9d18efa27cfd77b5a
+
                     <Button Height="40" Width="40" Margin="750,12,6,450" Command="{Binding Path=OpenHelpDocumentCommand}">
                         <Button.Content>
                             <Image HorizontalAlignment="Center" Name="QuestionMarkImageInHitCountTable" Stretch="Fill" VerticalAlignment="Top" Source="Image\QuestionMark.jpg"/>
                         </Button.Content>                           
                     </Button>
                 </Grid>
-<<<<<<< HEAD
             </TabItem>
             <TabItem Header="Article abstract" IsSelected="{Binding Path=SwitchArticleAbstractTab, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <Grid>
                     <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="button1" VerticalAlignment="Top" Width="75"  Command="{Binding Path=ExpordCommand}" />
-=======
+
             </TabItem>           
             <TabItem Header="Article abstract" >
                 <Grid>                                    
                     <Button Content="Export to txt" Height="23" HorizontalAlignment="Left" Margin="279,12,0,0" Name="ExportButton" VerticalAlignment="Top" Width="75"  Command="{Binding Path=ExportCommand}" />
->>>>>>> 332f1feb7b960cc2c16085b9d18efa27cfd77b5a
+
                     <TextBlock Height="23" HorizontalAlignment="Left" Margin="66,16,0,0" Name="textBlock1" Text="Result" VerticalAlignment="Top" Width="84" />
 
                     <DataGrid  AutoGenerateColumns="False" Height="498" HorizontalAlignment="Center" Margin="10,45,0,10" Name="ArticleInfoTabletDataGrid" VerticalAlignment="Top" Width="800"
