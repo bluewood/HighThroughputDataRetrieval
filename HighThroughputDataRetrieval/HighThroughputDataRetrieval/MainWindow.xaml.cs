@@ -14,8 +14,7 @@ namespace HighThroughputDataRetrieval
         public MainWindow()
         {
             InitializeComponent();
-            MainWindowViewModel viewModel = new MainWindowViewModel();
-            Closing += viewModel.MyWindow_Closing;// Subsribes to close window event
+            
         }
         
     }
